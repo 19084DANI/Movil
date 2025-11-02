@@ -12,6 +12,10 @@ export default function PresupuestosScreen() {
               style={styles.menuhamburgesa}
               source={require('../assets/menu.png')}
              ></Image>     
+             <Image
+              style={styles.logo}
+              source={require('../assets/logo.jpg')}
+             ></Image>  
           </View>
 
 
@@ -36,6 +40,7 @@ backgrounds: {
   height: '100%',
 },
 encabezado:{
+  justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
 backgroundColor: '#E1F5C4',
@@ -60,6 +65,15 @@ menuhamburgesa:{
 
 width: 35,
 height: 35,
+},
+
+logo:{
+
+width: 130,
+height: 90,
+borderRadius: 45,
+borderColor: '#f4e45dff',
+borderWidth:5
 },
 
 
