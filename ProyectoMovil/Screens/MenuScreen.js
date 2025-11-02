@@ -3,7 +3,7 @@ import React, { Component, useState } from 'react'
 
 import Transacciones from './TransaccionesScreen';
 import PresupuestosScreen from './PresupuestosScreen';
-import RecuperarContrasena from './RecuperarContrasena';
+import RecuperarContrasena from './recuperarContrasena';
 
 
 import { Button } from 'react-native'
