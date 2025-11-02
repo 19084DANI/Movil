@@ -7,7 +7,10 @@ export default function recuperarContrasena() {
     const [confirmarContrasena, setConfirmarContrasena] = useState('');
     const [email, setEmail] = useState('');
     const mostrarAlerta = () => {
-        if (usuario.trim() === ''){
+        if (usuario === '' && email === '' && contrasena === '' && confirmarContrasena === ''){
+            Alert.alert('Todos los campos estan vacios');
+            alert('Todos los campos estan vacios');
+        }else if (usuario.trim() === ''){
             Alert.alert('Nombre no puede estar vacio');
             alert('Nombre no puede estar vacio');
         }else if (email.trim() === ''){
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
         height:'10%',
         alignItems:'center',
         justifyContent:'center',
-        borderRadius:20,
+        borderRadius:30,
         marginBottom:15,
     },
 });
