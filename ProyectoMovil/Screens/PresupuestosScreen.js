@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, ImageBackground, ScrollView } from 'react-native'
+import { Text, StyleSheet, View, ImageBackground, ScrollView, Image } from 'react-native'
 
 
 export default function PresupuestosScreen() {
@@ -7,7 +7,11 @@ export default function PresupuestosScreen() {
       
       <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
         style={styles.backgrounds} >
-          <View style={styles.encabezado}>        
+          <View style={styles.encabezado}>  
+             <Image
+              style={styles.menuhamburgesa}
+              source={require('../assets/menu.png')}
+             ></Image>     
           </View>
 
 
@@ -32,7 +36,7 @@ backgrounds: {
   height: '100%',
 },
 encabezado:{
-  
+flexDirection: 'row',
 alignItems: "center",
 backgroundColor: '#E1F5C4',
 padding: 10,
@@ -51,8 +55,13 @@ borderRadius:10,
 marginBottom:0,
 width: '100%',
 height: '10%',
-
 },
+menuhamburgesa:{
+
+width: 35,
+height: 35,
+},
+
 
 })
 
