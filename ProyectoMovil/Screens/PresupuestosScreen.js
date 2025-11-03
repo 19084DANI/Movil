@@ -80,8 +80,8 @@ export default function PresupuestosScreen() {
            
 
         </View>
-        <View>
-          <Button>Actualizar Presupuesto</Button>
+        <View style={{width:120}}>
+          <Button color='#79B7B4' title='Actualizar Presupuesto'></Button>
         </View>
       </ScrollView>
         
