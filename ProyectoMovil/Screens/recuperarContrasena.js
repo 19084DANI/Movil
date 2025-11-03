@@ -1,7 +1,7 @@
 import { Text, StyleSheet, View, TextInput, Alert, Button, Image } from 'react-native'
 import React, {useState} from 'react'
 
-export default function recuperarContrasena() {
+export default function RecuperarContrasena() {
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [confirmarContrasena, setConfirmarContrasena] = useState('');

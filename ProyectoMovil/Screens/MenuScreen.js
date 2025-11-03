@@ -6,6 +6,7 @@ import PresupuestosScreen from './PresupuestosScreen';
 import RecuperarContrasena from './RecuperarContrasena';
 import LoginScreen from './LoginScreen'
 import IniciarSeScreen from './IniciarSeScreen';
+import RegistroScreen from './RegistroScreen';
 
 
 
@@ -20,21 +21,26 @@ export default function MenuScreen () {
         return <PresupuestosScreen/>
     case 'transacciones':
         return <Transacciones/>
-    case 'recuperarContrasena':
+    case 'RecuperarContrasena':
         return <RecuperarContrasena/>
     case 'Login':
         return<LoginScreen/>
     case 'IniciarSesion':
       return<IniciarSeScreen/>
+    case 'registro':
+      return<RegistroScreen/>
+
+    
     case 'menu':  
         default:
             return(
               <View>
                  <Button color="orange" onPress={()=>setScreen('presupuesto') } title='Presupuesto'/>
                   <Button color="orange" onPress={()=>setScreen('transacciones') } title='transacciones'/>
-                  <Button color="orange" onPress={()=>setScreen('recuperarContrasena') } title='Recuperar Contraseña'/>
+                  <Button color="orange" onPress={()=>setScreen('RecuperarContrasena') } title='Recuperar Contraseña'/>
                   <Button color ='orange' onPress={()=> setScreen('Login')} title= 'Login'/>
                   <Button color ='orange' onPress={()=> setScreen('IniciarSesion')} title='IniciarSesion'/>
+                  <Button color ='orange' onPress={()=> setScreen('registro')} title='Registro'/>
                 </View>
             )
   }

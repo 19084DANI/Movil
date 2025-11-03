@@ -17,21 +17,29 @@ export default function RegistroScreen(){
     const crearCuenta = () => {
         if (!nombre.trim() || !correo.trim() || !telefono.trim() || !contrasena.trim()){
             Alert.alert("Error", "Todos los campos son obligatorios, porfavor complete todos los campos.");
+            alert("ERROR, Todos los campos son obligatorios.");
             return;
         }
         if (!validarCorreo(correo.trim())){
             Alert.alert("Error", "El correo ingresado no es valido, porfavor ingresa un correo valido.");
+            alert("ERROR, Ingresa un correo valido");
             return;
         }
         if (!/^\d+$/.test(telefono) || telefono.length < 10 ){
             Alert.alert("Error", "El telefono ingresado no es valido, porfavor ingresa un telefono valido.");
+            alert("ERROR, Ingresa un telefono valido.");
             return;
         }
         if (contrasena.length < 6){
             Alert.alert("Error", "La contraseña ingresada no es valida, porfavor ingrese una contraseña valida");
+            alert("ERROR, Ingresa una contraseña valida.");
             return;
         }
         Alert.alert("Cuenta creada", `Nombre: ${nombre}\nCorreo: ${correo}`);
+        alert("Registro Exitoso! \nCuenta creada"+
+            "\n Datos ingresados: " +
+            `Nombre: ${nombre}\nCorreo: ${correo}\n`
+        )
     };
 
     const irIniciarSesion = () =>{
@@ -114,5 +122,7 @@ const styles= StyleSheet.create({
         marginBottom: 15,
         borderWidth: 1,
         borderColor: '#A9A9A9',
+        backgroundColor: '#E0F2C6'
     },
+
 });
