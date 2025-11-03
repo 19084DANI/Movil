@@ -1,7 +1,7 @@
 import { Text, StyleSheet, View, ImageBackground, ScrollView, Image } from 'react-native'
 import Slider from '@react-native-community/slider';
 import { useState } from 'react';
-import { Button } from 'react-native-web';
+import { Button } from 'react-native';
 
 export default function PresupuestosScreen() {
   const [preciot, setPrecio]=useState(0);
@@ -26,17 +26,17 @@ export default function PresupuestosScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={styles.Titulo2}>
-          <Text style={styles.Titulo}>         Mis {'\n'} Presupuestos{'\n'}{'\n'}</Text>
+          <Text style={styles.Titulo}>         Mis {'\n'} Presupuestos{'\n'}</Text>
          
         </View>
 
         <View style={styles.elementos}>
           <View style={styles.textoslide}>
-          <Text style={styles.texto1}>Presupuesto Total</Text>
+          <Text style={styles.texto1}>Presupuesto{'\n'}Total:</Text>
            
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
              </View>
-           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
+           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={80000}
             minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
              } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
@@ -49,7 +49,7 @@ export default function PresupuestosScreen() {
            
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(alimentacion)}</Text>
              </View>
-           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={3500}
+           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3500}
             minimumValue={2000} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
              } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
@@ -62,7 +62,7 @@ export default function PresupuestosScreen() {
            
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(transporte)}</Text>
              </View>
-           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={3200}
+           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3200}
             minimumValue={3000} color='#5030efff' onValueChange={(value)=>setTransporte(value)
              } thumbTintColor='#000000ff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
            
@@ -75,7 +75,7 @@ export default function PresupuestosScreen() {
            
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(entretenimiento)}</Text>
              </View>
-           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={1500}
+           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={1500}
             minimumValue={900} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
              } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
@@ -117,16 +117,16 @@ contenido: {
 textoslide:{
 justifyContent:'space-between',
 flexDirection:'row',
-paddingHorizontal:30
+paddingHorizontal:10
 },
 texto1:{
-  fontSize:30,
+  fontSize:27,
   fontWeight:'bold',
   color:'#fff'
 },
 
 slider:{
-paddingHorizontal: 120,
+paddingHorizontal: 12,
 
 },
 backgrounds: {
@@ -172,8 +172,8 @@ height: 45,
 
 logo:{
 
-width: 130,
-height: 90,
+width: 100,
+height: 70,
 borderRadius: 45,
 borderColor: '#f4e45dff',
 borderWidth:5
@@ -195,7 +195,7 @@ fontWeight: 'bold'
 
 elementos:{
   
- width: 850,
+ width: 350,
     height: 150,
     backgroundColor: '#a5c3a7',
     justifyContent: 'space-between',

@@ -1,5 +1,5 @@
 import { Text, StyleSheet, View, ImageBackground, Image, Button } from 'react-native'
-import { ScrollView } from 'react-native-web'
+import { ScrollView } from 'react-native'
 
 
 export default function TransaccionesScreen() {
@@ -32,7 +32,7 @@ export default function TransaccionesScreen() {
         <View style={styles.elementos}>
           <Text style={styles.texto1}>$50.00</Text>
              <View style={styles.fecha}>
-          <Text style={styles.texto1}>Fruteria Don Chuy</Text>
+          <Text style={styles.texto1}>Fruteria {'\n'}Don Chuy</Text>
           <Text style={styles.texto1}>12/09/2025</Text>
               </View>
         </View>
@@ -140,14 +140,14 @@ texto2:{
 
 logo:{
 
-width: 130,
-height: 90,
+width: 100,
+height: 70,
 borderRadius: 45,
 borderColor: '#f4e45dff',
 borderWidth:5
 },
 elementos:{
- width: 850,
+ width: 350,
     height: 150,
     backgroundColor: '#a5c3a7',
     justifyContent: 'space-between',
