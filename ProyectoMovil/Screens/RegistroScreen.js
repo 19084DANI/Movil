@@ -73,9 +73,15 @@ export default function RegistroScreen(){
            onChangeText={setContrasena}
            secureTextEntry
         />
-        
 
+        <View style={{width: '100%', marginTop:10}}>
+          <Button title='Crear Cuenta' color='#5F9EA0' onPress={crearCuenta} />
         </View>
-    )
+
+        <View>
+            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#2E9B57' onPress={irIniciarSesion}/>
+        </View>
+        </View>
+    );
     
 }
