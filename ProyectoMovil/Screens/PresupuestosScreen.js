@@ -37,7 +37,7 @@ export default function PresupuestosScreen() {
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
             minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
-             } thumbTintColor='#3700ffff'></Slider>
+             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
         </View>
@@ -50,7 +50,7 @@ export default function PresupuestosScreen() {
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
             minimumValue={0} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
-             } thumbTintColor='#3700ffff'></Slider>
+             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
         </View>
@@ -63,7 +63,7 @@ export default function PresupuestosScreen() {
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
             minimumValue={0} color='#5030efff' onValueChange={(value)=>setTransporte(value)
-             } thumbTintColor='#3700ffff'></Slider>
+             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
            
 
         </View>
@@ -76,7 +76,7 @@ export default function PresupuestosScreen() {
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
             minimumValue={0} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
-             } thumbTintColor='#3700ffff'></Slider>
+             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
         </View>
