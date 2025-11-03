@@ -45,6 +45,34 @@ export default function RegistroScreen(){
                style={styles.logo}
             />
         <Text style={styles.titulo}>¡Regístrate!</Text>
+
+        <TextInput
+           style={styles.input}
+           placeholder='Nombre'
+           value={nombre}
+           onChangeText={setNombre}
+        />
+       <TextInput
+           style={styles.input}
+           placeholder='Correo'
+           value={correo}
+           onChangeText={setCorreo}
+           keyboardType='email-address'
+        />
+         <TextInput
+           style={styles.input}
+           placeholder='Teléfono'
+           value={telefono}
+           onChangeText={setTelefono}
+           keyboardType='phone-pad'
+        />
+         <TextInput
+           style={styles.input}
+           placeholder='Contraseña'
+           value={contrasena}
+           onChangeText={setContrasena}
+           secureTextEntry
+        />
         
 
         </View>
