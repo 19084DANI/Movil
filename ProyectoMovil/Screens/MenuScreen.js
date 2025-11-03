@@ -4,7 +4,7 @@ import React, { Component, useState } from 'react'
 import Transacciones from './TransaccionesScreen';
 import PresupuestosScreen from './PresupuestosScreen';
 import RecuperarContrasena from './RecuperarContrasena';
-
+import NuevaTransScreen from './NuevaTransScreen';
 
 import { Button } from 'react-native'
 
@@ -19,13 +19,16 @@ export default function MenuScreen () {
         return <Transacciones/>
     case 'recuperarContrasena':
         return <RecuperarContrasena/>
-    case 'menu':  
+    case 'nuevaTransaccion':
+        return <NuevaTransScreen/>
+    case 'menu':
         default:
             return(
               <View>
                  <Button color="orange" onPress={()=>setScreen('presupuesto') } title='Presupuesto'/>
                   <Button color="orange" onPress={()=>setScreen('transacciones') } title='transacciones'/>
                   <Button color="orange" onPress={()=>setScreen('recuperarContrasena') } title='Recuperar Contraseña'/>
+                  <Button color="orange" onPress={()=>setScreen('nuevaTransaccion') } title='Nueva Transaccion'/>
                 </View>
             )
   }
