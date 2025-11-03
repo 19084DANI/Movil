@@ -5,6 +5,7 @@ import Transacciones from './TransaccionesScreen';
 import PresupuestosScreen from './PresupuestosScreen';
 import RecuperarContrasena from './RecuperarContrasena';
 import LoginScreen from './LoginScreen';
+import IniciarSeScreen from './IniciarSeScreen';
 
 import NuevaTransScreen from './NuevaTransScreen';
 
@@ -12,7 +13,7 @@ import { Button } from 'react-native'
 
 export default function MenuScreen () {
 
-  const [screen, setScreen]=useState('menu');
+  const [screen, setScreen]=useState('default');
 
   switch(screen){
     case 'presupuesto':
@@ -26,6 +27,8 @@ export default function MenuScreen () {
     case 'menu':  
     case 'nuevaTransaccion':
         return <NuevaTransScreen/>
+    case 'iniciarSe':
+        return <IniciarSeScreen/>
     case 'menu':
         default:
             return(
@@ -35,6 +38,7 @@ export default function MenuScreen () {
                   <Button color="orange" onPress={()=>setScreen('recuperarContrasena') } title='Recuperar Contraseña'/>
                   <Button color="orange" onPress={()=>setScreen('login') } title='Login'/>
                   <Button color="orange" onPress={()=>setScreen('nuevaTransaccion') } title='Nueva Transaccion'/>
+                  <Button color="orange" onPress={()=>setScreen('iniciarSe') } title='Iniciar Sesion'/>
                 </View>
             )
   }

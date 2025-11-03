@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   separador:{ //separador promedio
     marginTop:50,
   },
-  separador2:{ //separador promedio
+  separador2:{ 
     marginTop:25,
   },  
   //TEXTOS Y LETRAS
