@@ -1,9 +1,13 @@
 import { Text, StyleSheet, View, ImageBackground, ScrollView, Image } from 'react-native'
 import Slider from '@react-native-community/slider';
 import { useState } from 'react';
+import { Button } from 'react-native-web';
 
 export default function PresupuestosScreen() {
   const [preciot, setPrecio]=useState(0);
+  const [alimentacion, setAlimentacion]=useState(0);
+  const [transporte, setTransporte]=useState(0);
+  const [entretenimiento, setEntretenimiento]=useState(0);
     return (
       
       <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
@@ -42,10 +46,10 @@ export default function PresupuestosScreen() {
            <View style={styles.textoslide}>
           <Text style={styles.texto1}>Alimentación</Text>
            
-            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(alimentacion)}</Text>
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
              } thumbTintColor='#3700ffff'></Slider>
            
 
@@ -55,10 +59,10 @@ export default function PresupuestosScreen() {
            <View style={styles.textoslide}>
           <Text style={styles.texto1}>Transporte</Text>
            
-            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(transporte)}</Text>
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setTransporte(value)
              } thumbTintColor='#3700ffff'></Slider>
            
 
@@ -66,17 +70,19 @@ export default function PresupuestosScreen() {
 
          <View style={styles.elementos}>
           <View style={styles.textoslide}>
-          <Text style={styles.texto1}>ntretenimiento</Text>
+          <Text style={styles.texto1}>Entretenimiento</Text>
            
-            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(entretenimiento)}</Text>
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
              } thumbTintColor='#3700ffff'></Slider>
            
 
         </View>
-
+        <View>
+          <Button>Actualizar Presupuesto</Button>
+        </View>
       </ScrollView>
         
           <View style={styles.encabezado2}>
