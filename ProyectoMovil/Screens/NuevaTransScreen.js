@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView, Image, ImageBackground} from "react-native";
 
 export default function FormularioTransaccion() {
   const [nombre, setNombre] = useState("");
@@ -37,7 +37,15 @@ export default function FormularioTransaccion() {
   };
 
   return (
+    <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
+                 style={styles.backgrounds} >
+     <View style={styles.encabezado}>  
+               <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
+               <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
+     
+               </View>
     <ScrollView contentContainerStyle={styles.container}>
+   
       <View style={styles.formContainer}>
         <Text style={styles.titulo}>Nueva Transacción</Text>
 
@@ -93,34 +101,74 @@ export default function FormularioTransaccion() {
         <View style={{ marginTop: 10 }}>
           <Button title="Crear Transacción" color="#0b7a89ff" onPress={mostrarAlerta} />
         </View>
+        
       </View>
+     
     </ScrollView>
+      <View style={styles.encabezado2}>
+                            
+                </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: "#efe851ff",
+   // backgroundColor: "#efe851ff",
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 20,
   },
+  encabezado2:{
+  
+alignItems: "center",
+backgroundColor: '#E1F5C4',
+padding: 10,
+borderRadius:10,
+marginBottom:0,
+width: '100%',
+height: '10%',
+},
+  menuhamburgesa:{
+  width: 35,
+  height: 35,
+  },
+  logo:{
+  width: 130,
+  height: 90,
+  borderRadius: 45,
+  borderColor: '#f4e45dff',
+  borderWidth:5
+  },
+  encabezado:{
+  justifyContent:'space-between',
+  flexDirection: 'row',
+  alignItems: "center",
+  backgroundColor: '#E1F5C4',
+  padding: 10,
+  borderRadius:10,
+  marginBottom:0,
+  width: '100%',
+  height: '10%',
+
+},
   formContainer: {
-    width: "80%",
+    width: 850,
+    height:800,
     backgroundColor: "#c2fc87ff",
     borderRadius: 20,
     padding: 20,
     alignItems: "center",
   },
   titulo: {
-    fontSize: 20,
+    fontSize: 40,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#000000ff",
   },
   texto: {
-    fontSize: 14,
+    fontSize: 24,
     fontWeight: "bold",
     marginTop: 10,
   },
@@ -133,4 +181,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     marginBottom: 10,
   },
+  backgrounds: {
+  flex: 1,
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+},
 });
