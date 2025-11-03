@@ -83,6 +83,13 @@ export default function PresupuestosScreen() {
         <View style={{width:120}}>
           <Button color='#79B7B4' title='Actualizar Presupuesto'></Button>
         </View>
+
+        <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
+          <Image
+              style={styles.agregar}
+              source={require('../assets/plus.png')}
+             ></Image> 
+        </View>
       </ScrollView>
         
           <View style={styles.encabezado2}>
@@ -150,6 +157,12 @@ menuhamburgesa:{
 width: 35,
 height: 35,
 },
+agregar:{
+
+width: 45,
+height: 45,
+},
+
 
 logo:{
 
