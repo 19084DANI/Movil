@@ -22,7 +22,7 @@ export default function PresupuestosScreen() {
               source={require('../assets/logo.jpg')}
              ></Image>  
           </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={styles.Titulo2}>
           <Text style={styles.Titulo}>Mis Presupuestos</Text>
@@ -48,8 +48,8 @@ export default function PresupuestosScreen() {
            
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(alimentacion)}</Text>
              </View>
-           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
+           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={3500}
+            minimumValue={2000} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
              } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
@@ -61,9 +61,9 @@ export default function PresupuestosScreen() {
            
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(transporte)}</Text>
              </View>
-           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setTransporte(value)
-             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
+           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={3200}
+            minimumValue={300} color='#5030efff' onValueChange={(value)=>setTransporte(value)
+             } thumbTintColor='#000000ff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
            
 
         </View>
@@ -74,14 +74,14 @@ export default function PresupuestosScreen() {
            
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(entretenimiento)}</Text>
              </View>
-           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
+           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={1500}
+            minimumValue={900} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
              } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
         </View>
         <View style={{width:120}}>
-          <Button color='#79B7B4' title='Actualizar Presupuesto'></Button>
+          <Button color='#79B7B4' title='Actualizar'></Button>
         </View>
 
         <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
@@ -175,7 +175,7 @@ borderWidth:5
 
 Titulo:{
 justifyContent:'center',
-fontSize: 20,
+fontSize: 30,
 fontWeight: 'bold'
 
 },
