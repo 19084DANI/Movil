@@ -44,6 +44,8 @@ export default function RegistroScreen(){
                source={require('../assets/Logo.jpeg')}
                style={styles.logo}
             />
+        <Text style={styles.titulo}>¡Regístrate!</Text>
+        
 
         </View>
     )
