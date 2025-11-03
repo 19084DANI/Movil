@@ -13,6 +13,11 @@ export default function TransaccionesScreen() {
 
           </View>
 
+        <View style={styles.elementos}>
+          <Text style={styles.texto1}>$50.00</Text>
+          <Text style={styles.texto1}>Fruteria Don Chuy</Text>
+          <Text style={styles.texto1}>12/09/2025</Text>
+        </View>
          <View style={styles.encabezado2}>
                     
         </View>
@@ -66,7 +71,11 @@ agregar:{
 width: 45,
 height: 45,
 },
-
+texto1:{
+  fontSize:30,
+  fontWeight:'bold',
+  color:'#fff'
+},
 
 logo:{
 
@@ -76,5 +85,15 @@ borderRadius: 45,
 borderColor: '#f4e45dff',
 borderWidth:5
 },
-
+elementos:{
+  
+ width: 850,
+    height: 150,
+    backgroundColor: '#a5c3a7',
+    justifyContent: 'space-between',
+    //alignItems: 'center',
+    marginVertical: 10,
+    borderRadius: 10,
+    padding:15,
+},
 })
