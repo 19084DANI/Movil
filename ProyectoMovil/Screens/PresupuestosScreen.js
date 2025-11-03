@@ -1,8 +1,9 @@
 import { Text, StyleSheet, View, ImageBackground, ScrollView, Image } from 'react-native'
-
+import Slider from '@react-native-community/slider';
+import { useState } from 'react';
 
 export default function PresupuestosScreen() {
-
+  const [preciot, setPrecio]=useState(0);
     return (
       
       <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
@@ -19,24 +20,61 @@ export default function PresupuestosScreen() {
           </View>
       <ScrollView>
 
-        <View>
+        <View style={styles.Titulo2}>
           <Text style={styles.Titulo}>Mis Presupuestos</Text>
+         
         </View>
 
         <View style={styles.elementos}>
+          <View style={styles.textoslide}>
           <Text style={styles.texto1}>Presupuesto Total</Text>
+           
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+             </View>
+           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+             } thumbTintColor='#3700ffff'></Slider>
+           
+
         </View>
 
          <View style={styles.elementos}>
+           <View style={styles.textoslide}>
           <Text style={styles.texto1}>Alimentación</Text>
+           
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+             </View>
+           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+             } thumbTintColor='#3700ffff'></Slider>
+           
+
         </View>
 
          <View style={styles.elementos}>
+           <View style={styles.textoslide}>
           <Text style={styles.texto1}>Transporte</Text>
+           
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+             </View>
+           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+             } thumbTintColor='#3700ffff'></Slider>
+           
+
         </View>
 
          <View style={styles.elementos}>
-          <Text style={styles.texto1}>Entretenimiento</Text>
+          <View style={styles.textoslide}>
+          <Text style={styles.texto1}>ntretenimiento</Text>
+           
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+             </View>
+           <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={80000}
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+             } thumbTintColor='#3700ffff'></Slider>
+           
+
         </View>
 
       </ScrollView>
@@ -52,13 +90,26 @@ export default function PresupuestosScreen() {
     
 }
 const styles = StyleSheet.create({
-texto1:{
+precio:{
+  color:'#000',
+  fontWeight:'bold'
+},
 
+textoslide:{
+justifyContent:'space-between',
+flexDirection:'row',
+paddingHorizontal:30
+},
+texto1:{
+  fontSize:30,
   fontWeight:'bold',
   color:'#fff'
 },
 
+slider:{
+paddingHorizontal: 120,
 
+},
 backgrounds: {
   flex: 1,
   justifyContent: 'space-between',
@@ -109,16 +160,24 @@ fontSize: 20,
 fontWeight: 'bold'
 
 },
+Titulo2:{
+justifyContent:'center',
+alignItems:'center',
+fontSize: 20,
+fontWeight: 'bold'
+
+},
 
 elementos:{
   
  width: 850,
     height: 150,
     backgroundColor: '#a5c3a7',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    //alignItems: 'center',
     marginVertical: 10,
     borderRadius: 10,
+    padding:15,
 },
 
 })
