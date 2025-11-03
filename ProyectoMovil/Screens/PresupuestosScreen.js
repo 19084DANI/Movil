@@ -17,9 +17,30 @@ export default function PresupuestosScreen() {
               source={require('../assets/logo.jpg')}
              ></Image>  
           </View>
+      <ScrollView>
 
+        <View>
+          <Text style={styles.Titulo}>Mis Presupuestos</Text>
+        </View>
 
+        <View style={styles.elementos}>
+          <Text style={styles.texto1}>Presupuesto Total</Text>
+        </View>
 
+         <View style={styles.elementos}>
+          <Text style={styles.texto1}>Alimentación</Text>
+        </View>
+
+         <View style={styles.elementos}>
+          <Text style={styles.texto1}>Transporte</Text>
+        </View>
+
+         <View style={styles.elementos}>
+          <Text style={styles.texto1}>Entretenimiento</Text>
+        </View>
+
+      </ScrollView>
+        
           <View style={styles.encabezado2}>
           
           </View>
@@ -31,6 +52,12 @@ export default function PresupuestosScreen() {
     
 }
 const styles = StyleSheet.create({
+texto1:{
+
+  fontWeight:'bold',
+  color:'#fff'
+},
+
 
 backgrounds: {
   flex: 1,
@@ -76,6 +103,23 @@ borderColor: '#f4e45dff',
 borderWidth:5
 },
 
+Titulo:{
+justifyContent:'center',
+fontSize: 20,
+fontWeight: 'bold'
+
+},
+
+elementos:{
+  
+ width: 850,
+    height: 150,
+    backgroundColor: '#a5c3a7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 10,
+    borderRadius: 10,
+},
 
 })
 
