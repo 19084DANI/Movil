@@ -1,8 +1,22 @@
-import { StyleSheet, Text, View } from 'react-native'
-import { Button, ImageBackground,Image } from 'react-native-web'
 
-export default function login(){
-    return (
+import { StyleSheet, Text, View, Button, Image, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+
+
+//import de iniciar sesion
+import IniciarSeScreen from './IniciarSeScreen';
+import RegistroScreen from './RegistroScreen';
+
+export default function Login(){
+
+  const [screen, setScreen]=useState('default');
+  switch(screen){
+     case 'IniciarSesion':
+       return<IniciarSeScreen/>
+     case 'Registro':
+      return<RegistroScreen/>
+    default:
+  return (
 
       <View style={styles.ImageBackground}>
        <View style={styles.contSup}></View> 
@@ -10,6 +24,7 @@ export default function login(){
         <View style={styles.contPrin}>
           <View style={styles.separador}></View>
           <Text style={styles.contTitulo}>!Bienvenido!</Text>
+
 
           <Image 
           source={require('../assets/Logo.jpeg')}
@@ -23,19 +38,28 @@ export default function login(){
 
           <View style={styles.contenedorBotones}>   
            <View style={styles.btn}>            
-            <Button title='Iniciar Sesion' color='#ADD6BC'/>
+            <Button title='Iniciar Sesion' 
+            color='#ADD6BC' 
+            onPress={()=> setScreen('IniciarSesion')}
+            />
+
           </View>
     
             
           <View style={styles.btn}>
-          <Button title='Registrarse' color='#ADD6BC'/>  
+          <Button title='Registrarse'
+           color='#ADD6BC'
+           onPress={()=>setScreen('Registro')}
+           />  
         </View>
       </View>
     </View>
                       
       <View style={styles.contInf}></View>
   </View>
-    )
+    )      
+  }
+   
 }
 
 const styles = StyleSheet.create({

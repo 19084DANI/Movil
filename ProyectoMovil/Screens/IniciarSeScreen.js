@@ -1,15 +1,26 @@
 import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity} from 'react-native'
-import React, { Component, useState } from 'react'
-
+import {useState} from 'react'
 export default function IniciarSeScreen (){
-    const[usuario,setusario]= useState('');
+    const[usuario,setusuario]= useState('');
     const[keyword,setkeyword]= useState('');
 
     const mostrarAlerta= ()=>{
-        if(usario ===''|| keyword ===''){
+        if(usuario ===''|| keyword ===''){
             Alert.alert('Por favor complete todos los campos');
             alert('Por favor complete todos los campos');
-        }
+          }else{
+        Alert.alert(
+          "Datos ingresados",
+          `Nombre: ${usario}\n
+          Password: ${keyword}\n`
+        )
+          alert(
+          "Datos ingresados",
+          `Nombre: ${usario}\n
+          Password: ${keyword}\n`
+        )
+        
+      } 
     }
     return (
       <View style={styles.ImageBackground}>
@@ -35,15 +46,14 @@ export default function IniciarSeScreen (){
 
          <TextInput style={[styles.inputText,{zIndex:1}]}       
         placeholder='Ingresa tu Usuario'
-        keyboardType='Phone-pad'
-        onChangeText={setusario}
+        onChangeText={setusuario}
         value={usuario}        
         />            
          <View style={[styles.separador3,{zIndex:1}]}></View> 
          <View style={styles.separador2}></View>                      
           <TextInput style={[styles.inputText,{zIndex:1}]}       
         placeholder='Ingresa tu Contraseña'
-        keyboardType='Phone-pad'
+        secureTextEntry={true}
         onChangeText={setkeyword}
         value={keyword}        
         /> 
@@ -57,7 +67,10 @@ export default function IniciarSeScreen (){
         </TouchableOpacity>
 
         <View style={styles.btn}>
-            <Button title='Recuperar Contraseña' color='#446967ff'/>  
+            <Button title='Iniciar Sesion'
+             color='#446967ff'
+             onPress={() => mostrarAlerta()}
+             />  
         </View>  
         <View style={styles.contInf}></View>   
       </View>
