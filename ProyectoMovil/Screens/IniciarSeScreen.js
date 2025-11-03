@@ -1,5 +1,7 @@
 import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity} from 'react-native'
 import {useState} from 'react'
+
+
 export default function IniciarSeScreen (){
     const[usuario,setusuario]= useState('');
     const[keyword,setkeyword]= useState('');
@@ -11,12 +13,12 @@ export default function IniciarSeScreen (){
           }else{
         Alert.alert(
           "Datos ingresados",
-          `Nombre: ${usario}\n
+          `Nombre: ${usuario}\n
           Password: ${keyword}\n`
         )
           alert(
           "Datos ingresados",
-          `Nombre: ${usario}\n
+          `Nombre: ${usuario}\n
           Password: ${keyword}\n`
         )
         
@@ -62,9 +64,15 @@ export default function IniciarSeScreen (){
 
          <View style={[styles.separador3,{zIndex:1}]}></View> 
 
-        <TouchableOpacity style={styles.btn}>
+        <View style={styles.btnSuperpuesto}>              
+          <View style={styles.btnFondo} />                   
+          <TouchableOpacity
+            style={styles.touchEncima}
+            
+          >
             <Text style={styles.btnText}>Recuperar Contraseña</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.btn}>
             <Button title='Iniciar Sesion'
@@ -184,6 +192,39 @@ btnText:{
   fontSize:16,
   textDecorationLine:'underline', 
   fontWeight:'bold'
-}
-
+},
+btnSuperpuesto: {
+  position: 'relative',
+  width: 200,
+  height: 60,
+  alignSelf: 'center',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginVertical: 5,
+},
+btnFondo: {
+  backgroundColor: '#ADD6BC',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  borderRadius: 10,
+},
+touchEncima: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 10, 
+},
+btnText: {
+  color: '#517f7dff',
+  fontSize: 16,
+  textDecorationLine: 'underline',
+  fontWeight: 'bold',
+},
 })
