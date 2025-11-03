@@ -1,10 +1,7 @@
-import { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, ImageBackground,Image } from 'react-native-web'
 
-
-export default class login extends Component {
-  render() {
+export default function login(){
     return (
 
       <View style={styles.ImageBackground}>
@@ -39,7 +36,6 @@ export default class login extends Component {
       <View style={styles.contInf}></View>
   </View>
     )
-  }
 }
 
 const styles = StyleSheet.create({

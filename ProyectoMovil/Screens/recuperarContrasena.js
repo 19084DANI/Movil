@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, TextInput, Alert, Button } from 'react-native'
+import { Text, StyleSheet, View, TextInput, Alert, Button, Image } from 'react-native'
 import React, {useState} from 'react'
 
 export default function recuperarContrasena() {
@@ -36,7 +36,11 @@ export default function recuperarContrasena() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-            
+            <Image 
+            source={require('../assets/Logo.jpeg')}
+            style={{width:'33%', height:'100%', borderRadius:20}}
+            resizeMode='cover'
+            />
         </View>
 
         <View style={styles.formContainer}>
