@@ -22,10 +22,11 @@ export default function PresupuestosScreen() {
               source={require('../assets/logo.jpg')}
              ></Image>  
           </View>
+          <View style={styles.contenido}>
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={styles.Titulo2}>
-          <Text style={styles.Titulo}>Mis Presupuestos</Text>
+          <Text style={styles.Titulo}>         Mis {'\n'} Presupuestos{'\n'}{'\n'}</Text>
          
         </View>
 
@@ -62,12 +63,12 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(transporte)}</Text>
              </View>
            <Slider style={[{width:600, height: 50}, styles.slider]} maximumValue={3200}
-            minimumValue={300} color='#5030efff' onValueChange={(value)=>setTransporte(value)
+            minimumValue={3000} color='#5030efff' onValueChange={(value)=>setTransporte(value)
              } thumbTintColor='#000000ff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
            
 
         </View>
-
+             
          <View style={styles.elementos}>
           <View style={styles.textoslide}>
           <Text style={styles.texto1}>Entretenimiento</Text>
@@ -91,7 +92,7 @@ export default function PresupuestosScreen() {
              ></Image> 
         </View>
       </ScrollView>
-        
+        </View>
           <View style={styles.encabezado2}>
           
           </View>
@@ -106,6 +107,11 @@ const styles = StyleSheet.create({
 precio:{
   color:'#000',
   fontWeight:'bold'
+},
+
+contenido: {
+  padding:30,
+  paddingBottom:40,
 },
 
 textoslide:{
