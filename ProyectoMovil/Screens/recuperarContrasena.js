@@ -7,7 +7,10 @@ export default function recuperarContrasena() {
     const [confirmarContrasena, setConfirmarContrasena] = useState('');
     const [email, setEmail] = useState('');
     const mostrarAlerta = () => {
-        if (usuario.trim() === ''){
+        if (usuario === '' && email === '' && contrasena === '' && confirmarContrasena === ''){
+            Alert.alert('Todos los campos estan vacios');
+            alert('Todos los campos estan vacios');
+        }else if (usuario.trim() === ''){
             Alert.alert('Nombre no puede estar vacio');
             alert('Nombre no puede estar vacio');
         }else if (email.trim() === ''){
@@ -32,8 +35,8 @@ export default function recuperarContrasena() {
     };
     return (
       <View style={styles.container}>
-        <View>
-
+        <View style={styles.header}>
+            
         </View>
 
         <View style={styles.formContainer}>
@@ -73,7 +76,7 @@ export default function recuperarContrasena() {
                 />
             </View>
             <View>
-                <Button title="Iniciar Sesión" onPress={mostrarAlerta} style={styles.boton} color='#0b7a89ff'/>
+                <Button title="Iniciar Sesión" onPress={mostrarAlerta} color='#0b7a89ff'/>
             </View>
         </View>
       </View>
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
         width:'50%',
         borderColor:'gray',
         borderWidth:3,
-        borderRadius:5,
+        borderRadius:20,
         padding:5,
         backgroundColor:'#ffffff',
         marginBottom:10,
@@ -104,13 +107,23 @@ const styles = StyleSheet.create({
     },
     formContainer:{
         width:'65%',
+        height:'75%',
         alignItems:'center',
         justifyContent:'center',
-        backgroundColor:'#f4eb9eff',
-        borderRadius:8,
+        backgroundColor:'#c2fc87ff',
+        borderRadius:20,
     },
     texto:{
         fontSize:14,
         fontWeight:'bold',
+    },
+    header:{
+        backgroundColor:'#c2fc87ff',
+        width:'100%',
+        height:'10%',
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius:30,
+        marginBottom:15,
     },
 });
