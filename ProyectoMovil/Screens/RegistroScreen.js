@@ -78,10 +78,41 @@ export default function RegistroScreen(){
           <Button title='Crear Cuenta' color='#5F9EA0' onPress={crearCuenta} />
         </View>
 
-        <View>
+        <View style={{ marginTop: 15 }}>
             <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#2E9B57' onPress={irIniciarSesion}/>
         </View>
         </View>
     );
     
 }
+const styles= StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: '#F0E68C',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal:20,
+    },
+    logo:{
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginBottom:20,
+        borderWidth: 2,
+        borderColor: '#FFD700'
+    },
+    titulo:{
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#2E8B57',
+    },
+    input:{
+        width: '100%',
+        padding: 10,
+        borderRadius: 20,
+        marginBottom: 15,
+        borderWidth: 1,
+        borderColor: '#A9A9A9',
+    },
+});
