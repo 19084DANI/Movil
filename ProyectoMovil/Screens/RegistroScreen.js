@@ -34,6 +34,18 @@ export default function RegistroScreen(){
         Alert.alert("Cuenta creada", `Nombre: ${nombre}\nCorreo: ${correo}`);
     };
 
+    const irIniciarSesion = () =>{
+        Alert.alert("Inicia Sesión");
+    };
 
+    return (
+        <View style={styles.container}>
+            <Image
+               source={require('../assets/Logo.jpeg')}
+               style={styles.logo}
+            />
+
+        </View>
+    )
     
 }
