@@ -65,7 +65,12 @@ export default function TransaccionesScreen() {
           <Text style={styles.texto1}>2/10/2025</Text>
               </View>
         </View>
-        
+        <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
+                  <Image
+                      style={styles.agregar}
+                      source={require('../assets/plus.png')}
+                     ></Image> 
+                </View>
         </View>
         </ScrollView>
          <View style={styles.encabezado2}>
@@ -169,5 +174,10 @@ fecha:{
 botones:{
   flexDirection:'row',
  
+},
+agregar:{
+
+width: 45,
+height: 45,
 },
 })
