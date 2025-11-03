@@ -1,4 +1,5 @@
-import { Text, StyleSheet, View, ImageBackground, Image } from 'react-native'
+import { Text, StyleSheet, View, ImageBackground, Image, Button } from 'react-native'
+import { ScrollView } from 'react-native-web'
 
 
 export default function TransaccionesScreen() {
@@ -12,12 +13,61 @@ export default function TransaccionesScreen() {
           <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
 
           </View>
+          <ScrollView 
+          showsVerticalScrollIndicator={false}>
+        <View style={styles.Titulo}>
+                  <Text style={styles.texto2}>Transacciones</Text>
+                 
+                </View>
+        <View style={styles.contenido}>
+        <View style={styles.botones}>
+       <View style={{width:120,  marginRight: 10} }  >
+                <Button color='#79B7B4' title='Fecha'></Button>
+       </View>
 
+       <View style={{width:120,  marginRight: 10}}>
+                <Button color='#79B7B4' title='Categoria'></Button>
+       </View>
+        </View>
         <View style={styles.elementos}>
           <Text style={styles.texto1}>$50.00</Text>
+             <View style={styles.fecha}>
           <Text style={styles.texto1}>Fruteria Don Chuy</Text>
           <Text style={styles.texto1}>12/09/2025</Text>
+              </View>
         </View>
+        <View style={styles.elementos}>
+          <Text style={styles.texto1}>$220.00</Text>
+             <View style={styles.fecha}>
+          <Text style={styles.texto1}>Uber X</Text>
+          <Text style={styles.texto1}>18/09/2025</Text>
+              </View>
+        </View>
+
+        <View style={styles.elementos}>
+          <Text style={styles.texto1}>$180.00</Text>
+             <View style={styles.fecha}>
+          <Text style={styles.texto1}>Cinepolis</Text>
+          <Text style={styles.texto1}>24/09/2025</Text>
+              </View>
+        </View>
+        <View style={styles.elementos}>
+          <Text style={styles.texto1}>$5000.00</Text>
+             <View style={styles.fecha}>
+          <Text style={styles.texto1}>Colegiatura</Text>
+          <Text style={styles.texto1}>24/09/2025</Text>
+              </View>
+        </View>
+        <View style={styles.elementos}>
+          <Text style={styles.texto1}>$50.00</Text>
+             <View style={styles.fecha}>
+          <Text style={styles.texto1}>Cuidado con el Perro</Text>
+          <Text style={styles.texto1}>2/10/2025</Text>
+              </View>
+        </View>
+        
+        </View>
+        </ScrollView>
          <View style={styles.encabezado2}>
                     
         </View>
@@ -77,6 +127,12 @@ texto1:{
   color:'#fff'
 },
 
+texto2:{
+  fontSize:40,
+  fontWeight:'bold',
+  color:'#070707ff'
+},
+
 logo:{
 
 width: 130,
@@ -86,7 +142,6 @@ borderColor: '#f4e45dff',
 borderWidth:5
 },
 elementos:{
-  
  width: 850,
     height: 150,
     backgroundColor: '#a5c3a7',
@@ -95,5 +150,24 @@ elementos:{
     marginVertical: 10,
     borderRadius: 10,
     padding:15,
+},
+
+Titulo:{
+justifyContent:'center',
+alignItems:'center',
+fontSize: 20,
+fontWeight: 'bold',
+marginVertical: 10,
+width:'100%'
+},
+
+fecha:{
+  flexDirection:'row',
+  justifyContent:'space-between'
+},
+
+botones:{
+  flexDirection:'row',
+ 
 },
 })
