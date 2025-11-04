@@ -6,14 +6,21 @@ export default function BotonesScreen() {
     return (
     <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
              style={styles.backgrounds} >
-     <View style={styles.encabezado}>  
+    <View style={styles.encabezado}>  
          <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
          <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
     </View>
 
+        <View style={styles.elementos}>
+        <Text style={styles.titulo}>¡Hola de Nuevo!</Text>
+        <View style={styles.saldo}>
+        <Text style={styles.textosaldo}>Saldo Disponible: </Text>
+        <Text style={styles.textsaldo2}>$2100.00 </Text>
+        </View>
+        </View>
+    
 
-    <View style={styles.encabezado2}>
-                        
+    <View style={styles.encabezado2}>               
     </View>
     </ImageBackground>
     )
@@ -32,6 +39,12 @@ marginBottom:0,
 width: '100%',
 height: '10%',
 
+},
+titulo:{
+fontSize:24,
+fontWeight:'bold',
+marginBottom:20,
+textAlign:'center',
 },
 
 menuhamburgesa:{
@@ -66,5 +79,38 @@ borderRadius:10,
 marginBottom:0,
 width: '100%',
 height: '10%',
+},
+
+elementos:{
+ width: '80%',
+ flexDirection: 'column',
+    height: '70%',
+    backgroundColor: '#E1F5C4',
+    justifyContent: 'flex-start',
+    //alignItems: 'center',
+    marginVertical: 10,
+    borderRadius: 10,
+    padding:15,
+},
+saldo:{
+    width: '60%',
+    height: '15%',
+    backgroundColor: '#ADD6BC',
+    justifyContent: 'space-between',
+    //alignItems: 'center',
+    marginVertical: 10,
+    borderRadius: 10,
+    padding:15,
+},
+
+textosaldo:{
+    fontSize:18,
+    fontWeight:'bold',
+    color:'#476c57ff',
+},
+textsaldo2:{
+    fontSize:22,
+    fontWeight:'bold',
+    color:'#ffffffff',
 },
 })
