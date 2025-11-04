@@ -5,6 +5,7 @@ import { ScrollView } from 'react-native'
 export default function TransaccionesScreen() {
 
     return (
+
       <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
              style={styles.backgrounds} >
 
@@ -180,4 +181,5 @@ agregar:{
 width: 45,
 height: 45,
 },
+
 })

@@ -34,20 +34,27 @@ export default function RecuperarContrasena() {
         }
     };
     return (
-      <View style={styles.container}>
+
+      <View  style={styles.ImageBackground}>
+       <View style={styles.contSup}></View>   
+           <Image 
+          source={require('../assets/Logo.jpeg')}
+          style={[styles.logo,{zIndex:1}]}
+          resizeMode='cover'
+          />      
+
         <View style={styles.header}>
-            <Image 
-            source={require('../assets/Logo.jpeg')}
-            style={{width:'33%', height:'100%', borderRadius:20}}
-            resizeMode='cover'
-            />
+
         </View>
 
-        <View style={styles.formContainer}>
-            <View>
+
+        <View style={styles.contInf}>
+             <View style={styles.separador}></View>         
                 <Text style={styles.titulo}>Recuperar Contraseña</Text>
-            </View>
-            <View>
+
+               <View style={styles.separador2}></View>  
+
+            <View tyle={styles.form}>
                 <Text style={styles.texto}>Usuario</Text>
                 <TextInput
                 style={styles.inputs}
@@ -55,6 +62,9 @@ export default function RecuperarContrasena() {
                 onChangeText={setUsuario}
                 value={usuario}
                 />
+
+ 
+              <View style={styles.separador2}></View>  
                 <Text style={styles.texto}>Email</Text>
                 <TextInput
                 style={styles.inputs}
@@ -62,6 +72,8 @@ export default function RecuperarContrasena() {
                 onChangeText={setEmail}
                 value={email}
                 />
+
+              <View style={styles.separador2}></View>                
                 <Text style={styles.texto}>Nueva Contraseña</Text>
                 <TextInput
                 style={styles.inputs}
@@ -70,6 +82,8 @@ export default function RecuperarContrasena() {
                 value={contrasena}
                 secureTextEntry={true}
                 />
+
+              <View style={styles.separador2}></View>                 
                 <Text style={styles.texto}>Confirmar Nueva Contraseña</Text>
                 <TextInput
                 style={styles.inputs}
@@ -78,24 +92,38 @@ export default function RecuperarContrasena() {
                 value={confirmarContrasena}
                 secureTextEntry={true}
                 />
-            </View>
-            <View>
-                <Button title="Iniciar Sesión" onPress={mostrarAlerta} color='#0b7a89ff'/>
-            </View>
+
+                <View style={styles.botonContainer}></View>   
+             <View style={styles.separador3}></View>                  
+                <Button title="Iniciar Sesión" onPress={mostrarAlerta} color='#0b7a89ff'/>                            
+                </View>
+             <View>               
         </View>
-      </View>
+    </View>         
+</View>
     )
 }
 
 const styles = StyleSheet.create({
+   separador:{ //separador promedio
+    marginTop:90,
+},   
+  separador2:{ //separador promedio
+    marginTop:15,
+},
+   separador3:{ //separador promedio
+    marginTop:50,
+}, 
     inputs:{
-        width:'50%',
-        borderColor:'gray',
-        borderWidth:3,
-        borderRadius:20,
-        padding:5,
-        backgroundColor:'#ffffff',
-        marginBottom:10,
+    width:'100%',            
+    borderColor:'gray',
+    borderWidth:2,           
+    borderRadius:20,
+    paddingVertical:8,
+    paddingHorizontal:15,
+    backgroundColor:'#ffffff',
+    marginBottom:15,
+    textAlign:'center',   
     },
     titulo:{
         color:'#000000ff',
@@ -110,7 +138,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     formContainer:{
-        width:'65%',
+        width:'80%',
         height:'75%',
         alignItems:'center',
         justifyContent:'center',
@@ -122,7 +150,7 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
     },
     header:{
-        backgroundColor:'#c2fc87ff',
+      // backgroundColor:'#c2fc87ff',
         width:'100%',
         height:'10%',
         alignItems:'center',
@@ -130,4 +158,38 @@ const styles = StyleSheet.create({
         borderRadius:30,
         marginBottom:15,
     },
+    contSup:{ //cuadrito de arriba
+    backgroundColor:'#E1F5C4',
+    padding:'9%',
+    borderRadius:0,
+    justifyContent:'flex-start',
+  },
+    ImageBackground:{
+    flex:1,
+    backgroundColor:'#EDE574'
+  },
+    logo:{
+    width:150,
+    height:150,
+    alignSelf:'center',
+    marginVertical:20,
+    marginHorizontal:30,
+    borderRadius:75,
+    overflow:'hidden',
+    zIndex:1,
+    position:'absolute',
+  },
+contInf: {
+  backgroundColor: '#E1F5C4',
+  position: 'absolute',
+  bottom:20,
+  width: '87%',       
+  height: '83%',         
+  borderRadius: 50,   
+  alignSelf: 'center', 
+  alignItems:'center',
+  paddingVertical:20,
+  zIndex:0,
+},
+    
 });
