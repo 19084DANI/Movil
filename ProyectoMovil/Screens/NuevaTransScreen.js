@@ -154,8 +154,8 @@ height: '10%',
 
 },
   formContainer: {
-    width: 850,
-    height:800,
+    width: 350,
+    height:700,
     backgroundColor: "#c2fc87ff",
     borderRadius: 20,
     padding: 20,

@@ -1,8 +1,15 @@
 import { Text, StyleSheet, View, Image, ImageBackground, ScrollView, Button } from 'react-native'
-
+import { useState } from 'react';
+import PresupuestosScreen from './PresupuestosScreen';
 
 export default function BotonesScreen() {
 
+    const [screen, setScreen]=useState('default');
+    switch(screen){
+      case 'presupuestos':
+          return <PresupuestosScreen/>
+      default:
+    
     return (
     <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
              style={styles.backgrounds} >
@@ -10,7 +17,7 @@ export default function BotonesScreen() {
          <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
          <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
     </View>
-        <ScrollView contentContainerStyle={styles.Container} >
+     <ScrollView contentContainerStyle={styles.Container} >
         <View style={styles.elementos}>
         <Text style={styles.titulo}>¡Hola de Nuevo!</Text>
         <View style={styles.saldo}>
@@ -19,8 +26,9 @@ export default function BotonesScreen() {
         <Text style={styles.textsaldo2}>$2100.00 </Text>
         </View>
         <View style={styles.botonPresupuesto}>
-        <Text style={{color: '#fff', fontWeight: 'bold'}}>Presupuestos</Text>
-        </View>
+        <Button style={styles.btn}color="#ADD6BC" title='Presupuestos'
+        onPress={() => setScreen('presupuestos')}></Button>
+          </View>
         </View>
         <View  style={styles.cuadros}>
         <View style={styles.elementos2}>
@@ -68,7 +76,7 @@ export default function BotonesScreen() {
         <Image style={styles.ayuda} source={require('../assets/help.png')}/>
     </ImageBackground>
     )
-  
+  }
 }
 
 const styles = StyleSheet.create({
@@ -242,13 +250,21 @@ mas:{
   alignSelf: 'center', 
   resizeMode: 'contain', 
 },
+btn:{
+  width:200,
+  marginVertical:5,
+  height:60,
+  justifyContent:'center',
+  alignItems:'center',
+  zIndex:1,
+  alignSelf:'center'
+},
 botonPresupuesto: {
-  width: 85,
+  width: 120,
   height: 85,
-  backgroundColor: '#ADD6BC',
   borderRadius: 25,
   justifyContent: 'center',
   alignItems: 'center',
-   marginLeft: 70,
+   marginLeft: 50,
 },
 })

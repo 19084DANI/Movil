@@ -60,7 +60,7 @@ export default function IniciarSeScreen (){
           </View>  
           <View style={styles.separador2}></View>            
             <View style={[styles.titulo2,{zIndex:1}]}>
-            <Text style={styles.TextUsarioTitulo} >Usario</Text>              
+            <Text style={styles.TextUsarioTitulo} >Usuario</Text>              
           </View>    
           <View style={styles.separador2}></View>     
             <View style={[styles.titulo3,{zIndex:1}]}>
