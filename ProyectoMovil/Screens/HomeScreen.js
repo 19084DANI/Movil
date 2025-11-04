@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image, ImageBackground } from 'react-native'
+import { Text, StyleSheet, View, Image, ImageBackground, ScrollView } from 'react-native'
 
 
 export default function BotonesScreen() {
@@ -10,7 +10,7 @@ export default function BotonesScreen() {
          <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
          <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
     </View>
-
+        <ScrollView contentContainerStyle={styles.Container} >
         <View style={styles.elementos}>
         <Text style={styles.titulo}>¡Hola de Nuevo!</Text>
         <View style={styles.saldo}>
@@ -27,7 +27,7 @@ export default function BotonesScreen() {
         <Text  style={styles.num}>$5900.00 </Text>
         </View>
          <View style={styles.elementos2}>
-        <Text style={styles.textot}>Transaccion:</Text>   
+        <Text style={styles.textot}>Transaccion</Text>   
         </View>
         </View>
         <View>
@@ -40,14 +40,27 @@ export default function BotonesScreen() {
                 <Text style={styles.textotransacciones}>24/09/2025</Text>
                 </View>
             </View>
+             <View style={styles.elementostransacciones}>
+                <Text style={styles.textotransacciones}>$220.00</Text>
+                <View style={styles.fecha}>
+                <Text style={styles.textotransacciones}>Uber X</Text>
+                <Text style={styles.textotransacciones}>15/04/2025</Text>
+                </View>
+            </View>
+            <View style={styles.elementostransacciones}>
+                <Text style={styles.textotransacciones}>$220.00</Text>
+                <View style={styles.fecha}>
+                <Text style={styles.textotransacciones}>Ferreteria</Text>
+                <Text style={styles.textotransacciones}>29/01/2025</Text>
+                </View>
+            </View>
           
         </View>
 
         </View>
-    
+    </ScrollView>
 
-    <View style={styles.encabezado2}>               
-    </View>
+   
     </ImageBackground>
     )
   
@@ -66,6 +79,10 @@ width: '100%',
 height: '10%',
 
 },
+Container:{
+  alignItems: 'center',
+  paddingBottom: 40, 
+},
 cuadros:{
     width:'100%',
     flexDirection:'row',
@@ -73,7 +90,7 @@ cuadros:{
     justifyContent:'space-between',
 },
 textotransacciones:{
-  fontSize:30,
+  fontSize:25,
   fontWeight:'bold',
   color:'#fff'
 },
@@ -130,7 +147,7 @@ height: '10%',
 elementos:{
  width: '90%',
  flexDirection: 'column',
-    height: '70%',
+    height: 750,
     backgroundColor: '#E1F5C4',
     justifyContent: 'flex-start',
     marginVertical: 10,
@@ -159,7 +176,7 @@ elementos22:{
 },
 saldo:{
     width: '60%',
-    height: '15%',
+    height: 100,
     backgroundColor: '#ADD6BC',
     justifyContent: 'space-between',
     marginVertical: 10,
@@ -180,7 +197,7 @@ textoi:{
 },
 
 textot:{
-    fontSize:13,
+    fontSize:12,
     fontWeight:'bold',
     color:'#000000ff',
 },
@@ -197,7 +214,7 @@ textsaldo2:{
 },
 elementostransacciones:{
  width: '100%',
-    height: '40%',
+    height: 100,
     backgroundColor: '#ADD6BC',
     justifyContent: 'space-between',
     marginVertical: 10,
