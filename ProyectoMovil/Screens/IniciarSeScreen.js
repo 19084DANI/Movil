@@ -1,8 +1,11 @@
-import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity} from 'react-native'
+import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,Switch} from 'react-native'
 import {useState} from 'react'
+
+import RecuperarContrasena from './RecuperarContrasena';
 
 
 export default function IniciarSeScreen (){
+    const [screen, setScreen]=useState('default');
     const[usuario,setusuario]= useState('');
     const[keyword,setkeyword]= useState('');
 
@@ -24,66 +27,73 @@ export default function IniciarSeScreen (){
         
       } 
     }
-    return (
-      <View style={styles.ImageBackground}>
-        <View style={styles.contSup}></View> 
-          <Image 
-          source={require('../assets/Logo.jpeg')}
-          style={[styles.logo,{zIndex:1}]}
-          resizeMode='cover'
-          /> 
-         <View style={styles.separador}></View>         
-          <View style={[styles.titulo,{zIndex:1}]}>
-           <Text style={styles.TextTitulo} >Bienvenid@</Text>              
-        </View>  
-         <View style={styles.separador2}></View>            
-          <View style={[styles.titulo2,{zIndex:1}]}>
-           <Text style={styles.TextUsarioTitulo} >Usario</Text>              
-        </View>    
-         <View style={styles.separador2}></View>     
-          <View style={[styles.titulo3,{zIndex:1}]}>
-           <Text style={styles.TextIngresarTitulo} >Ingrese su Usuario y Contraseña</Text>              
-        </View>  
-         <View style={styles.separador}></View>   
 
-         <TextInput style={[styles.inputText,{zIndex:1}]}       
-        placeholder='Ingresa tu Usuario'
-        onChangeText={setusuario}
-        value={usuario}        
-        />            
-         <View style={[styles.separador3,{zIndex:1}]}></View> 
-         <View style={styles.separador2}></View>                      
+  switch(screen){
+     case 'recuperar':
+       return<RecuperarContrasena/>
+    /* case 'Iniciar sesion':
+      return<RegistroScreen/>*/
+    default:
+  return (
+        <View style={styles.ImageBackground}>
+          <View style={styles.contSup}></View> 
+            <Image 
+            source={require('../assets/Logo.jpeg')}
+            style={[styles.logo,{zIndex:1}]}
+            resizeMode='cover'
+            /> 
+          <View style={styles.separador}></View>         
+            <View style={[styles.titulo,{zIndex:1}]}>
+            <Text style={styles.TextTitulo} >Bienvenid@</Text>              
+          </View>  
+          <View style={styles.separador2}></View>            
+            <View style={[styles.titulo2,{zIndex:1}]}>
+            <Text style={styles.TextUsarioTitulo} >Usario</Text>              
+          </View>    
+          <View style={styles.separador2}></View>     
+            <View style={[styles.titulo3,{zIndex:1}]}>
+            <Text style={styles.TextIngresarTitulo} >Ingrese su Usuario y Contraseña</Text>              
+          </View>  
+          <View style={styles.separador}></View>   
+
           <TextInput style={[styles.inputText,{zIndex:1}]}       
-        placeholder='Ingresa tu Contraseña'
-        secureTextEntry={true}
-        onChangeText={setkeyword}
-        value={keyword}        
-        /> 
-         <View style={styles.separador2}></View>  
-    
+          placeholder='Ingresa tu Usuario'
+          onChangeText={setusuario}
+          value={usuario}        
+          />            
+          <View style={[styles.separador3,{zIndex:1}]}></View> 
+          <View style={styles.separador2}></View>                      
+            <TextInput style={[styles.inputText,{zIndex:1}]}       
+          placeholder='Ingresa tu Contraseña'
+          secureTextEntry={true}
+          onChangeText={setkeyword}
+          value={keyword}        
+          /> 
+          <View style={styles.separador2}></View>  
+      
 
-         <View style={[styles.separador3,{zIndex:1}]}></View> 
+          <View style={[styles.separador3,{zIndex:1}]}></View> 
 
-        <View style={styles.btnSuperpuesto}>              
-          <View style={styles.btnFondo} />                   
-          <TouchableOpacity
-            style={styles.touchEncima}
-            
-          >
-            <Text style={styles.btnText}>Recuperar Contraseña</Text>
-          </TouchableOpacity>
+          <View style={styles.btn}>              
+            <View style={styles.btn} />                   
+              <Button title='Olvide mi contraseña'
+              color='#446967ff'
+              onPress={() => setScreen('recuperar')}
+              /> 
+          </View>
+          <View style={styles.separador4}></View>  
+          <View style={styles.btn}>
+              <Button title='Iniciar Sesion'
+              color='#446967ff'
+              onPress={() => mostrarAlerta()}
+              />  
+          </View>  
+          <View style={styles.contInf}></View>   
         </View>
-
-        <View style={styles.btn}>
-            <Button title='Iniciar Sesion'
-             color='#446967ff'
-             onPress={() => mostrarAlerta()}
-             />  
-        </View>  
-        <View style={styles.contInf}></View>   
-      </View>
-    )
-  
+      )
+        
+    }
+    
 }
 
 const styles = StyleSheet.create({
@@ -123,6 +133,8 @@ separador3: {
   width: '80%',
   alignSelf: 'center',
   marginTop: 20,
+},  separador4:{ //separador promedio
+    marginTop:50,
 },
   logo:{
     width:150,
@@ -186,45 +198,5 @@ btn:{
   alignItems:'center',
   zIndex:1,
   alignSelf:'center'
-},
-btnText:{
-  color:'#517f7dff',   
-  fontSize:16,
-  textDecorationLine:'underline', 
-  fontWeight:'bold'
-},
-btnSuperpuesto: {
-  position: 'relative',
-  width: 200,
-  height: 60,
-  alignSelf: 'center',
-  justifyContent: 'center',
-  alignItems: 'center',
-  marginVertical: 5,
-},
-btnFondo: {
-  backgroundColor: '#ADD6BC',
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  borderRadius: 10,
-},
-touchEncima: {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 10, 
-},
-btnText: {
-  color: '#517f7dff',
-  fontSize: 16,
-  textDecorationLine: 'underline',
-  fontWeight: 'bold',
 },
 })
