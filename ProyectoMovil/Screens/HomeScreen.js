@@ -17,6 +17,19 @@ export default function BotonesScreen() {
         <Text style={styles.textosaldo}>Saldo Disponible: </Text>
         <Text style={styles.textsaldo2}>$2100.00 </Text>
         </View>
+        <View  style={styles.cuadros}>
+        <View style={styles.elementos2}>
+        <Text>Ingresos:</Text>
+        <Text>$8000.00 </Text>
+        </View>
+        <View style={styles.elementos2}>
+        <Text>Gastos:</Text>
+        <Text>$5900.00 </Text>
+        </View>
+         <View style={styles.elementos2}>
+        <Text >Transaccion:</Text>   
+        </View>
+        </View>
         </View>
     
 
@@ -39,6 +52,12 @@ marginBottom:0,
 width: '100%',
 height: '10%',
 
+},
+cuadros:{
+    width:'100%',
+    flexDirection:'row',
+    marginRight:10,
+    justifyContent:'space-between',
 },
 titulo:{
 fontSize:24,
@@ -86,6 +105,17 @@ elementos:{
  flexDirection: 'column',
     height: '70%',
     backgroundColor: '#E1F5C4',
+    justifyContent: 'flex-start',
+    //alignItems: 'center',
+    marginVertical: 10,
+    borderRadius: 10,
+    padding:15,
+},
+elementos2:{
+ width: '30%',
+ flexDirection: 'column',
+    height: '80%',
+    backgroundColor: '#ADD6BC',
     justifyContent: 'flex-start',
     //alignItems: 'center',
     marginVertical: 10,
