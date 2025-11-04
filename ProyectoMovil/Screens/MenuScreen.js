@@ -8,7 +8,7 @@ import LoginScreen from './LoginScreen'
 import IniciarSeScreen from './IniciarSeScreen';
 import RegistroScreen from './RegistroScreen';
 import Home from './HomeScreen';
-
+import NuevaTransScreen from './NuevaTransScreen';
 
 import { Button } from 'react-native'
 
@@ -29,6 +29,8 @@ export default function MenuScreen () {
       return<IniciarSeScreen/>
     case 'registro':
       return<RegistroScreen/>
+    case 'NuevaTransaccion':
+      return<NuevaTransScreen/>
     case 'home':
       return<Home/>
     
@@ -42,6 +44,7 @@ export default function MenuScreen () {
                   <Button color ='orange' onPress={()=> setScreen('Login')} title= 'Login'/>
                   <Button color ='orange' onPress={()=> setScreen('IniciarSesion')} title='IniciarSesion'/>
                   <Button color ='orange' onPress={()=> setScreen('registro')} title='Registro'/>
+                  <Button color ='orange' onPress={()=> setScreen('NuevaTransaccion')} title='Nueva Transaccion'/>
                   <Button color ='orange' onPress={()=> setScreen('home')} title='Home'/>
                 </View>
             )
