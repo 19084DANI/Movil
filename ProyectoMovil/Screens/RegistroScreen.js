@@ -1,6 +1,7 @@
 import {Text, StyleSheet, View, TextInput, Button, Image, Alert} from 'react-native';
 import { useActionState, useState } from 'react';
 
+import HomeScreen from './HomeScreen';
 export default function RegistroScreen(){
     const [nombre, setNombre] = useState('');
     const [correo, setCorreo] = useState('');
@@ -39,7 +40,11 @@ export default function RegistroScreen(){
         alert("Registro Exitoso! \nCuenta creada"+
             "\n Datos ingresados: " +
             `Nombre: ${nombre}\nCorreo: ${correo}\n`
-        )
+            
+
+        );
+        setScreen('Iniciar sesion');
+        
     };
 
     const irIniciarSesion = () =>{

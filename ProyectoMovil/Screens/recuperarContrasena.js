@@ -1,7 +1,9 @@
 import { Text, StyleSheet, View, TextInput, Alert, Button, Image } from 'react-native'
 import React, {useState} from 'react'
 
+import HomeScreen from './HomeScreen';
 export default function RecuperarContrasena() {
+    const [screen, setScreen]=useState('default');
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [confirmarContrasena, setConfirmarContrasena] = useState('');
@@ -31,8 +33,14 @@ export default function RecuperarContrasena() {
         }else{
             Alert.alert('Contraseña cambiada con exito');
             alert('Contraseña cambiada con exito');
+            setScreen('Iniciar sesion');
         }
     };
+    switch(screen){
+         
+         case 'Iniciar sesion':
+          return<HomeScreen/>
+        default:
     return (
 
       <View  style={styles.ImageBackground}>
@@ -102,6 +110,7 @@ export default function RecuperarContrasena() {
     </View>         
 </View>
     )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -115,7 +124,7 @@ const styles = StyleSheet.create({
     marginTop:50,
 }, 
     inputs:{
-    width:'100%',            
+    width:200,            
     borderColor:'gray',
     borderWidth:2,           
     borderRadius:20,
