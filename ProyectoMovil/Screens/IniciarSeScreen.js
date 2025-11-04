@@ -97,7 +97,7 @@ export default function IniciarSeScreen (){
           <View style={styles.btn}>
               <Button title='Iniciar Sesion'
               color='#446967ff'
-              onPress={() => mostrarAlerta()}
+              onPress={() => mostrarAlerta()} 
               />  
           </View>  
           <View style={styles.contInf}></View>   

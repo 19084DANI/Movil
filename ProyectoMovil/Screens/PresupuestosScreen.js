@@ -1,13 +1,20 @@
 import { Text, StyleSheet, View, ImageBackground, ScrollView, Image } from 'react-native'
 import Slider from '@react-native-community/slider';
 import { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { Button } from 'react-native';
-
+import HomeScreen from './HomeScreen';
 export default function PresupuestosScreen() {
+  const [screen, setScreen]=useState('default');
   const [preciot, setPrecio]=useState(0);
   const [alimentacion, setAlimentacion]=useState(0);
   const [transporte, setTransporte]=useState(0);
   const [entretenimiento, setEntretenimiento]=useState(0);
+   switch(screen){
+        case 'home':
+            return <HomeScreen/>
+
+        default:
     return (
       
       <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
@@ -17,10 +24,12 @@ export default function PresupuestosScreen() {
               style={styles.menuhamburgesa}
               source={require('../assets/menu.png')}
              ></Image>     
+             <TouchableOpacity onPress={() => setScreen('home')}>
              <Image
               style={styles.logo}
               source={require('../assets/logo.jpg')}
              ></Image>  
+             </TouchableOpacity>
           </View>
           <View style={styles.contenido}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -100,6 +109,7 @@ export default function PresupuestosScreen() {
       </ImageBackground>
       
     )
+  }
   
     
 }

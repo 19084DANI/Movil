@@ -1,9 +1,15 @@
 import { Text, StyleSheet, View, ImageBackground, Image, Button } from 'react-native'
 import { ScrollView } from 'react-native'
-
-
+import { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import HomeScreen from './HomeScreen';
 export default function TransaccionesScreen() {
+  const [screen, setScreen] = useState('default');
+  switch(screen){
+        case 'homeee':
+            return <HomeScreen/>
 
+        default:
     return (
 
       <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
@@ -11,7 +17,12 @@ export default function TransaccionesScreen() {
 
          <View style={styles.encabezado}>  
           <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
-          <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
+         <TouchableOpacity onPress={() => setScreen('homeee')}>
+  <Image
+    style={styles.logo}
+    source={require('../assets/logo.jpg')}
+  />
+</TouchableOpacity> 
 
           </View>
           <ScrollView 
@@ -80,6 +91,7 @@ export default function TransaccionesScreen() {
       </ImageBackground>
         
     )
+   }
   
 }const styles = StyleSheet.create({
 

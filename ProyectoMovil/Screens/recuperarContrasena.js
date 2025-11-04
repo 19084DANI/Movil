@@ -2,6 +2,7 @@ import { Text, StyleSheet, View, TextInput, Alert, Button, Image } from 'react-n
 import React, {useState} from 'react'
 
 import HomeScreen from './HomeScreen';
+import IniciarSeScreen from './IniciarSeScreen';
 export default function RecuperarContrasena() {
     const [screen, setScreen]=useState('default');
     const [usuario, setUsuario] = useState('');
@@ -39,7 +40,8 @@ export default function RecuperarContrasena() {
     switch(screen){
          
          case 'Iniciar sesion':
-          return<HomeScreen/>
+          return<IniciarSeScreen/>
+
         default:
     return (
 

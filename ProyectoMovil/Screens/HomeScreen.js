@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native';
 import PresupuestosScreen from './PresupuestosScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import NuevatransScreen from './NuevaTransScreen';
+import Login from './LoginScreen';
 export default function BotonesScreen() {
 
     const [screen, setScreen]=useState('default');
@@ -14,13 +15,20 @@ export default function BotonesScreen() {
           return <TransaccionesScreen/>
         case 'NuevaTransScreen':
             return <NuevatransScreen/>
+        case 'login':
+            return <Login/>
       default:
     
     return (
     <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
              style={styles.backgrounds} >
     <View style={styles.encabezado}>  
-         <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
+        <View style={{ flexDirection: 'row', width: 90, }}>
+         <Image style={[styles.menuhamburgesa, { marginRight: 10 }]} source={require('../assets/menu.png')}></Image>
+            <TouchableOpacity onPress={() => setScreen('login')}>
+         <Image style={styles.menuhamburgesa} source={require('../assets/salir.png')}></Image>  
+         </TouchableOpacity>
+          </View>
          <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
     </View>
      <ScrollView contentContainerStyle={styles.Container} >
@@ -54,7 +62,7 @@ export default function BotonesScreen() {
         </View>
         <View>
         <Text style={styles.utransaccion}>Ultimas Transacciones</Text>
-        
+         <TouchableOpacity onPress={() => setScreen('transacciones')}>
             <View style={styles.elementostransacciones}>
                 <Text style={styles.textotransacciones}>$180.00</Text>
                 <View style={styles.fecha}>
@@ -62,6 +70,7 @@ export default function BotonesScreen() {
                 <Text style={styles.textotransacciones}>24/09/2025</Text>
                 </View>
             </View>
+            </TouchableOpacity>
              <View style={styles.elementostransacciones}>
                 <Text style={styles.textotransacciones}>$220.00</Text>
                 <View style={styles.fecha}>

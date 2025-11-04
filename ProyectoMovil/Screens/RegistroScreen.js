@@ -57,6 +57,9 @@ export default function RegistroScreen(){
             return<IniciarSeScreen/>
         default:
     return (
+        <View style={{flex:1, backgroundColor:'#F0E68C'}}>
+         <View style={styles.encabezado}>  
+            </View>
         <View style={styles.container}>
             <Image
                source={require('../assets/Logo.jpeg')}
@@ -100,6 +103,7 @@ export default function RegistroScreen(){
             <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#2E9B57' onPress={irIniciarSesion} />
         </View>
         </View>
+        </View>
     );
     }
 }
@@ -134,5 +138,36 @@ const styles= StyleSheet.create({
         borderColor: '#A9A9A9',
         backgroundColor: '#E0F2C6'
     },
+    menuhamburgesa:{
+
+    width: 35,
+    height: 35,
+},
+utransaccion:{
+justifyContent:'center',
+fontSize: 24,
+fontWeight: 'bold'
+
+},
+logo:{
+
+width: 100,
+height: 70,
+borderRadius: 45,
+borderColor: '#f4e45dff',
+borderWidth:5
+},
+    encabezado:{
+justifyContent:'space-between',
+flexDirection: 'row',
+alignItems: "center",
+backgroundColor: '#E1F5C4',
+padding: 10,
+borderRadius:10,
+marginBottom:0,
+width: '100%',
+height: '10%',
+
+},
 
 });

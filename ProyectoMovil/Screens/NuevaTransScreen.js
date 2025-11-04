@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView, Image, ImageBackground} from "react-native";
-
+import HomeScreen from './HomeScreen';
+import TransaccionesScreen from './TransaccionesScreen';
+import { TouchableOpacity } from 'react-native';
 export default function FormularioTransaccion() {
+  const [screen, setScreen]=useState('default');
   const [nombre, setNombre] = useState("");
   const [monto, setMonto] = useState("");
   const [categoria, setCategoria] = useState("");
@@ -26,22 +29,33 @@ export default function FormularioTransaccion() {
       Alert.alert("Descripción no puede estar vacía");
     } else if (!gasto.trim()) {
       Alert.alert("Gasto no puede estar vacío");
-    } else if (gasto.toLowerCase() !== "sí" && gasto.toLowerCase() !== "no") {
-      Alert.alert("Gasto debe ser 'Sí' o 'No'");
+    } else if (gasto.toLowerCase() !== "si" && gasto.toLowerCase() !== "no") {
+      Alert.alert("Gasto debe ser 'Si' o 'No'");
     } else {
       Alert.alert(
         "Transacción creada",
         `Nombre: ${nombre}\nMonto: ${monto}\nCategoría: ${categoria}\nFecha: ${fecha}\nDescripción: ${descripcion}\nGasto: ${gasto}`
       );
+      setScreen('Transacciones');
     }
   };
-
+     switch(screen){
+          case 'homee':
+              return <HomeScreen/>
+          case 'Transacciones':
+              return <TransaccionesScreen/>
+          default:
   return (
     <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
                  style={styles.backgrounds} >
      <View style={styles.encabezado}>  
                <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
-               <Image style={styles.logo} source={require('../assets/logo.jpg')}></Image>  
+                  <TouchableOpacity onPress={() => setScreen('homee')}>
+                           <Image
+                            style={styles.logo}
+                            source={require('../assets/logo.jpg')}
+                           ></Image>  
+                           </TouchableOpacity> 
      
                </View>
     <ScrollView contentContainerStyle={styles.container}>
@@ -111,6 +125,7 @@ export default function FormularioTransaccion() {
     </ImageBackground>
   );
 }
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -156,7 +171,7 @@ height: '10%',
   formContainer: {
     width: 350,
     height:700,
-    backgroundColor: "#c2fc87ff",
+    backgroundColor: "#E1F5C4",
     borderRadius: 20,
     padding: 20,
     alignItems: "center",
