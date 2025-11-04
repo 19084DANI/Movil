@@ -7,7 +7,7 @@ import RecuperarContrasena from './RecuperarContrasena';
 import LoginScreen from './LoginScreen'
 import IniciarSeScreen from './IniciarSeScreen';
 import RegistroScreen from './RegistroScreen';
-
+import Home from './HomeScreen';
 
 
 import { Button } from 'react-native'
@@ -29,7 +29,8 @@ export default function MenuScreen () {
       return<IniciarSeScreen/>
     case 'registro':
       return<RegistroScreen/>
-
+    case 'home':
+      return<Home/>
     
     case 'menu':  
         default:
@@ -41,6 +42,7 @@ export default function MenuScreen () {
                   <Button color ='orange' onPress={()=> setScreen('Login')} title= 'Login'/>
                   <Button color ='orange' onPress={()=> setScreen('IniciarSesion')} title='IniciarSesion'/>
                   <Button color ='orange' onPress={()=> setScreen('registro')} title='Registro'/>
+                  <Button color ='orange' onPress={()=> setScreen('home')} title='Home'/>
                 </View>
             )
   }
