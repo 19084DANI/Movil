@@ -2,7 +2,7 @@ import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,S
 import {useState} from 'react'
 
 import RecuperarContrasena from './RecuperarContrasena';
-
+import HomeScreen from './HomeScreen';
 
 export default function IniciarSeScreen (){
     const [screen, setScreen]=useState('default');
@@ -17,13 +17,25 @@ export default function IniciarSeScreen (){
         Alert.alert(
           "Datos ingresados",
           `Nombre: ${usuario}\n
-          Password: ${keyword}\n`
-        )
+          Password: ${keyword}\n`,
+           [
+          {
+            text: "Aceptar",
+            onPress: () => setScreen('Iniciar sesion') 
+          }
+        ]
+        );
           alert(
           "Datos ingresados",
           `Nombre: ${usuario}\n
-          Password: ${keyword}\n`
-        )
+          Password: ${keyword}\n`,
+          [
+          {
+            text: "Aceptar",
+            onPress: () => setScreen('Iniciar sesion') 
+          }
+        ]
+        );
         
       } 
     }
@@ -31,8 +43,8 @@ export default function IniciarSeScreen (){
   switch(screen){
      case 'recuperar':
        return<RecuperarContrasena/>
-    /* case 'Iniciar sesion':
-      return<RegistroScreen/>*/
+     case 'Iniciar sesion':
+      return<HomeScreen/>
     default:
   return (
         <View style={styles.ImageBackground}>
