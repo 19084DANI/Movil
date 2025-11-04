@@ -1,13 +1,19 @@
 import { Text, StyleSheet, View, Image, ImageBackground, ScrollView, Button } from 'react-native'
 import { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 import PresupuestosScreen from './PresupuestosScreen';
-
+import TransaccionesScreen from './TransaccionesScreen';
+import NuevatransScreen from './NuevaTransScreen';
 export default function BotonesScreen() {
 
     const [screen, setScreen]=useState('default');
     switch(screen){
       case 'presupuestos':
           return <PresupuestosScreen/>
+        case 'transacciones':
+          return <TransaccionesScreen/>
+        case 'NuevaTransScreen':
+            return <NuevatransScreen/>
       default:
     
     return (
@@ -41,7 +47,9 @@ export default function BotonesScreen() {
         </View>
          <View style={styles.elementos2}>
         <Text style={styles.textot}>Transaccion</Text>   
+        <TouchableOpacity onPress={() => setScreen('NuevaTransScreen')}>
         <Image style={styles.mas} source={require('../assets/mas.png')}/>
+        </TouchableOpacity>
         </View>
         </View>
         <View>
