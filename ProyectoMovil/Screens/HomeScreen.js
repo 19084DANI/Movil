@@ -59,8 +59,7 @@ export default function BotonesScreen() {
 
         </View>
     </ScrollView>
-
-   
+        <Image style={styles.ayuda} source={require('../assets/help.png')}/>
     </ImageBackground>
     )
   
@@ -220,5 +219,13 @@ elementostransacciones:{
     marginVertical: 10,
     borderRadius: 20,
     padding:15,
+},
+ayuda:{
+  position: 'absolute',
+  bottom: 25,      
+  right: 25,      
+  width: 40,       
+  height: 40,
+  borderRadius: 20,
 },
 })
