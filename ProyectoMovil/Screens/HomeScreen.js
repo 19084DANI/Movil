@@ -32,7 +32,17 @@ export default function BotonesScreen() {
         </View>
         <View>
         <Text style={styles.utransaccion}>Ultimas Transacciones</Text>
+        
+            <View style={styles.elementostransacciones}>
+                <Text style={styles.textotransacciones}>$180.00</Text>
+                <View style={styles.fecha}>
+                <Text style={styles.textotransacciones}>Cinepolis</Text>
+                <Text style={styles.textotransacciones}>24/09/2025</Text>
+                </View>
+            </View>
+          
         </View>
+
         </View>
     
 
@@ -60,6 +70,15 @@ cuadros:{
     width:'100%',
     flexDirection:'row',
     marginRight:10,
+    justifyContent:'space-between',
+},
+textotransacciones:{
+  fontSize:30,
+  fontWeight:'bold',
+  color:'#fff'
+},
+fecha:{
+    flexDirection:'row',
     justifyContent:'space-between',
 },
 titulo:{
@@ -114,7 +133,6 @@ elementos:{
     height: '70%',
     backgroundColor: '#E1F5C4',
     justifyContent: 'flex-start',
-    //alignItems: 'center',
     marginVertical: 10,
     borderRadius: 10,
     padding:15,
@@ -125,7 +143,6 @@ elementos2:{
     height: '80%',
     backgroundColor: '#ADD6BC',
     justifyContent: 'flex-start',
-    //alignItems: 'center',
     marginVertical: 10,
     borderRadius: 10,
     padding:15,
@@ -136,7 +153,6 @@ elementos22:{
     height: '80%',
     backgroundColor: '#F9D423',
     justifyContent: 'flex-start',
-    //alignItems: 'center',
     marginVertical: 10,
     borderRadius: 10,
     padding:15,
@@ -146,7 +162,6 @@ saldo:{
     height: '15%',
     backgroundColor: '#ADD6BC',
     justifyContent: 'space-between',
-    //alignItems: 'center',
     marginVertical: 10,
     borderRadius: 10,
     padding:15,
@@ -179,5 +194,14 @@ textsaldo2:{
     fontSize:22,
     fontWeight:'bold',
     color:'#ffffffff',
+},
+elementostransacciones:{
+ width: '100%',
+    height: '40%',
+    backgroundColor: '#ADD6BC',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+    borderRadius: 20,
+    padding:15,
 },
 })
