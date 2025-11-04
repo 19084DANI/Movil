@@ -1,8 +1,9 @@
 import {Text, StyleSheet, View, TextInput, Button, Image, Alert} from 'react-native';
 import { useActionState, useState } from 'react';
 
-import HomeScreen from './HomeScreen';
+import IniciarSeScreen from './IniciarSeScreen';
 export default function RegistroScreen(){
+    const [screen, setScreen]=useState('default');
     const [nombre, setNombre] = useState('');
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
@@ -43,14 +44,18 @@ export default function RegistroScreen(){
             
 
         );
-        setScreen('Iniciar sesion');
+        
         
     };
 
     const irIniciarSesion = () =>{
         Alert.alert("Inicia Sesión");
+        setScreen('Iniciar sesion');
     };
-
+    switch(screen){
+        case 'Iniciar sesion':
+            return<IniciarSeScreen/>
+        default:
     return (
         <View style={styles.container}>
             <Image
@@ -92,11 +97,11 @@ export default function RegistroScreen(){
         </View>
 
         <View style={{ marginTop: 15 }}>
-            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#2E9B57' onPress={irIniciarSesion}/>
+            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#2E9B57' onPress={irIniciarSesion} />
         </View>
         </View>
     );
-    
+    }
 }
 const styles= StyleSheet.create({
     container:{
