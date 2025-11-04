@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image, ImageBackground, ScrollView } from 'react-native'
+import { Text, StyleSheet, View, Image, ImageBackground, ScrollView, Button } from 'react-native'
 
 
 export default function BotonesScreen() {
@@ -14,8 +14,13 @@ export default function BotonesScreen() {
         <View style={styles.elementos}>
         <Text style={styles.titulo}>¡Hola de Nuevo!</Text>
         <View style={styles.saldo}>
+        <View>
         <Text style={styles.textosaldo}>Saldo Disponible: </Text>
         <Text style={styles.textsaldo2}>$2100.00 </Text>
+        </View>
+        <View style={styles.botonPresupuesto}>
+        <Text style={{color: '#fff', fontWeight: 'bold'}}>Presupuestos</Text>
+        </View>
         </View>
         <View  style={styles.cuadros}>
         <View style={styles.elementos2}>
@@ -28,6 +33,7 @@ export default function BotonesScreen() {
         </View>
          <View style={styles.elementos2}>
         <Text style={styles.textot}>Transaccion</Text>   
+        <Image style={styles.mas} source={require('../assets/mas.png')}/>
         </View>
         </View>
         <View>
@@ -179,6 +185,7 @@ saldo:{
     backgroundColor: '#ADD6BC',
     justifyContent: 'space-between',
     marginVertical: 10,
+    flexDirection:'row',
     borderRadius: 10,
     padding:15,
 },
@@ -227,5 +234,21 @@ ayuda:{
   width: 40,       
   height: 40,
   borderRadius: 20,
+},
+mas:{
+  width: 25,      
+  height: 25,
+  marginTop: 5,   
+  alignSelf: 'center', 
+  resizeMode: 'contain', 
+},
+botonPresupuesto: {
+  width: 85,
+  height: 85,
+  backgroundColor: '#ADD6BC',
+  borderRadius: 25,
+  justifyContent: 'center',
+  alignItems: 'center',
+   marginLeft: 70,
 },
 })
