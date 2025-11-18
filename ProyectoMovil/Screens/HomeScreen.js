@@ -101,7 +101,7 @@ encabezado:{
 justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
-backgroundColor: '#E1F5C4',
+backgroundColor: '#EEF5DB',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
@@ -151,7 +151,7 @@ logo:{
 width: 100,
 height: 70,
 borderRadius: 45,
-borderColor: '#f4e45dff',
+borderColor: '#b7ba9bff',
 borderWidth:5
 },
 
@@ -166,7 +166,7 @@ backgrounds: {
 encabezado2:{
   
 alignItems: "center",
-backgroundColor: '#E1F5C4',
+backgroundColor: '#EEF5DB',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
@@ -178,7 +178,7 @@ elementos:{
  width: '90%',
  flexDirection: 'column',
     height: 750,
-    backgroundColor: '#E1F5C4',
+    backgroundColor: '#EEF5DB',
     justifyContent: 'flex-start',
     marginVertical: 10,
     borderRadius: 10,

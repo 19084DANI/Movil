@@ -113,14 +113,14 @@ contPrincipal:{
 
 },
   contSup:{ //cuadrito de arriba
-    backgroundColor:'#E1F5C4',
+    backgroundColor:'#EEF5DB',
     padding:'9%',
     borderRadius:0,
     justifyContent:'flex-start',
     zIndex:0,
   },
 contInf: {
-  backgroundColor: '#E1F5C4',
+  backgroundColor: '#EEF5DB',
   position: 'absolute',
   bottom:20,
   width: '87%',       
@@ -131,7 +131,7 @@ contInf: {
 },
     ImageBackground:{
     flex:1,
-    backgroundColor:'#EDE574'
+    backgroundColor:'#93A392'
 },
   separador:{ //separador promedio
     marginTop:85,
@@ -194,7 +194,7 @@ TextIngresarTitulo:{
     color:'#517f7dff',   
 },
 inputText:{
-    backgroundColor:'#E1F5C4',
+    backgroundColor:'#dde2ceff',
     height:40,
     borderRadius:10,
     padding:10,

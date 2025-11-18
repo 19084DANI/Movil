@@ -31,8 +31,9 @@ export default function PresupuestosScreen() {
              ></Image>  
              </TouchableOpacity>
           </View>
+          
           <View style={styles.contenido}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+     <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={styles.Titulo2}>
           <Text style={styles.Titulo}>         Mis {'\n'} Presupuestos{'\n'}</Text>
@@ -150,7 +151,7 @@ encabezado:{
   justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
-backgroundColor: '#E1F5C4',
+backgroundColor: '#EEF5DB',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
@@ -161,7 +162,7 @@ height: '10%',
 encabezado2:{
   
 alignItems: "center",
-backgroundColor: '#E1F5C4',
+backgroundColor: '#EEF5DB',
 padding: 10,
 borderRadius:10,
 marginBottom:0,

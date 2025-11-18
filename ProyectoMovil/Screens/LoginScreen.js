@@ -39,7 +39,7 @@ export default function Login(){
           <View style={styles.contenedorBotones}>   
            <View style={styles.btn}>            
             <Button title='Iniciar Sesion' 
-            color='#ADD6BC' 
+            color='#f0e7da3e' 
             onPress={()=> setScreen('IniciarSesion')}
             />
 
@@ -48,7 +48,7 @@ export default function Login(){
             
           <View style={styles.btn}>
           <Button title='Registrarse'
-           color='#ADD6BC'
+           color='#f0e7da50'
            onPress={()=>setScreen('Registro')}
            />  
         </View>
@@ -65,17 +65,18 @@ export default function Login(){
 const styles = StyleSheet.create({
   ImageBackground:{
     flex:1,
-    backgroundColor:'#EDE574'
+   // backgroundColor:'#EDE574'
+    backgroundColor:'#93A392'
   },
   //MARGENENES 
   contSup:{ //cuadrito de arriba
-    backgroundColor:'#E1F5C4',
+    backgroundColor:'#EEF5DB',
     padding:'9%',
     borderRadius:0,
     justifyContent:'flex-start',
   },
   contInf:{ //cuadrito de abajo
-    backgroundColor:'#E1F5C4',
+    backgroundColor:'#EEF5DB',
     padding:'9%',
     borderRadius:0,
     position:'absolute',
@@ -91,8 +92,8 @@ const styles = StyleSheet.create({
   },  
   //TEXTOS Y LETRAS
   contTitulo:{
-    backgroundColor:'#EDE574',
-    color:'#517f7dff',
+    backgroundColor:'#93A392',
+    color:'#3D4939',
     fontSize:30,
     fontWeight:'bold',
     textAlign:'center',
@@ -100,8 +101,8 @@ const styles = StyleSheet.create({
     padding:10,  
   },
   Slogan:{
-    backgroundColor:'#EDE574',
-    color:'#517f7cff',
+    backgroundColor:'#93A392',
+    color:'#3D4939',
     fontSize:17,
     fontWeight:'bold',
     textAlign:'center',

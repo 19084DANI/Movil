@@ -96,11 +96,11 @@ export default function RegistroScreen(){
         />
 
         <View style={{width: '100%', marginTop:10}}>
-          <Button title='Crear Cuenta' color='#5F9EA0' onPress={crearCuenta} />
+          <Button title='Crear Cuenta' color='#5b8486ff' onPress={crearCuenta} />
         </View>
 
         <View style={{ marginTop: 15 }}>
-            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#2E9B57' onPress={irIniciarSesion} />
+            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#456953ff' onPress={irIniciarSesion} />
         </View>
         </View>
         </View>
@@ -110,7 +110,7 @@ export default function RegistroScreen(){
 const styles= StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#F0E68C',
+        backgroundColor: '#93A392',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal:20,
@@ -121,13 +121,13 @@ const styles= StyleSheet.create({
         borderRadius: 40,
         marginBottom:20,
         borderWidth: 2,
-        borderColor: '#FFD700'
+        borderColor: '#EEF5DB'
     },
     titulo:{
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: '#2E8B57',
+        color: '#3D4939',
     },
     input:{
         width: '100%',
@@ -136,7 +136,7 @@ const styles= StyleSheet.create({
         marginBottom: 15,
         borderWidth: 1,
         borderColor: '#A9A9A9',
-        backgroundColor: '#E0F2C6'
+        backgroundColor: '#EEF5DB'
     },
     menuhamburgesa:{
 
@@ -154,14 +154,14 @@ logo:{
 width: 100,
 height: 70,
 borderRadius: 45,
-borderColor: '#f4e45dff',
+borderColor: '#EEF5DB',
 borderWidth:5
 },
     encabezado:{
 justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
-backgroundColor: '#E1F5C4',
+backgroundColor: '#EEF5DB',
 padding: 10,
 borderRadius:10,
 marginBottom:0,

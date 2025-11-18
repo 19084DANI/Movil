@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     borderRadius:20,
     paddingVertical:8,
     paddingHorizontal:15,
-    backgroundColor:'#ffffff',
+    backgroundColor:'#dde2ceff',
     marginBottom:15,
     textAlign:'center',   
     },
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         marginBottom:20,
     },
     container:{
-        backgroundColor:'#efe851ff',
+        backgroundColor:'#EEF5DB',
         flex:1,
         alignItems:'center',
         justifyContent:'center',
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
         height:'75%',
         alignItems:'center',
         justifyContent:'center',
-        backgroundColor:'#c2fc87ff',
+        backgroundColor:'#EEF5DB',
         borderRadius:20,
     },
     texto:{
@@ -170,14 +170,14 @@ const styles = StyleSheet.create({
         marginBottom:15,
     },
     contSup:{ //cuadrito de arriba
-    backgroundColor:'#E1F5C4',
+    backgroundColor:'#EEF5DB',
     padding:'9%',
     borderRadius:0,
     justifyContent:'flex-start',
   },
     ImageBackground:{
     flex:1,
-    backgroundColor:'#EDE574'
+    backgroundColor:'#93A392'
   },
     logo:{
     width:150,
@@ -188,10 +188,11 @@ const styles = StyleSheet.create({
     borderRadius:75,
     overflow:'hidden',
     zIndex:1,
+    borderColor:'#000000ff',
     position:'absolute',
   },
 contInf: {
-  backgroundColor: '#E1F5C4',
+  backgroundColor: '#EEF5DB',
   position: 'absolute',
   bottom:20,
   width: '87%',       
