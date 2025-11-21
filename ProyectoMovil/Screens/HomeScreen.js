@@ -5,6 +5,7 @@ import PresupuestosScreen from './PresupuestosScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import NuevatransScreen from './NuevaTransScreen';
 import Login from './LoginScreen';
+import GraficaScreen from './GraficaScreen';
 export default function BotonesScreen() {
 
     const [screen, setScreen]=useState('default');
@@ -17,6 +18,8 @@ export default function BotonesScreen() {
             return <NuevatransScreen/>
         case 'login':
             return <Login/>
+        case 'grafica':
+            return <GraficaScreen/>
       default:
     
     return (

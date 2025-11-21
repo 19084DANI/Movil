@@ -9,6 +9,7 @@ import IniciarSeScreen from './IniciarSeScreen';
 import RegistroScreen from './RegistroScreen';
 import Home from './HomeScreen';
 import NuevaTransScreen from './NuevaTransScreen';
+import GraficaScreen from './GraficaScreen';
 
 import { Button } from 'react-native'
 
@@ -33,6 +34,8 @@ export default function MenuScreen () {
       return<NuevaTransScreen/>
     case 'home':
       return<Home/>
+    case 'grafica':
+        return <GraficaScreen/>
     
     case 'menu':  
         default:
@@ -46,6 +49,7 @@ export default function MenuScreen () {
                   <Button color ='orange' onPress={()=> setScreen('registro')} title='Registro'/>
                   <Button color ='orange' onPress={()=> setScreen('NuevaTransaccion')} title='Nueva Transaccion'/>
                   <Button color ='orange' onPress={()=> setScreen('home')} title='Home'/>
+                  <Button color ='orange' onPress={()=> setScreen('grafica')} title='Grafica'/>
                 </View>
             )
   }
