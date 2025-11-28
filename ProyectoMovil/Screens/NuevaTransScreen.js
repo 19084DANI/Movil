@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView, Image, ImageBackground} from "react-native";
+import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView, Image, ImageBackground, Pressable} from "react-native";
 import HomeScreen from './HomeScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
 import TransaccionController from '../controllers/TransaccionController';
+import { Ionicons } from  '@expo/vector-icons';
 
 // Comentario: Se integra TransaccionController para guardar transacciones en BD
 const controller = TransaccionController;
@@ -13,11 +14,17 @@ export default function FormularioTransaccion() {
   const [nombre, setNombre] = useState("");
   const [monto, setMonto] = useState("");
   const [categoria, setCategoria] = useState("");
-  const [fecha, setFecha] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [gasto, setGasto] = useState("");
   const [guardando, setGuardando] = useState(false);
 
+    const [fecha, setFecha] = useState(() => {
+    const hoy = new Date();
+    const iso = hoy.toISOString().split("T")[0];   
+    return iso;
+  });
+
+  const fechaActual = new Date().toISOString().split("T")[0];
   // Mostrar alerta y guardar en BD
   const mostrarAlerta = async () => {
     if (!nombre && !monto && !categoria && !fecha && !descripcion && !gasto) {
@@ -86,7 +93,7 @@ export default function FormularioTransaccion() {
     <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
                  style={styles.backgrounds} >
      <View style={styles.encabezado}>  
-               <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
+                  
                   <TouchableOpacity onPress={() => setScreen('homee')}>
                            <Image
                             style={styles.logo}
@@ -98,6 +105,8 @@ export default function FormularioTransaccion() {
     <ScrollView contentContainerStyle={styles.container}>
    
       <View style={styles.formContainer}>
+
+        <View style={styles.formContainer2} >
         <Text style={styles.titulo}>Nueva Transacción</Text>
 
         <Text style={styles.texto}>Nombre</Text>
@@ -128,37 +137,39 @@ export default function FormularioTransaccion() {
         <Text style={styles.texto}>Fecha</Text>
         <TextInput
           style={styles.inputs}
-          placeholder="DD/MM/AAAA"
           value={fecha}
-          onChangeText={setFecha}
+          editable={false}
+          selectTextOnFocus={false}
+          placeholderTextColor='#777'
         />
 
         <Text style={styles.texto}>Descripción</Text>
         <TextInput
-          style={styles.inputs}
+          style={styles.inputDescripcion}
           placeholder="Ej. Recibo de CFE"
           value={descripcion}
           onChangeText={setDescripcion}
+          multiline={true}
         />
 
-        <Text style={styles.texto}>Gasto</Text>
-        <TextInput
-          style={styles.inputs}
-          placeholder="Sí/No"
-          value={gasto}
-          onChangeText={setGasto}
-        />
 
         <View style={{ marginTop: 10 }}>
-          <Button title={guardando ? "Guardando..." : "Crear Transacción"} color="#0b7a89ff" onPress={mostrarAlerta} disabled={guardando} />
+          <Pressable
+            style={styles.Button}
+            onPress={mostrarAlerta}
+            disabled={guardando}
+            >
+            <Text style={styles.textoBoton}>
+              {guardando ? "Guardando..." : "CREAR TRANSACCION"}
+          </Text>
+        </Pressable>
         </View>
+        </View>
+
         
       </View>
      
     </ScrollView>
-      <View style={styles.encabezado2}>
-                            
-                </View>
     </ImageBackground>
   );
 }
@@ -172,66 +183,92 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 20,
   },
-  encabezado2:{
-  
-alignItems: "center",
-backgroundColor: '#EEF5DB',
-padding: 10,
-borderRadius:10,
-marginBottom:0,
-width: '100%',
-height: '10%',
-},
+
   menuhamburgesa:{
   width: 35,
   height: 35,
   },
   logo:{
-  width: 130,
-  height: 90,
+  width: 80,
+  height: 80,
   borderRadius: 45,
-  borderColor: '#f4e45dff',
-  borderWidth:5
+  borderColor: '#2d526eff',
+  borderWidth:3,
+  resizeMode:'cover',
+  overflow:'hidden',
+  position:'absolute',
+  left:-35,
+  top:-10,
   },
   encabezado:{
   justifyContent:'space-between',
-  flexDirection: 'row',
+ // flexDirection: 'row',
   alignItems: "center",
-  backgroundColor: '#EEF5DB',
+  backgroundColor: '#e5e9dbff',
   padding: 10,
-  borderRadius:10,
+  //borderRadius:10,
   marginBottom:0,
   width: '100%',
   height: '10%',
 
 },
   formContainer: {
-    width: 350,
-    height:700,
+    width: 450,
+    height:900,
+    backgroundColor: "#182735ff",
+    borderRadius: 40,
+    padding: 20,
+    alignItems: "center",
+  },
+    formContainer2: {
+    width:'100%',
+    height:'100%',
     backgroundColor: "#EEF5DB",
     borderRadius: 20,
     padding: 20,
     alignItems: "center",
   },
   titulo: {
-    fontSize: 40,
+    fontSize: 35,
     fontWeight: "bold",
     marginBottom: 20,
     color: "#000000ff",
   },
   texto: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     marginTop: 10,
+
+
   },
   inputs: {
     width: "80%",
-    borderColor: "gray",
+    borderColor: '#b0b0b0ff',
     borderWidth: 2,
-    borderRadius: 15,
+    borderRadius: 17,
     padding: 8,
     backgroundColor: "#dde2ceff",
     marginBottom: 10,
+    marginTop:10,
+    color:'#777',
+    fontSize:15,
+    fontWeight:'550',
+
+  },
+  inputDescripcion: {
+    width: "80%",
+    borderColor: '#b0b0b0ff',
+    marginTop:10,
+    borderWidth: 2,
+    borderRadius: 15,
+    height:150,
+    padding: 8,
+    backgroundColor: "#dde2ceff",
+    marginBottom: 10,
+    color:'#777',
+    fontSize:15,
+    fontWeight:'550',
+
   },
   backgrounds: {
   flex: 1,
@@ -240,4 +277,23 @@ height: '10%',
   width: '100%',
   height: '100%',
 },
+Button:{
+  width:150,
+  height:45,
+  backgroundColor:'#226485ff',
+  borderRadius:15,
+  alignItems:'center',
+  justifyContent:'center',
+  marginTop:30,
+  shadowColor:'#9b998fff',
+  shadowOffset:{
+    height:3,
+    width:0,
+  }
+},
+textoBoton:{
+  fontSize:14,
+  fontWeight:'550',
+  color:'white',
+}
 });
