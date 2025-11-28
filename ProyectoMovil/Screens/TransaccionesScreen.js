@@ -3,6 +3,7 @@ import { ScrollView } from 'react-native'
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import HomeScreen from './HomeScreen';
+import { Ionicons } from  '@expo/vector-icons';
 export default function TransaccionesScreen() {
   const [screen, setScreen] = useState('default');
   switch(screen){

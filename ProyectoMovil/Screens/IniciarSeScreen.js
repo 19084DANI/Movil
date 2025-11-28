@@ -1,8 +1,8 @@
 import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,Switch} from 'react-native'
 import {useState} from 'react'
-
 import RecuperarContrasena from './RecuperarContrasena';
 import HomeScreen from './HomeScreen';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function IniciarSeScreen (){
     const [screen, setScreen]=useState('default');

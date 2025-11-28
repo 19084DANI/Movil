@@ -3,6 +3,7 @@ import React, {useState} from 'react'
 
 import HomeScreen from './HomeScreen';
 import IniciarSeScreen from './IniciarSeScreen';
+import { Ionicons } from  '@expo/vector-icons';
 export default function RecuperarContrasena() {
     const [screen, setScreen]=useState('default');
     const [usuario, setUsuario] = useState('');

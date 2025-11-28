@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View, Image, ImageBackground, ScrollView,TouchableOpacity,} from 'react-native';
 import HomeScreen from './HomeScreen';
+import { Ionicons } from  '@expo/vector-icons';
 
 export default function GraficaScreen() {
 	const [screen, setScreen] = useState('default');

@@ -3,6 +3,7 @@ import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView, Image, Im
 import HomeScreen from './HomeScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
+import { Ionicons } from  '@expo/vector-icons';
 export default function FormularioTransaccion() {
   const [screen, setScreen]=useState('default');
   const [nombre, setNombre] = useState("");

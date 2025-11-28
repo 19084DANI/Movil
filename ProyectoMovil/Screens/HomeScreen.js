@@ -6,6 +6,7 @@ import TransaccionesScreen from './TransaccionesScreen';
 import NuevatransScreen from './NuevaTransScreen';
 import Login from './LoginScreen';
 import GraficaScreen from './GraficaScreen';
+import { Ionicons } from  '@expo/vector-icons';
 export default function BotonesScreen() {
 
     const [screen, setScreen]=useState('default');

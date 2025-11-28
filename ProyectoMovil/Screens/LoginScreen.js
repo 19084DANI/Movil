@@ -1,7 +1,7 @@
 
 import { StyleSheet, Text, View, Button, Image, ImageBackground } from 'react-native';
 import React, { useState } from 'react';
-
+import { Ionicons } from  '@expo/vector-icons';
 
 //import de iniciar sesion
 import IniciarSeScreen from './IniciarSeScreen';

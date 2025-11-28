@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Button } from 'react-native';
 import HomeScreen from './HomeScreen';
+import { Ionicons } from  '@expo/vector-icons';
 export default function PresupuestosScreen() {
   const [screen, setScreen]=useState('default');
   const [preciot, setPrecio]=useState(0);

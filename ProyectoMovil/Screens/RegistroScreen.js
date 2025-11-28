@@ -2,6 +2,7 @@ import {Text, StyleSheet, View, TextInput, Button, Image, Alert} from 'react-nat
 import { useActionState, useState } from 'react';
 
 import IniciarSeScreen from './IniciarSeScreen';
+import { Ionicons } from  '@expo/vector-icons';
 export default function RegistroScreen(){
     const [screen, setScreen]=useState('default');
     const [nombre, setNombre] = useState('');
