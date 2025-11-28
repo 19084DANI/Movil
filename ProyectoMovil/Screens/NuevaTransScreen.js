@@ -3,7 +3,11 @@ import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView, Image, Im
 import HomeScreen from './HomeScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
-import { Ionicons } from  '@expo/vector-icons';
+import TransaccionController from '../controllers/TransaccionController';
+
+// Comentario: Se integra TransaccionController para guardar transacciones en BD
+const controller = TransaccionController;
+
 export default function FormularioTransaccion() {
   const [screen, setScreen]=useState('default');
   const [nombre, setNombre] = useState("");
@@ -12,8 +16,10 @@ export default function FormularioTransaccion() {
   const [fecha, setFecha] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [gasto, setGasto] = useState("");
+  const [guardando, setGuardando] = useState(false);
 
-  const mostrarAlerta = () => {
+  // Mostrar alerta y guardar en BD
+  const mostrarAlerta = async () => {
     if (!nombre && !monto && !categoria && !fecha && !descripcion && !gasto) {
       Alert.alert("Todos los campos están vacíos");
     } else if (!nombre.trim()) {
@@ -33,11 +39,41 @@ export default function FormularioTransaccion() {
     } else if (gasto.toLowerCase() !== "si" && gasto.toLowerCase() !== "no") {
       Alert.alert("Gasto debe ser 'Si' o 'No'");
     } else {
-      Alert.alert(
-        "Transacción creada",
-        `Nombre: ${nombre}\nMonto: ${monto}\nCategoría: ${categoria}\nFecha: ${fecha}\nDescripción: ${descripcion}\nGasto: ${gasto}`
-      );
-      setScreen('Transacciones');
+      // Llamar al controlador para guardar la transacción en BD
+      try {
+        setGuardando(true);
+        const res = await controller.crearTransaccion({
+          nombre: nombre.trim(),
+          monto: monto.trim(),
+          categoria: categoria.trim(),
+          fecha: fecha.trim(),
+          descripcion: descripcion.trim(),
+          es_gasto: gasto.toLowerCase()
+        });
+
+        if (res.success) {
+          Alert.alert(
+            "Transacción creada",
+            `Nombre: ${nombre}\nMonto: $${monto}\nCategoría: ${categoria}`,
+            [{ text: 'Aceptar', onPress: () => {
+              // Limpiar formulario
+              setNombre('');
+              setMonto('');
+              setCategoria('');
+              setFecha('');
+              setDescripcion('');
+              setGasto('');
+              setScreen('Transacciones');
+            }}]
+          );
+        } else {
+          Alert.alert('Error', res.error || 'No se pudo crear la transacción');
+        }
+      } catch (error) {
+        Alert.alert('Error', error.message || 'Error al crear la transacción');
+      } finally {
+        setGuardando(false);
+      }
     }
   };
      switch(screen){
@@ -114,7 +150,7 @@ export default function FormularioTransaccion() {
         />
 
         <View style={{ marginTop: 10 }}>
-          <Button title="Crear Transacción" color="#0b7a89ff" onPress={mostrarAlerta} />
+          <Button title={guardando ? "Guardando..." : "Crear Transacción"} color="#0b7a89ff" onPress={mostrarAlerta} disabled={guardando} />
         </View>
         
       </View>

@@ -1,19 +1,11 @@
 import databaseService from '../database/DatabaseService';
 
-/**
- * Modelo de Usuario
- * Maneja todas las operaciones de base de datos relacionadas con usuarios
- */
 class UserModel {
   constructor() {
     this.tableName = 'usuarios';
   }
 
-  /**
-   * Crea un nuevo usuario en la base de datos
-   * @param {Object} userData - Datos del usuario {nombre, correo, telefono, contrasena}
-   * @returns {Promise<Object>} Resultado de la operación
-   */
+  
   async create(userData) {
     try {
       // Verificar si el correo ya existe
@@ -30,7 +22,7 @@ class UserModel {
         nombre: userData.nombre.trim(),
         correo: userData.correo.trim().toLowerCase(),
         telefono: userData.telefono.trim(),
-        contrasena: userData.contrasena // En producción, debería estar hasheada
+        contrasena: userData.contrasena // produccion debería estar hasheada
       });
 
       if (result.success) {
@@ -88,11 +80,7 @@ class UserModel {
     }
   }
 
-  /**
-   * Busca un usuario por ID
-   * @param {number} id - ID del usuario
-   * @returns {Promise<Object>} Usuario encontrado o null
-   */
+ 
   async findById(id) {
     try {
       const result = await databaseService.select(

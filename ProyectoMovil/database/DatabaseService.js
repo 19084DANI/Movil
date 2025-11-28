@@ -20,6 +20,14 @@ class DatabaseService {
     }
   }
 
+  // Método openDB para acceso directo a la BD (utilizado por TransaccionModel)
+  async openDB() {
+    if (!this.db) {
+      await this.init();
+    }
+    return this.db;
+  }
+
 //mobil
 
   async initSQLite() {
@@ -35,6 +43,20 @@ class DatabaseService {
           telefono TEXT NOT NULL,
           contrasena TEXT NOT NULL,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
+      // Crear tabla de transacciones
+      await this.db.execAsync(`
+        CREATE TABLE IF NOT EXISTS transacciones (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nombre TEXT NOT NULL,
+          monto REAL NOT NULL,
+          categoria TEXT NOT NULL,
+          fecha TEXT NOT NULL,
+          descripcion TEXT NOT NULL,
+          es_gasto INTEGER DEFAULT 1,
+          fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
         );
       `);
 
