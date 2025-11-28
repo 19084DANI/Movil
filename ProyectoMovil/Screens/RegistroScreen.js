@@ -1,52 +1,52 @@
-import {Text, StyleSheet, View, TextInput, Button, Image, Alert} from 'react-native';
-import { useActionState, useState } from 'react';
+import {Text, StyleSheet, View, TextInput, Button, Image, Alert, ActivityIndicator} from 'react-native';
+import { useState } from 'react';
 
 import IniciarSeScreen from './IniciarSeScreen';
 import { Ionicons } from  '@expo/vector-icons';
+import AuthController from '../controllers/AuthController';
+
 export default function RegistroScreen(){
     const [screen, setScreen]=useState('default');
     const [nombre, setNombre] = useState('');
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    // Validaciones //
-    
-    const validarCorreo = (email) =>{
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);  
-    };
-
-    const crearCuenta = () => {
-        if (!nombre.trim() || !correo.trim() || !telefono.trim() || !contrasena.trim()){
-            Alert.alert("Error", "Todos los campos son obligatorios, porfavor complete todos los campos.");
-            alert("ERROR, Todos los campos son obligatorios.");
-            return;
-        }
-        if (!validarCorreo(correo.trim())){
-            Alert.alert("Error", "El correo ingresado no es valido, porfavor ingresa un correo valido.");
-            alert("ERROR, Ingresa un correo valido");
-            return;
-        }
-        if (!/^\d+$/.test(telefono) || telefono.length < 10 ){
-            Alert.alert("Error", "El telefono ingresado no es valido, porfavor ingresa un telefono valido.");
-            alert("ERROR, Ingresa un telefono valido.");
-            return;
-        }
-        if (contrasena.length < 6){
-            Alert.alert("Error", "La contraseña ingresada no es valida, porfavor ingrese una contraseña valida");
-            alert("ERROR, Ingresa una contraseña valida.");
-            return;
-        }
-        Alert.alert("Cuenta creada", `Nombre: ${nombre}\nCorreo: ${correo}`);
-        alert("Registro Exitoso! \nCuenta creada"+
-            "\n Datos ingresados: " +
-            `Nombre: ${nombre}\nCorreo: ${correo}\n`
-            
-
-        );
+    const crearCuenta = async () => {
+        setLoading(true);
         
-        
+        const result = await AuthController.register({
+            nombre,
+            correo,
+            telefono,
+            contrasena
+        });
+
+        setLoading(false);
+
+        if (result.success) {
+            Alert.alert(
+                "Éxito",
+                result.message || "Cuenta creada exitosamente",
+                [
+                    {
+                        text: "Aceptar",
+                        onPress: () => {
+                            // Limpiar campos
+                            setNombre('');
+                            setCorreo('');
+                            setTelefono('');
+                            setContrasena('');
+                            // Ir a iniciar sesión
+                            setScreen('Iniciar sesion');
+                        }
+                    }
+                ]
+            );
+        } else {
+            Alert.alert("Error", result.error || "Error al crear la cuenta");
+        }
     };
 
     const irIniciarSesion = () =>{
@@ -97,7 +97,11 @@ export default function RegistroScreen(){
         />
 
         <View style={{width: '100%', marginTop:10}}>
-          <Button title='Crear Cuenta' color='#5b8486ff' onPress={crearCuenta} />
+          {loading ? (
+            <ActivityIndicator size="large" color="#5b8486ff" />
+          ) : (
+            <Button title='Crear Cuenta' color='#5b8486ff' onPress={crearCuenta} />
+          )}
         </View>
 
         <View style={{ marginTop: 15 }}>

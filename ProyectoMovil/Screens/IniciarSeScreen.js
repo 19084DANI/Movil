@@ -1,43 +1,34 @@
-import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,Switch} from 'react-native'
+import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,Switch, ActivityIndicator} from 'react-native'
 import {useState} from 'react'
 import RecuperarContrasena from './RecuperarContrasena';
 import HomeScreen from './HomeScreen';
 import { Ionicons } from '@expo/vector-icons';
+import AuthController from '../controllers/AuthController';
 
 export default function IniciarSeScreen (){
     const [screen, setScreen]=useState('default');
     const[usuario,setusuario]= useState('');
     const[keyword,setkeyword]= useState('');
+    const[loading, setLoading] = useState(false);
 
-    const mostrarAlerta= ()=>{
-        if(usuario ===''|| keyword ===''){
-            Alert.alert('Por favor complete todos los campos');
-            alert('Por favor complete todos los campos');
-          }else{
-        Alert.alert(
-          "Datos ingresados",
-          `Nombre: ${usuario}\n
-          Password: ${keyword}\n`,
-           [
-          {
-            text: "Aceptar",
-            onPress: () => setScreen('Iniciar sesion') 
-          }
-        ]
-        );
-          alert(
-          "Datos ingresados",
-          `Nombre: ${usuario}\n
-          Password: ${keyword}\n`,
-          [
-          {
-            text: "Aceptar",
-            onPress: () => setScreen('Iniciar sesion') 
-          }
-        ]
-        );
+    const mostrarAlerta= async ()=>{
+        setLoading(true);
         
-      } 
+        const result = await AuthController.login(usuario, keyword);
+        
+        setLoading(false);
+
+        if (result.success) {
+        Alert.alert("Éxito", result.message || "Inicio de sesión exitoso",[{text: "Aceptar",
+            onPress: () => {                            
+              setusuario('');
+              setkeyword('');
+                setScreen('Iniciar sesion');
+             }
+             }]);
+        } else {
+            Alert.alert("Error", result.error || "Error al iniciar sesión");
+        }
     }
 
   switch(screen){
@@ -69,9 +60,11 @@ export default function IniciarSeScreen (){
           <View style={styles.separador}></View>   
 
           <TextInput style={[styles.inputText,{zIndex:1}]}       
-          placeholder='Ingresa tu Usuario'
+          placeholder='Ingresa tu Correo'
           onChangeText={setusuario}
-          value={usuario}        
+          value={usuario}
+          keyboardType='email-address'
+          autoCapitalize='none'
           />            
           <View style={[styles.separador3,{zIndex:1}]}></View> 
           <View style={styles.separador2}></View>                      
@@ -95,10 +88,14 @@ export default function IniciarSeScreen (){
           </View>
           <View style={styles.separador4}></View>  
           <View style={styles.btn}>
-              <Button title='Iniciar Sesion'
-              color='#446967ff'
-              onPress={() => mostrarAlerta()} 
-              />  
+              {loading ? (
+                <ActivityIndicator size="large" color="#446967ff" />
+              ) : (
+                <Button title='Iniciar Sesion'
+                color='#446967ff'
+                onPress={() => mostrarAlerta()} 
+                />
+              )}
           </View>  
           <View style={styles.contInf}></View>   
         </View>
@@ -140,12 +137,12 @@ contInf: {
     marginTop:15,
 },
 separador3: {
-  borderBottomColor: 'black', // color de la línea
-  borderBottomWidth: 2,       // grosor de la línea
+  borderBottomColor: 'black', 
+  borderBottomWidth: 2,      
   width: '80%',
   alignSelf: 'center',
   marginTop: 20,
-},  separador4:{ //separador promedio
+},  separador4:{ 
     marginTop:50,
 },
   logo:{

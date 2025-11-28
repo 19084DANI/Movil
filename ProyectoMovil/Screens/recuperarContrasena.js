@@ -1,41 +1,47 @@
-import { Text, StyleSheet, View, TextInput, Alert, Button, Image } from 'react-native'
+import { Text, StyleSheet, View, TextInput, Alert, Button, Image, ActivityIndicator } from 'react-native'
 import React, {useState} from 'react'
 
 import HomeScreen from './HomeScreen';
 import IniciarSeScreen from './IniciarSeScreen';
 import { Ionicons } from  '@expo/vector-icons';
+import AuthController from '../controllers/AuthController';
+
 export default function RecuperarContrasena() {
     const [screen, setScreen]=useState('default');
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [confirmarContrasena, setConfirmarContrasena] = useState('');
     const [email, setEmail] = useState('');
-    const mostrarAlerta = () => {
-        if (usuario === '' && email === '' && contrasena === '' && confirmarContrasena === ''){
-            Alert.alert('Todos los campos estan vacios');
-            alert('Todos los campos estan vacios');
-        }else if (usuario.trim() === ''){
-            Alert.alert('Nombre no puede estar vacio');
-            alert('Nombre no puede estar vacio');
-        }else if (email.trim() === ''){
-            Alert.alert('Email no puede estar vacio');
-            alert('Email no puede estar vacio');
-        }else if (!email.includes('@') || !email.includes('.')){
-            Alert.alert('Email no es valido');
-            alert('Email no es valido');
-        }else if (contrasena.trim() === ''){
-            Alert.alert('Contraseña no puede estar vacio');
-            alert('Contraseña no puede estar vacio');
-        }else if (confirmarContrasena.trim() === ''){
-            Alert.alert('Las contraseñas no coinciden');
-            alert('Las contraseñas no coinciden');
-        }else if (contrasena !== confirmarContrasena){
-            Alert.alert('Las contraseñas no coinciden');
-            alert('Las contraseñas no coinciden');
-        }else{
-            Alert.alert('Contraseña cambiada con exito');
-            alert('Contraseña cambiada con exito');
-            setScreen('Iniciar sesion');
+    const [loading, setLoading] = useState(false);
+
+    const mostrarAlerta = async () => {
+        setLoading(true);
+        
+        const result = await AuthController.recoverPassword(email, contrasena, confirmarContrasena);
+        
+        setLoading(false);
+
+        if (result.success) {
+            Alert.alert(
+                "Éxito",
+                result.message || "Contraseña actualizada exitosamente",
+                [
+                    {
+                        text: "Aceptar",
+                        onPress: () => {
+                            // Limpiar campos
+                            setUsuario('');
+                            setEmail('');
+                            setContrasena('');
+                            setConfirmarContrasena('');
+                            // Ir a iniciar sesión
+                            setScreen('Iniciar sesion');
+                        }
+                    }
+                ]
+            );
+        } else {
+            Alert.alert("Error", result.error || "Error al actualizar la contraseña");
         }
     };
     switch(screen){
@@ -105,8 +111,12 @@ export default function RecuperarContrasena() {
                 />
 
                 <View style={styles.botonContainer}></View>   
-             <View style={styles.separador3}></View>                  
-                <Button title="Iniciar Sesión" onPress={mostrarAlerta} color='#0b7a89ff'/>                            
+             <View style={styles.separador3}></View>
+                {loading ? (
+                    <ActivityIndicator size="large" color="#0b7a89ff" />
+                ) : (
+                    <Button title="Cambiar Contraseña" onPress={mostrarAlerta} color='#0b7a89ff'/>
+                )}                            
                 </View>
              <View>               
         </View>
