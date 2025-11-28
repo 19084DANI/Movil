@@ -1,15 +1,61 @@
-import { Text, StyleSheet, View, Image, ImageBackground, ScrollView, Button } from 'react-native'
-import { useState } from 'react';
+import { Text, StyleSheet, View, Image, ImageBackground, ScrollView, Button, FlatList, ActivityIndicator, Alert } from 'react-native'
+import React, { useState, useEffect, useCallback } from 'react';
 import { TouchableOpacity } from 'react-native';
 import PresupuestosScreen from './PresupuestosScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import NuevatransScreen from './NuevaTransScreen';
 import Login from './LoginScreen';
 import GraficaScreen from './GraficaScreen';
+import TransaccionController from '../controllers/TransaccionController';
 import { Ionicons } from  '@expo/vector-icons';
-export default function BotonesScreen() {
 
+const controller = TransaccionController;
+export default function BotonesScreen() {
+    const [transacciones, setTransacciones] = useState([]);
     const [screen, setScreen]=useState('default');
+      const [loading, setLoading] = useState(true);
+    // cargar transacciones
+      const cargarTransacciones = useCallback(async () => {
+        try {
+          setLoading(true);
+          const data = await controller.obtenerTransacciones();
+          setTransacciones(data);
+          console.log(`${data.length} transacciones cargadas`);
+        } catch (error) {
+          Alert.alert('Error', error.message || 'Error al cargar transacciones');
+        } finally {
+          setLoading(false);
+        }
+      }, []);
+    
+      // useEffect para cargar transacciones al montar
+      useEffect(() => {
+        const init = async () => {
+          await controller.initialize();
+          await cargarTransacciones();
+        };
+        init();
+        controller.addListener(cargarTransacciones);
+    
+        return () => {
+          controller.removeListener(cargarTransacciones);
+        };
+      }, [cargarTransacciones]);
+    const renderTransaccion = ({ item, index }) => (
+        <View style={styles.elementos}>
+          <View style={styles.headerTransaccion}>
+            <Text style={styles.monto}>${item.monto.toFixed(2)}</Text>
+          </View>
+          <View style={styles.detalles}>
+            <Text style={[styles.texto1, { fontSize: 16 }]}>{item.nombre}</Text>
+            <Text style={[styles.texto1, { fontSize: 12 }]}>{item.categoria}</Text>
+          </View>
+          <View style={styles.fecha}>
+            <Text style={[styles.texto1, { fontSize: 11 }]}>{item.descripcion}</Text>
+            <Text style={[styles.texto1, { fontSize: 11 }]}>{item.fecha}</Text>
+          </View>
+        </View>
+      );
     switch(screen){
       case 'presupuestos':
           return <PresupuestosScreen/>
@@ -59,36 +105,23 @@ export default function BotonesScreen() {
         </View>
          <View style={styles.elementos2}>
         <Text style={styles.textot}>Transaccion</Text>   
-        <TouchableOpacity onPress={() => setScreen('NuevaTransScreen')}>
+        <TouchableOpacity onPress={() => setScreen('transacciones')}>
         <Image style={styles.mas} source={require('../assets/mas.png')}/>
         </TouchableOpacity>
         </View>
         </View>
         <View>
         <Text style={styles.utransaccion}>Ultimas Transacciones</Text>
-         <TouchableOpacity onPress={() => setScreen('transacciones')}>
-            <View style={styles.elementostransacciones}>
-                <Text style={styles.textotransacciones}>$180.00</Text>
-                <View style={styles.fecha}>
-                <Text style={styles.textotransacciones}>Cinepolis</Text>
-                <Text style={styles.textotransacciones}>24/09/2025</Text>
-                </View>
-            </View>
-            </TouchableOpacity>
-             <View style={styles.elementostransacciones}>
-                <Text style={styles.textotransacciones}>$220.00</Text>
-                <View style={styles.fecha}>
-                <Text style={styles.textotransacciones}>Uber X</Text>
-                <Text style={styles.textotransacciones}>15/04/2025</Text>
-                </View>
-            </View>
-            <View style={styles.elementostransacciones}>
-                <Text style={styles.textotransacciones}>$220.00</Text>
-                <View style={styles.fecha}>
-                <Text style={styles.textotransacciones}>Ferreteria</Text>
-                <Text style={styles.textotransacciones}>29/01/2025</Text>
-                </View>
-            </View>
+          <View style={styles.contenido}>
+              <FlatList style={styles.flatlista} data={transacciones.slice(0, 5)} keyExtractor={(item) => item.id.toString()}
+              renderItem={renderTransaccion}
+              scrollEnabled={false}
+              ListEmptyComponent={ <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>No hay transacciones</Text>
+              <Text style={styles.emptySubtext}>Crea la primera transacción</Text>
+             </View>
+             }/>
+    </View>
           
         </View>
 
@@ -287,5 +320,17 @@ botonPresupuesto: {
   justifyContent: 'center',
   alignItems: 'center',
    marginLeft: 50,
+},
+
+flatlista:{
+width: '100%',
+    height: '40%',
+    backgroundColor: '#ADD6BC',
+    marginVertical: 5,
+    borderRadius: 20,
+    padding:5,
+    paddingHorizontal:15,
+    paddingVertical:5,
+
 },
 })
