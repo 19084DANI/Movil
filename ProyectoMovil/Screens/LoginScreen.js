@@ -1,5 +1,5 @@
 
-import { StyleSheet, Text, View, Button, Image, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ImageBackground,Pressable } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from  '@expo/vector-icons';
 
@@ -37,21 +37,22 @@ export default function Login(){
           <View style={styles.separador}></View>
 
           <View style={styles.contenedorBotones}>   
-           <View style={styles.btn}>            
-            <Button title='Iniciar Sesion' 
-            color='#f0e7da3e' 
-            onPress={()=> setScreen('IniciarSesion')}
-            />
 
-          </View>
-    
-            
-          <View style={styles.btn}>
-          <Button title='Registrarse'
-           color='#f0e7da50'
-           onPress={()=>setScreen('Registro')}
-           />  
-        </View>
+
+          <Pressable 
+          style={styles.botones}
+          onPress={()=> setScreen('IniciarSesion')}
+          >
+          <Text style={styles.textoBoton}>INICIAR SESION</Text>
+          </Pressable>
+
+           <Pressable 
+          style={styles.botones}
+          onPress={()=>setScreen('Registro')}
+          >
+          <Text style={styles.textoBoton}>REGISTRARSE</Text>
+          </Pressable> 
+
       </View>
     </View>
                       
@@ -124,11 +125,33 @@ const styles = StyleSheet.create({
     marginHorizontal:30,
     borderRadius:75,
     overflow:'hidden',
+    borderColor:'#172b41ff',
+    borderWidth:5,
+    
   },
   btn:{
     width:200,
     marginVertical:5,
     height:60,
+  },
+  botones:{
+    width:200,
+    height:40,
+    backgroundColor:'#23555fa0',
+    borderRadius:15,
+    alignItems:'center',
+    justifyContent:'center',
+    shadowColor:'#777',
+    marginBottom:30,
+    shadowOffset:{
+      height:3,
+      width:0,
+    }
+  },
+  textoBoton:{
+    fontSize:15,
+    fontWeight:'550',
+    color:'white',
   }
 
 })

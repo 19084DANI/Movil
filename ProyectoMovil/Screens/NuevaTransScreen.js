@@ -97,7 +97,7 @@ export default function FormularioTransaccion() {
                   <TouchableOpacity onPress={() => setScreen('homee')}>
                            <Image
                             style={styles.logo}
-                            source={require('../assets/logo.jpg')}
+                            source={require('../assets/Logo.jpeg')}
                            ></Image>  
                            </TouchableOpacity> 
      
