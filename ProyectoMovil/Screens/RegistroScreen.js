@@ -1,64 +1,58 @@
-import {Text, StyleSheet, View, TextInput, Button, Image, Alert, ActivityIndicator} from 'react-native';
-import { useState } from 'react';
+import {Text, StyleSheet, View, TextInput, Button, Image, Alert} from 'react-native';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../data/AuthContext';
 
-import IniciarSeScreen from './IniciarSeScreen';
-import { Ionicons } from  '@expo/vector-icons';
-import AuthController from '../controllers/AuthController';
-
-export default function RegistroScreen(){
-    const [screen, setScreen]=useState('default');
+export default function RegistroScreen({ navigation }){
+    const { registro, loading } = useContext(AuthContext);
     const [nombre, setNombre] = useState('');
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
     const [contrasena, setContrasena] = useState('');
-    const [loading, setLoading] = useState(false);
+
+    // Validaciones //
+    
+    const validarCorreo = (email) =>{
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);  
+    };
 
     const crearCuenta = async () => {
-        setLoading(true);
-        
-        const result = await AuthController.register({
-            nombre,
-            correo,
-            telefono,
-            contrasena
-        });
+        if (!nombre.trim() || !correo.trim() || !telefono.trim() || !contrasena.trim()){
+            Alert.alert("Error", "Todos los campos son obligatorios, porfavor complete todos los campos.");
+            return;
+        }
+        if (!validarCorreo(correo.trim())){
+            Alert.alert("Error", "El correo ingresado no es valido, porfavor ingresa un correo valido.");
+            return;
+        }
+        if (!/^\d+$/.test(telefono) || telefono.length < 10 ){
+            Alert.alert("Error", "El telefono ingresado no es valido, porfavor ingresa un telefono valido.");
+            return;
+        }
+        if (contrasena.length < 6){
+            Alert.alert("Error", "La contraseña ingresada no es valida, porfavor ingrese una contraseña valida");
+            return;
+        }
 
-        setLoading(false);
-
-        if (result.success) {
-            Alert.alert(
-                "Éxito",
-                result.message || "Cuenta creada exitosamente",
-                [
-                    {
-                        text: "Aceptar",
-                        onPress: () => {
-                            // Limpiar campos
-                            setNombre('');
-                            setCorreo('');
-                            setTelefono('');
-                            setContrasena('');
-                            // Ir a iniciar sesión
-                            setScreen('Iniciar sesion');
-                        }
-                    }
-                ]
-            );
-        } else {
-            Alert.alert("Error", result.error || "Error al crear la cuenta");
+        try {
+            const result = await registro(nombre, correo, telefono, contrasena);
+            if (result.success) {
+                Alert.alert("Éxito", `Cuenta creada para: ${nombre}\nCorreo: ${correo}`);
+                // Navegar al Home y evitar volver a la pantalla de auth
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'HomeDrawer' }],
+                });
+            } else {
+                Alert.alert("Error", result.error || "Error al crear la cuenta");
+            }
+        } catch (error) {
+            Alert.alert("Error", "Error al crear la cuenta: " + error.message);
         }
     };
 
-    const irIniciarSesion = () =>{
-        Alert.alert("Inicia Sesión");
-        setScreen('Iniciar sesion');
-    };
-    switch(screen){
-        case 'Iniciar sesion':
-            return<IniciarSeScreen/>
-        default:
     return (
-        <View style={{flex:1, backgroundColor:'#F0E68C'}}>
+        <View style={{flex:1, backgroundColor:'#F5E6D3'}}>
          <View style={styles.encabezado}>  
             </View>
         <View style={styles.container}>
@@ -97,25 +91,20 @@ export default function RegistroScreen(){
         />
 
         <View style={{width: '100%', marginTop:10}}>
-          {loading ? (
-            <ActivityIndicator size="large" color="#5b8486ff" />
-          ) : (
-            <Button title='Crear Cuenta' color='#5b8486ff' onPress={crearCuenta} />
-          )}
+          <Button title={loading ? 'Creando...' : 'Crear Cuenta'} color='#000000' onPress={crearCuenta} disabled={loading} />
         </View>
 
         <View style={{ marginTop: 15 }}>
-            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#456953ff' onPress={irIniciarSesion} />
+            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#000000' onPress={() => navigation.navigate('IniciarSesion')} />
         </View>
         </View>
         </View>
     );
-    }
 }
 const styles= StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#93A392',
+        backgroundColor: '#F5E6D3',
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal:20,
@@ -126,13 +115,13 @@ const styles= StyleSheet.create({
         borderRadius: 40,
         marginBottom:20,
         borderWidth: 2,
-        borderColor: '#EEF5DB'
+        borderColor: '#001F3F'
     },
     titulo:{
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
-        color: '#3D4939',
+        color: '#001F3F',
     },
     input:{
         width: '100%',
@@ -140,8 +129,8 @@ const styles= StyleSheet.create({
         borderRadius: 20,
         marginBottom: 15,
         borderWidth: 1,
-        borderColor: '#A9A9A9',
-        backgroundColor: '#EEF5DB'
+        borderColor: '#001F3F',
+        backgroundColor: '#FFFFFF'
     },
     menuhamburgesa:{
 
@@ -166,7 +155,7 @@ borderWidth:5
 justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
-backgroundColor: '#EEF5DB',
+backgroundColor: '#001F3F',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
