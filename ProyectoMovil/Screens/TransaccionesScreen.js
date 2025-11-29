@@ -5,22 +5,18 @@ import HomeScreen from './HomeScreen';
 import NuevaTransScreen from './NuevaTransScreen';
 import TransaccionController from '../controllers/TransaccionController';
 
-//transaccionController para cargar y gestionar transacciones
 const controller = TransaccionController;
 
 export default function TransaccionesScreen() {
   const [screen, setScreen] = useState('default');
   const [transacciones, setTransacciones] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editingId, setEditingId] = useState(null);
 
-  // cargar transacciones
   const cargarTransacciones = useCallback(async () => {
     try {
       setLoading(true);
       const data = await controller.obtenerTransacciones();
       setTransacciones(data);
-      console.log(`${data.length} transacciones cargadas`);
     } catch (error) {
       Alert.alert('Error', error.message || 'Error al cargar transacciones');
     } finally {
@@ -28,7 +24,6 @@ export default function TransaccionesScreen() {
     }
   }, []);
 
-  // useEffect para cargar transacciones al montar
   useEffect(() => {
     const init = async () => {
       await controller.initialize();
@@ -42,7 +37,6 @@ export default function TransaccionesScreen() {
     };
   }, [cargarTransacciones]);
 
-  // Eliminar transacción con confirmación
   const handleEliminar = (transaccion) => {
     Alert.alert(
       'Confirmar eliminación',
@@ -53,15 +47,11 @@ export default function TransaccionesScreen() {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
-            try {
-              const res = await controller.eliminarTransaccion(transaccion.id);
-              if (res.success) {
-                Alert.alert('Eliminado', `Transacción "${transaccion.nombre}" eliminada.`);
-              } else {
-                Alert.alert('Error', res.error || 'No se pudo eliminar');
-              }
-            } catch (error) {
-              Alert.alert('Error', error.message);
+            const res = await controller.eliminarTransaccion(transaccion.id);
+            if (res.success) {
+              Alert.alert('Eliminado', `Transacción "${transaccion.nombre}" eliminada.`);
+            } else {
+              Alert.alert('Error', res.error || 'No se pudo eliminar');
             }
           }
         }
@@ -69,13 +59,12 @@ export default function TransaccionesScreen() {
     );
   };
 
-  // Renderizar item de transacción
-  const renderTransaccion = ({ item, index }) => (
+  const renderTransaccion = ({ item }) => (
     <View style={styles.elementos}>
       <View style={styles.headerTransaccion}>
         <Text style={styles.monto}>${item.monto.toFixed(2)}</Text>
         <View style={styles.acciones}>
-          <TouchableOpacity style={styles.btnEditar} onPress={() => {}}>
+          <TouchableOpacity style={styles.btnEditar}>
             <Text style={styles.btnTexto}>✎</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btnEliminar} onPress={() => handleEliminar(item)}>
@@ -83,259 +72,288 @@ export default function TransaccionesScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
       <View style={styles.detalles}>
-        <Text style={[styles.texto1, { fontSize: 18 }]}>{item.nombre}</Text>
-        <Text style={[styles.texto1, { fontSize: 14 }]}>{item.categoria}</Text>
+        <Text style={styles.textoNombre}>{item.nombre}</Text>
+        <Text style={styles.textoCategoria}>{item.categoria}</Text>
       </View>
+
       <View style={styles.fecha}>
-        <Text style={[styles.texto1, { fontSize: 12 }]}>{item.descripcion}</Text>
-        <Text style={[styles.texto1, { fontSize: 12 }]}>{item.fecha}</Text>
+        <Text style={styles.textoDescripcion}>{item.descripcion}</Text>
+        <Text style={styles.textoFecha}>{item.fecha}</Text>
       </View>
-      <Text style={[styles.texto1, { fontSize: 10, marginTop: 5 }]}>
-        {item.es_gasto ? 'Gasto' : 'Ingreso'}
-      </Text>
+
+      <Text style={styles.textTipo}>{item.es_gasto ? 'Gasto' : 'Ingreso'}</Text>
     </View>
   );
 
-  switch(screen) {
+  switch (screen) {
     case 'homeee':
-      return <HomeScreen/>;
+      return <HomeScreen />;
     case 'nuevaTrans':
-      return <NuevaTransScreen/>;
+      return <NuevaTransScreen />;
     default:
       return (
-        <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
-               style={styles.backgrounds} >
+        <ImageBackground
+          source={require('../assets/fondo1.jpg')}
+          resizeMode='cover'
+          style={styles.backgrounds}
+        >
 
-           <View style={styles.encabezado}>   
-           <TouchableOpacity onPress={() => setScreen('homeee')}>
-    <Image
-      style={styles.logo}
-      source={require('../assets/Logo.jpeg')}
-    />
-  </TouchableOpacity> 
-
-            </View>
-            
-            <View style={styles.Titulo}>
-              <Text style={styles.texto2}>Transacciones</Text>
-            </View>
-
-            <View style={styles.botones}>
-              <View style={{width:120,  marginRight: 10} }  >
-                      <Button color='#79B7B4' title='Fecha'></Button>
-              </View>
-              <View style={{width:120,  marginRight: 10}}>
-                      <Button color='#79B7B4' title='Categoria'></Button>
-              </View>
-            </View>
-
-            {loading ? (
-              <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#0b7a89ff" />
-                <Text style={styles.loadingText}>Cargando transacciones...</Text>
-              </View>
-            ) : (
-              <View style={styles.contenido}>
-                <FlatList
-                  data={transacciones}
-                  keyExtractor={(item) => item.id.toString()}
-                  renderItem={renderTransaccion}
-                  scrollEnabled={false}
-                  ListEmptyComponent={
-                    <View style={styles.emptyContainer}>
-                      <Text style={styles.emptyText}>No hay transacciones</Text>
-                      <Text style={styles.emptySubtext}>Crea la primera transacción</Text>
-                    </View>
-                  }
-                />
-
-                <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
-                  <TouchableOpacity onPress={() => setScreen('nuevaTrans')}>
-                    <Image
-                        style={styles.agregar}
-                        source={require('../assets/plus.png')}
-                       ></Image> 
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-           <View style={styles.encabezado2}>
-                      
+          <View style={styles.encabezado}>
+            <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')} />
+            <TouchableOpacity onPress={() => setScreen('homeee')}>
+              <Image style={styles.logo} source={require('../assets/logo.jpg')} />
+            </TouchableOpacity>
           </View>
+
+          <View style={styles.Titulo}>
+            <Text style={styles.texto2}>Transacciones</Text>
+          </View>
+
+          <View style={styles.botones}>
+            <View style={{ width: 140, marginRight: 10 }}>
+              <Button color='#79B7B4' title='Fecha' />
+            </View>
+            <View style={{ width: 140 }}>
+              <Button color='#79B7B4' title='Categoria' />
+            </View>
+          </View>
+
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#0b7a89ff" />
+              <Text style={styles.loadingText}>Cargando transacciones...</Text>
+            </View>
+          ) : (
+            <View style={styles.contenido}>
+              <FlatList
+                data={transacciones}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderTransaccion}
+                contentContainerStyle={styles.lista}
+                style={{ width: '100%' }}
+
+                ListEmptyComponent={
+                  <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>No hay transacciones</Text>
+                    <Text style={styles.emptySubtext}>Crea la primera transacción</Text>
+                  </View>
+                }
+              />
+
+              <View style={styles.contenedorAgregar}>
+                <TouchableOpacity onPress={() => setScreen('nuevaTrans')}>
+                  <Image style={styles.agregar} source={require('../assets/plus.png')} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          <View style={styles.encabezado2} />
         </ImageBackground>
       );
-   }
-  
-}const styles = StyleSheet.create({
+  }
+}
 
-contenido: {
-  flex: 1,
-  padding:15,
-  paddingBottom:10,
-},
+const styles = StyleSheet.create({
 
-backgrounds: {
-  flex: 1,
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  width: '100%',
-  height: '100%',
-},
-encabezado:{
-  justifyContent:'space-between',
-flexDirection: 'row',
-alignItems: "center",
-justifyContent:'center',
-backgroundColor: '#EEF5DB',
-padding: 10,
-//borderRadius:10,
-marginBottom:0,
-width: '100%',
-height: '10%',
+  backgrounds: {
+    flex: 1,
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
 
-},
-encabezado2:{ 
-alignItems: "center",
-backgroundColor: '#EEF5DB',
-padding: 10,
-//borderRadius:10,
-marginBottom:0,
-width: '100%',
-height: '10%',
-},
-menuhamburgesa:{
-
-width: 35,
-height: 35,
-},
-agregar:{
-
-width: 45,
-height: 45,
-},
-texto1:{
-  fontSize:30,
-  fontWeight:'bold',
-  color:'#fff'
-},
-
-texto2:{
-  fontSize:40,
-  fontWeight:'bold',
-  color:'#070707ff'
-},
-
-logo:{
-width: 80,
-height: 80,
-borderRadius: 50,
-borderColor: '#134f51ff',
-borderWidth:3
-},
-elementos:{
- width: '100%',
-    backgroundColor: '#a5c3a7',
+  encabezado: {
+    flexDirection: 'row',
+    alignItems: "center",
     justifyContent: 'space-between',
-    marginVertical: 8,
+    backgroundColor: '#EEF5DB',
+    padding: 12,
     borderRadius: 10,
-    padding:15,
-},
+    width: '100%',
+    height: '10%',
+  },
 
-Titulo:{
-justifyContent:'center',
-alignItems:'center',
-fontSize: 20,
-fontWeight: 'bold',
-marginVertical: 10,
-width:'100%'
-},
+  encabezado2: {
+    backgroundColor: '#EEF5DB',
+    padding: 10,
+    borderRadius: 10,
+    width: '100%',
+    height: '10%',
+  },
 
-fecha:{
-  flexDirection:'row',
-  justifyContent:'space-between'
-},
+  menuhamburgesa: {
+    width: 40,
+    height: 40,
+  },
 
-botones:{
-  flexDirection:'row',
-  paddingHorizontal: 15,
-  marginBottom: 10,
-},
+  logo: {
+    width: 110,
+    height: 80,
+    borderRadius: 45,
+    borderColor: '#f4e45dff',
+    borderWidth: 5,
+  },
 
-loadingContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-},
+  Titulo: {
+    marginTop: 10,
+    alignItems: 'center',
+    width: '100%',
+  },
 
-loadingText: {
-  marginTop: 10,
-  color: '#666',
-  fontSize: 14,
-},
+  texto2: {
+    fontSize: 42,
+    fontWeight: 'bold',
+    color: '#070707ff',
+  },
 
-emptyContainer: {
-  alignItems: 'center',
-  paddingVertical: 40,
-},
+  botones: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
 
-emptyText: {
-  fontSize: 18,
-  color: '#999',
-  marginBottom: 8,
-},
+  contenido: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+    paddingTop: 10,
+  },
 
-emptySubtext: {
-  fontSize: 14,
-  color: '#bbb',
-},
+  lista: {
+    paddingBottom: 200,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+  },
 
-headerTransaccion: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginBottom: 10,
-},
+  elementos: {
+    width: '90%',
+    backgroundColor: '#a5c3a7',
+    marginVertical: 14,
+    borderRadius: 18,
+    padding: 28,
+    borderWidth: 2,
+    borderColor: '#7fa88a',
+  },
 
-monto: {
-  fontSize: 24,
-  fontWeight: 'bold',
-  color: '#fff',
-},
+  headerTransaccion: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
 
-acciones: {
-  flexDirection: 'row',
-  gap: 8,
-},
+  monto: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
 
-btnEditar: {
-  width: 30,
-  height: 30,
-  borderRadius: 15,
-  backgroundColor: '#5ba3a1',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
+  acciones: {
+    flexDirection: 'row',
+    gap: 10,
+  },
 
-btnEliminar: {
-  width: 30,
-  height: 30,
-  borderRadius: 15,
-  backgroundColor: '#d32f2f',
-  justifyContent: 'center',
-  alignItems: 'center',
-},
+  btnEditar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#5ba3a1',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
-btnTexto: {
-  color: '#fff',
-  fontWeight: 'bold',
-  fontSize: 16,
-},
+  btnEliminar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#d32f2f',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
-detalles: {
-  marginBottom: 8,
-},
+  btnTexto: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 
-})
+  detalles: {
+    marginBottom: 10,
+  },
 
+  textoNombre: {
+    fontSize: 26,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+
+  textoCategoria: {
+    fontSize: 18,
+    color: '#fff',
+  },
+
+  fecha: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  textoDescripcion: {
+    fontSize: 16,
+    color: '#fff',
+  },
+
+  textoFecha: {
+    fontSize: 16,
+    color: '#fff',
+  },
+
+  textTipo: {
+    fontSize: 16,
+    marginTop: 10,
+    color: '#fff',
+  },
+
+  contenedorAgregar: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingRight: 25,
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+
+  agregar: {
+    width: 55,
+    height: 55,
+  },
+
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  loadingText: {
+    marginTop: 10,
+    color: '#666',
+    fontSize: 16,
+  },
+
+  emptyContainer: {
+    alignItems: 'center',
+    paddingVertical: 40,
+  },
+
+  emptyText: {
+    fontSize: 20,
+    color: '#999',
+  },
+
+  emptySubtext: {
+    fontSize: 16,
+    color: '#bbb',
+  },
+});

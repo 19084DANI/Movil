@@ -32,9 +32,9 @@ class TransaccionController {
     if (!data.descripcion || !data.descripcion.trim()) {
       return { valid: false, message: 'La descripción es obligatoria' };
     }
-    if (!data.es_gasto || (data.es_gasto.toLowerCase() !== 'si' && data.es_gasto.toLowerCase() !== 'no')) {
-      return { valid: false, message: 'Especifique si es gasto (Sí/No)' };
-    }
+ //   if (!data.es_gasto || (data.es_gasto.toLowerCase() !== 'si' && data.es_gasto.toLowerCase() !== 'no')) {
+   //   return { valid: false, message: 'Especifique si es gasto (Sí/No)' };
+    //}
     return { valid: true, message: '' };
   }
 
@@ -93,7 +93,7 @@ class TransaccionController {
     return result;
   }
 
-  // Sistema de listeners para cambios en tiempo real
+  
   addListener(callback) {
     this.listeners.push(callback);
   }

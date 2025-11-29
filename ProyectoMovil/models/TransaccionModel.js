@@ -1,4 +1,3 @@
-
 import DatabaseService from '../database/DatabaseService';
 
 class TransaccionModel {
@@ -12,15 +11,14 @@ class TransaccionModel {
       const db = await DatabaseService.openDB();
       
       await db.runAsync(
-        `INSERT INTO transacciones (nombre, monto, categoria, fecha, descripcion, es_gasto) 
-         VALUES (?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO transacciones (nombre, monto, categoria, fecha, descripcion) 
+         VALUES (?, ?, ?, ?, ?)`,
         [
           transaccionData.nombre.trim(),
           parseFloat(transaccionData.monto),
           transaccionData.categoria.trim(),
           transaccionData.fecha.trim(),
-          transaccionData.descripcion.trim(),
-          transaccionData.es_gasto === 'si' ? 1 : 0
+          transaccionData.descripcion.trim()
         ]
       );
 
@@ -43,7 +41,7 @@ class TransaccionModel {
       const db = await DatabaseService.openDB();
       
       const result = await db.getAllAsync(
-        `SELECT id, nombre, monto, categoria, fecha, descripcion, es_gasto, fecha_creacion
+        `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion
          FROM transacciones
          ORDER BY fecha DESC`
       );
@@ -68,7 +66,7 @@ class TransaccionModel {
       const db = await DatabaseService.openDB();
       
       const result = await db.getFirstAsync(
-        `SELECT id, nombre, monto, categoria, fecha, descripcion, es_gasto, fecha_creacion
+        `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion
          FROM transacciones
          WHERE id = ?`,
         [id]
@@ -95,7 +93,7 @@ class TransaccionModel {
       
       await db.runAsync(
         `UPDATE transacciones 
-         SET nombre = ?, monto = ?, categoria = ?, fecha = ?, descripcion = ?, es_gasto = ?
+         SET nombre = ?, monto = ?, categoria = ?, fecha = ?, descripcion = ?
          WHERE id = ?`,
         [
           transaccionData.nombre.trim(),
@@ -103,7 +101,6 @@ class TransaccionModel {
           transaccionData.categoria.trim(),
           transaccionData.fecha.trim(),
           transaccionData.descripcion.trim(),
-          transaccionData.es_gasto === 'si' ? 1 : 0,
           id
         ]
       );

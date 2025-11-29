@@ -9,9 +9,6 @@ class DatabaseService {
     this.dbVersion = 1;
   }
 
-
-   //inicia la base
-   
   async init() {
     if (this.isWeb) {
       return await this.initIndexedDB();
@@ -20,7 +17,6 @@ class DatabaseService {
     }
   }
 
-  // Método openDB para acceso directo a la BD (utilizado por TransaccionModel)
   async openDB() {
     if (!this.db) {
       await this.init();
@@ -28,13 +24,11 @@ class DatabaseService {
     return this.db;
   }
 
-//mobil
-
+  // base de teefono
   async initSQLite() {
     try {
       this.db = await SQLite.openDatabaseAsync(this.dbName);
-      
-      // Crear tabla de usuarios
+
       await this.db.execAsync(`
         CREATE TABLE IF NOT EXISTS usuarios (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -46,20 +40,6 @@ class DatabaseService {
         );
       `);
 
-      // Crear tabla de transacciones
-      await this.db.execAsync(`
-        CREATE TABLE IF NOT EXISTS transacciones (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT NOT NULL,
-          monto REAL NOT NULL,
-          categoria TEXT NOT NULL,
-          fecha TEXT NOT NULL,
-          descripcion TEXT NOT NULL,
-          es_gasto INTEGER DEFAULT 1,
-          fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
-
       console.log('SQLite database initialized');
       return true;
     } catch (error) {
@@ -68,8 +48,7 @@ class DatabaseService {
     }
   }
 
-//para web
-
+  //para web
   async initIndexedDB() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, this.dbVersion);
@@ -85,15 +64,15 @@ class DatabaseService {
         resolve(true);
       };
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = event.target.result;
 
-        // se crea object store de usuarios si no existe
         if (!db.objectStoreNames.contains('usuarios')) {
           const objectStore = db.createObjectStore('usuarios', {
             keyPath: 'id',
             autoIncrement: true
           });
+
           objectStore.createIndex('correo', 'correo', { unique: true });
           objectStore.createIndex('nombre', 'nombre', { unique: false });
         }
@@ -101,13 +80,11 @@ class DatabaseService {
     });
   }
 
-
+  // agregra
   async insert(table, data) {
-    if (this.isWeb) {
-      return await this.insertIndexedDB(table, data);
-    } else {
-      return await this.insertSQLite(table, data);
-    }
+    return this.isWeb
+      ? await this.insertIndexedDB(table, data)
+      : await this.insertSQLite(table, data);
   }
 
   async insertSQLite(table, data) {
@@ -129,7 +106,7 @@ class DatabaseService {
   }
 
   async insertIndexedDB(table, data) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const transaction = this.db.transaction([table], 'readwrite');
       const objectStore = transaction.objectStore(table);
       const request = objectStore.add({
@@ -137,32 +114,23 @@ class DatabaseService {
         created_at: new Date().toISOString()
       });
 
-      request.onsuccess = () => {
-        resolve({ success: true, insertId: request.result });
-      };
-
-      request.onerror = () => {
-        console.error('Error inserting into IndexedDB:', request.error);
+      request.onsuccess = () => resolve({ success: true, insertId: request.result });
+      request.onerror = () =>
         resolve({ success: false, error: request.error.message });
-      };
     });
   }
 
- 
+  //seleccionar
   async select(table, where = null, params = []) {
-    if (this.isWeb) {
-      return await this.selectIndexedDB(table, where, params);
-    } else {
-      return await this.selectSQLite(table, where, params);
-    }
+    return this.isWeb
+      ? await this.selectIndexedDB(table, where, params)
+      : await this.selectSQLite(table, where, params);
   }
 
   async selectSQLite(table, where, params) {
     try {
       let query = `SELECT * FROM ${table}`;
-      if (where) {
-        query += ` WHERE ${where}`;
-      }
+      if (where) query += ` WHERE ${where}`;
 
       const result = await this.db.getAllAsync(query, params);
       return { success: true, data: result };
@@ -172,53 +140,25 @@ class DatabaseService {
     }
   }
 
-  async selectIndexedDB(table, where, params) {
-    return new Promise((resolve) => {
+  async selectIndexedDB(table) {
+    return new Promise(resolve => {
       const transaction = this.db.transaction([table], 'readonly');
       const objectStore = transaction.objectStore(table);
       const request = objectStore.getAll();
 
-      request.onsuccess = () => {
-        let results = request.result;
+      request.onsuccess = () =>
+        resolve({ success: true, data: request.result });
 
-        // Aplicar filtros básicos si se proporcionan
-        if (where && params.length > 0) {
-          // Parsear condiciones simples como "correo = ?" o "correo = ? AND contrasena = ?"
-          if (where.includes(' AND ')) {
-            
-            const conditions = where.split(' AND ');
-            results = results.filter(item => {
-              return conditions.every((condition, index) => {
-                const field = condition.split(' = ?')[0].trim();
-                const value = params[index];
-                return item[field] === value;
-              });
-            });
-          } else {
-            // Condición simple
-            const condition = where.split(' = ?')[0].trim();
-            const value = params[0];
-            results = results.filter(item => item[condition] === value);
-          }
-        }
-
-        resolve({ success: true, data: results });
-      };
-
-      request.onerror = () => {
-        console.error('Error selecting from IndexedDB:', request.error);
+      request.onerror = () =>
         resolve({ success: false, error: request.error.message, data: [] });
-      };
     });
   }
 
-  //actualiza (consulta)
+  // actualizar
   async update(table, data, where, params) {
-    if (this.isWeb) {
-      return await this.updateIndexedDB(table, data, where, params);
-    } else {
-      return await this.updateSQLite(table, data, where, params);
-    }
+    return this.isWeb
+      ? await this.updateIndexedDB(table, data, where, params)
+      : await this.updateSQLite(table, data, where, params);
   }
 
   async updateSQLite(table, data, where, params) {
@@ -240,49 +180,38 @@ class DatabaseService {
     }
   }
 
-  async updateIndexedDB(table, data, where, params) {
-    return new Promise((resolve) => {
+  async updateIndexedDB(table, data) {
+    return new Promise(resolve => {
       const transaction = this.db.transaction([table], 'readwrite');
       const objectStore = transaction.objectStore(table);
-      
- 
-      const condition = where.split(' = ?')[0].trim();
-      const value = params[0];
-      const request = objectStore.getAll();
 
+      const request = objectStore.get(data.id);
       request.onsuccess = () => {
-        const results = request.result;
-        const record = results.find(item => item[condition] === value);
-        
-        if (record) {
-          Object.assign(record, data);
-          const updateRequest = objectStore.put(record);
-          
-          updateRequest.onsuccess = () => {
-            resolve({ success: true, changes: 1 });
-          };
+        const record = request.result;
 
-          updateRequest.onerror = () => {
-            resolve({ success: false, error: updateRequest.error.message });
-          };
-        } else {
+        if (!record) {
           resolve({ success: false, error: 'Record not found' });
+          return;
         }
-      };
 
-      request.onerror = () => {
-        resolve({ success: false, error: request.error.message });
+        Object.assign(record, data);
+
+        const updateRequest = objectStore.put(record);
+        updateRequest.onsuccess = () =>
+          resolve({ success: true, changes: 1 });
+
+        updateRequest.onerror = () =>
+          resolve({ success: false, error: updateRequest.error.message });
       };
     });
   }
 
-  //eliminar (consulta)
+
+  // eliminar
   async delete(table, where, params) {
-    if (this.isWeb) {
-      return await this.deleteIndexedDB(table, where, params);
-    } else {
-      return await this.deleteSQLite(table, where, params);
-    }
+    return this.isWeb
+      ? await this.deleteIndexedDB(table, where, params)
+      : await this.deleteSQLite(table, where, params);
   }
 
   async deleteSQLite(table, where, params) {
@@ -300,40 +229,37 @@ class DatabaseService {
   }
 
   async deleteIndexedDB(table, where, params) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const transaction = this.db.transaction([table], 'readwrite');
       const objectStore = transaction.objectStore(table);
-      
-      const condition = where.split(' = ?')[0];
+
+      const keyField = where.split(' = ?')[0];
       const value = params[0];
-      const index = objectStore.index(condition);
-      const request = index.getKey(value);
+
+      const request = objectStore.getAll();
 
       request.onsuccess = () => {
-        const key = request.result;
-        if (key) {
-          const deleteRequest = objectStore.delete(key);
-          deleteRequest.onsuccess = () => {
-            resolve({ success: true, changes: 1 });
-          };
-          deleteRequest.onerror = () => {
-            resolve({ success: false, error: deleteRequest.error.message });
-          };
-        } else {
-          resolve({ success: false, error: 'Record not found' });
-        }
-      };
+        const results = request.result;
+        const record = results.find(item => item[keyField] === value);
 
-      request.onerror = () => {
-        resolve({ success: false, error: request.error.message });
+        if (!record) {
+          resolve({ success: false, error: 'Record not found' });
+          return;
+        }
+
+        const deleteRequest = objectStore.delete(record.id);
+        deleteRequest.onsuccess = () =>
+          resolve({ success: true, changes: 1 });
+
+        deleteRequest.onerror = () =>
+          resolve({ success: false, error: deleteRequest.error.message });
       };
     });
   }
 }
 
-
 const databaseService = new DatabaseService();
-//inicia la base de datos al iniciar la app
+
 export const initDatabase = async () => {
   try {
     const initialized = await databaseService.init();
@@ -351,4 +277,3 @@ export const initDatabase = async () => {
 };
 
 export default databaseService;
-
