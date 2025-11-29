@@ -80,17 +80,6 @@ export default function BotonesScreen() {
           resizeMode='cover'
           style={styles.backgrounds}>
 
-          <View style={styles.encabezado}>
-            <View style={{ flexDirection: 'row', width: 90 }}>
-              <Image style={[styles.menuhamburgesa, { marginRight: 10 }]} source={require('../assets/menu.png')} />
-              <TouchableOpacity onPress={() => setScreen('login')}>
-                <Image style={styles.menuhamburgesa} source={require('../assets/salir.png')} />
-              </TouchableOpacity>
-            </View>
-
-            <Image style={styles.logo} source={require('../assets/logo.jpg')} />
-          </View>
-
           <View style={styles.Container}>
 
             <View style={styles.elementos}>
