@@ -107,12 +107,11 @@ export default function TransaccionesScreen() {
         <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
                style={styles.backgrounds} >
 
-           <View style={styles.encabezado}>  
-            <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')}></Image>     
+           <View style={styles.encabezado}>   
            <TouchableOpacity onPress={() => setScreen('homeee')}>
     <Image
       style={styles.logo}
-      source={require('../assets/logo.jpg')}
+      source={require('../assets/Logo.jpeg')}
     />
   </TouchableOpacity> 
 
@@ -188,20 +187,20 @@ encabezado:{
   justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
+justifyContent:'center',
 backgroundColor: '#EEF5DB',
 padding: 10,
-borderRadius:10,
+//borderRadius:10,
 marginBottom:0,
 width: '100%',
 height: '10%',
 
 },
-encabezado2:{
-  
+encabezado2:{ 
 alignItems: "center",
 backgroundColor: '#EEF5DB',
 padding: 10,
-borderRadius:10,
+//borderRadius:10,
 marginBottom:0,
 width: '100%',
 height: '10%',
@@ -229,12 +228,11 @@ texto2:{
 },
 
 logo:{
-
-width: 100,
-height: 70,
-borderRadius: 45,
-borderColor: '#f4e45dff',
-borderWidth:5
+width: 80,
+height: 80,
+borderRadius: 50,
+borderColor: '#134f51ff',
+borderWidth:3
 },
 elementos:{
  width: '100%',
