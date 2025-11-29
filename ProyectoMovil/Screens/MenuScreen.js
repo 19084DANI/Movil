@@ -1,5 +1,6 @@
 import { Text, StyleSheet, View} from 'react-native'
 import React, { Component, useState } from 'react'
+import { StatusBar } from 'expo-status-bar';
 
 import Transacciones from './TransaccionesScreen';
 import PresupuestosScreen from './PresupuestosScreen';
@@ -40,7 +41,7 @@ export default function MenuScreen () {
     case 'menu':  
         default:
             return(
-              <View>
+              <View style={styles.container}>
                  <Button color="orange" onPress={()=>setScreen('presupuesto') } title='Presupuesto'/>
                   <Button color="orange" onPress={()=>setScreen('transacciones') } title='transacciones'/>
                   <Button color="orange" onPress={()=>setScreen('RecuperarContrasena') } title='Recuperar Contraseña'/>
@@ -53,6 +54,12 @@ export default function MenuScreen () {
                 </View>
             )
   }
-
-
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
