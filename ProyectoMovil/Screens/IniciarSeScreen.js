@@ -1,10 +1,10 @@
-import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,Switch, ActivityIndicator} from 'react-native'
+import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,Switch, ActivityIndicator, Pressable} from 'react-native'
 import {useState} from 'react'
 import RecuperarContrasena from './RecuperarContrasena';
 import HomeScreen from './HomeScreen';
 import { Ionicons } from '@expo/vector-icons';
 import AuthController from '../controllers/AuthController';
-
+import RegistroScreen from './RegistroScreen';
 export default function IniciarSeScreen (){
     const [screen, setScreen]=useState('default');
     const[usuario,setusuario]= useState('');
@@ -77,25 +77,25 @@ export default function IniciarSeScreen (){
           <View style={styles.separador2}></View>  
       
 
-          <View style={[styles.separador3,{zIndex:1}]}></View> 
+          <View style={[styles.separador5,{zIndex:1}]}></View> 
 
           <View style={styles.btn}>              
-            <View style={styles.btn} />                   
-              <Button title='Olvide mi contraseña'
-              color='#446967ff'
+              <Pressable 
               onPress={() => setScreen('recuperar')}
-              /> 
+              style={styles.botonOlvidar}              
+              >
+                <Text style={styles.textoOlvidar}>Olvide mi contraseña</Text>
+              </Pressable>
+                            
           </View>
           <View style={styles.separador4}></View>  
           <View style={styles.btn}>
-              {loading ? (
-                <ActivityIndicator size="large" color="#446967ff" />
-              ) : (
-                <Button title='Iniciar Sesion'
-                color='#446967ff'
-                onPress={() => mostrarAlerta()} 
-                />
-              )}
+                <Pressable 
+                 style={styles.botones}
+                onPress={()=>setScreen('Iniciar sesion')}
+                >
+              <Text style={styles.textoBoton}>REGISTRARSE</Text>
+             </Pressable> 
           </View>  
           <View style={styles.contInf}></View>   
         </View>
@@ -141,8 +141,16 @@ separador3: {
   borderBottomWidth: 2,      
   width: '80%',
   alignSelf: 'center',
-  marginTop: 20,
-},  separador4:{ 
+  marginTop: 5,
+}, 
+separador5: {
+  borderBottomColor: 'black', 
+  borderBottomWidth: 2,      
+  width: '80%',
+  alignSelf: 'center',
+  marginTop:-10,
+}, 
+ separador4:{ 
     marginTop:50,
 },
   logo:{
@@ -153,6 +161,8 @@ separador3: {
     marginHorizontal:30,
     borderRadius:75,
     overflow:'hidden',
+    borderColor:'#113c42ff',
+    borderWidth:5,
 },
 titulo:{
    // backgroundColor:'#fff',
@@ -191,7 +201,7 @@ TextIngresarTitulo:{
     color:'#517f7dff',   
 },
 inputText:{
-    backgroundColor:'#dde2ceff',
+    backgroundColor:'#dde2ce02',
     height:40,
     borderRadius:10,
     padding:10,
@@ -208,4 +218,39 @@ btn:{
   zIndex:1,
   alignSelf:'center'
 },
+botonOlvidar:{
+  borderBottomColor:'#180f3fff',
+  borderBottomWidth:1,
+  marginBottom:15,
+  marginTop:80,
+},
+textoOlvidar:{
+  fontSize:15,
+  fontWeight:'550',
+  color:'#1a3e91ff',
+  shadowColor:'#160d6fff',
+  shadowOffset:{
+    height:1,
+    width:0,
+  }
+},
+  botones:{
+    width:160,
+    height:40,
+    backgroundColor:'#23555fa0',
+    borderRadius:15,
+    alignItems:'center',
+    justifyContent:'center',
+    shadowColor:'#a9a9a9ff',
+    marginBottom:70,
+    shadowOffset:{
+      height:4,
+      width:0,
+    }
+  },
+  textoBoton:{
+    fontSize:15,
+    fontWeight:'550',
+    color:'white',
+  }
 })
