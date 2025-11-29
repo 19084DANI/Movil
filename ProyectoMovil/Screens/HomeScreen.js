@@ -1,17 +1,11 @@
 import { Text, StyleSheet, View, Image, ImageBackground, Button, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react';
-import PresupuestosScreen from './PresupuestosScreen';
-import TransaccionesScreen from './TransaccionesScreen';
-import NuevatransScreen from './NuevaTransScreen';
-import Login from './LoginScreen';
-import GraficaScreen from './GraficaScreen';
 import TransaccionController from '../controllers/TransaccionController';
 import { Ionicons } from '@expo/vector-icons';
 
 const controller = TransaccionController;
 export default function BotonesScreen() {
   const [transacciones, setTransacciones] = useState([]);
-  const [screen, setScreen] = useState('default');
   const [loading, setLoading] = useState(true);
 
   const cargarTransacciones = useCallback(async () => {
@@ -48,7 +42,7 @@ export default function BotonesScreen() {
     .slice(0, 3);
 
   const renderTransaccion = ({ item }) => (
-    <TouchableOpacity onPress={() => setScreen('transacciones')} activeOpacity={0.8}>
+    <TouchableOpacity activeOpacity={0.8}>
       <View style={styles.cardTransaccion}>
         <Text style={styles.cardMonto}>${item.monto.toFixed(2)}</Text>
         <Text style={styles.cardTitulo}>{item.nombre}</Text>
@@ -61,24 +55,11 @@ export default function BotonesScreen() {
     </TouchableOpacity>
   );
 
-  switch (screen) {
-    case 'presupuestos':
-      return <PresupuestosScreen />
-    case 'transacciones':
-      return <TransaccionesScreen />
-    case 'NuevaTransScreen':
-      return <NuevatransScreen />
-    case 'login':
-      return <Login />
-    case 'grafica':
-      return <GraficaScreen />
-    default:
-
-      return (
-        <ImageBackground
-          source={require('../assets/fondo1.jpg')}
-          resizeMode='cover'
-          style={styles.backgrounds}>
+  return (
+    <ImageBackground
+      source={require('../assets/fondo1.jpg')}
+      resizeMode='cover'
+      style={styles.backgrounds}>
 
           <View style={styles.Container}>
 
@@ -96,7 +77,6 @@ export default function BotonesScreen() {
                     style={styles.btn}
                     color="#ADD6BC"
                     title='Presupuestos'
-                    onPress={() => setScreen('presupuestos')}
                   />
                 </View>
               </View>
@@ -114,7 +94,7 @@ export default function BotonesScreen() {
 
                 <View style={styles.elementos2}>
                   <Text style={styles.textot}>Transacción</Text>
-                  <TouchableOpacity onPress={() => setScreen('transacciones')}>
+                  <TouchableOpacity>
                     <Image style={styles.mas} source={require('../assets/mas.png')} />
                   </TouchableOpacity>
                 </View>
@@ -141,8 +121,7 @@ export default function BotonesScreen() {
 
           <Image style={styles.ayuda} source={require('../assets/help.png')} />
         </ImageBackground>
-      )
-  }
+      );
 }
 
 const styles = StyleSheet.create({

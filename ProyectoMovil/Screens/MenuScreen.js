@@ -13,7 +13,7 @@ export default function MenuScreen () {
 
   const [screen, setScreen] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
-  const slideAnim = useRef(new Animated.Value(-450)).current;
+  const slideAnim = useRef(new Animated.Value(-280)).current;
 
   // Opciones del menú
   const menuOptions = [
@@ -28,7 +28,7 @@ export default function MenuScreen () {
   useEffect(() => {
     // Animar el menú
     Animated.timing(slideAnim, {
-      toValue: menuOpen ? 0 : -450,
+      toValue: menuOpen ? 0 : -280,
       duration: 300,
       useNativeDriver: false,
     }).start();
@@ -130,13 +130,14 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
     backgroundColor: '#001F3F',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    paddingTop: 8,
+    paddingVertical: 20,
+    paddingTop: 15,
     zIndex: 10,
+    minHeight: 100,
   },
   hamburger: {
     width: 28,
@@ -168,19 +169,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: 450,
+    width: 280,
     height: '100%',
     backgroundColor: '#F5E6D3',
     borderRightWidth: 2,
     borderRightColor: '#001F3F',
     zIndex: 2,
-    paddingTop: 80,
+    paddingTop: 100,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 18,
     borderBottomWidth: 1,
     borderBottomColor: '#E0D4C4',
   },
