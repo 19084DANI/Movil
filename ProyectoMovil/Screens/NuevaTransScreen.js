@@ -5,7 +5,7 @@ import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
 import TransaccionController from '../controllers/TransaccionController';
 import { Ionicons } from  '@expo/vector-icons';
-import { Modal } from 'react-native';
+
 
 // Comentario: Se integra TransaccionController para guardar transacciones en BD
 

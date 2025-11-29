@@ -1,7 +1,6 @@
 import { Text, StyleSheet, View, TextInput, Alert, Image, ActivityIndicator, Pressable } from 'react-native';
 import React, { useState } from 'react';
 
-// Asegúrate de que las rutas sean correctas
 import HomeScreen from './HomeScreen';
 import IniciarSeScreen from './IniciarSeScreen';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,14 +14,12 @@ export default function RecuperarContrasena() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Color elegido por psicología del color (Seguridad y Dinero)
     const THEME_COLOR = '#136F63'; 
 
     const mostrarAlerta = async () => {
         setLoading(true);
         const result = await AuthController.recoverPassword(email, contrasena, confirmarContrasena);
         setLoading(false);
-
         if (result.success) {
             Alert.alert(
                 "Éxito",
@@ -45,19 +42,17 @@ export default function RecuperarContrasena() {
         }
     };
 
-    // Lógica de navegación manual
     switch (screen) {
         case 'Iniciar sesion':
             return <IniciarSeScreen />;
         
-        case 'HomeScreen': // Agregado para el botón de regreso
+        case 'HomeScreen':
             return <HomeScreen />;
 
         default:
             return (
                 <View style={styles.ImageBackground}>
                     
-                    {/* Contenedor Superior con botón de regreso */}
                     <View style={styles.contSup}>
                         <Pressable 
                             style={[styles.btnBack, { backgroundColor: THEME_COLOR }]} 
@@ -79,12 +74,11 @@ export default function RecuperarContrasena() {
 
                         <View style={styles.separador2}></View>
 
-                        {/* Corregido: 'tyle' a 'style' */}
                         <View style={styles.formContainer}> 
                             <Text style={styles.texto}>Usuario</Text>
                             <TextInput
                                 style={styles.inputs}
-                                placeholder="Usuario" // Corregido: 'stakeholder' a 'placeholder'
+                                placeholder="Usuario"
                                 onChangeText={setUsuario}
                                 value={usuario}
                             />
@@ -117,7 +111,6 @@ export default function RecuperarContrasena() {
 
                             <View style={styles.separador3}></View>
                             
-                            {/* Nuevo Botón con Pressable */}
                             {loading ? (
                                 <ActivityIndicator size="large" color={THEME_COLOR} />
                             ) : (
@@ -139,14 +132,14 @@ export default function RecuperarContrasena() {
 }
 
 const styles = StyleSheet.create({
-    separador: { marginTop: 60 }, // Ajustado un poco para dar espacio
+    separador: { marginTop: 60 },
     separador2: { marginTop: 10 },
     separador3: { marginTop: 20 },
     
     inputs: {
-        width: 250, // Aumenté un poco el ancho para que se vea mejor
+        width: 250,
         borderColor: 'gray',
-        borderWidth: 1, // Borde más sutil
+        borderWidth: 1,
         borderRadius: 20,
         paddingVertical: 10,
         paddingHorizontal: 15,
@@ -160,7 +153,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 5,
     },
-    formContainer: { // Estilos para el contenedor interno del formulario
+    formContainer: {
         width: '100%',
         alignItems: 'center',
     },
@@ -168,14 +161,14 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         marginBottom: 5,
-        alignSelf: 'center', // Centrar etiquetas
+        alignSelf: 'center',
     },
     contSup: {
         backgroundColor: '#ffffff',
-        height: '20%', // Aumentado para dar espacio al botón y logo
+        height: '20%',
         width: '100%',
         justifyContent: 'flex-start',
-        paddingTop: 50, // Para bajarlo de la barra de estado
+        paddingTop: 50,
         paddingLeft: 20,
     },
     ImageBackground: {
@@ -183,12 +176,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     logo: {
-        width: 120, // Logo un poco más pequeño para balancear
+        width: 120,
         height: 120,
         alignSelf: 'center',
-        top: 80, // Posición absoluta ajustada
+        top: 80,
         borderRadius: 60,
-        zIndex: 2, // Mayor zIndex para estar encima de todo
+        zIndex: 1,
         borderColor: '#000',
         borderWidth: 1,
         position: 'absolute',
@@ -197,7 +190,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ebecdb',
         position: 'absolute',
         bottom: 0,
-        width: '100%', // Ocupa todo el ancho pero con borde redondeado arriba
+        width: '100%',
         height: '75%',
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
@@ -205,15 +198,14 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         zIndex: 0,
     },
-    // --- NUEVOS ESTILOS PARA LOS BOTONES ---
     btnBack: {
         width: 45,
         height: 45,
         borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 5, // Sombra en Android
-        shadowColor: '#000', // Sombra en iOS
+        elevation: 5,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
