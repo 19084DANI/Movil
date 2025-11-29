@@ -5,9 +5,10 @@ import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
 import TransaccionController from '../controllers/TransaccionController';
 import { Ionicons } from  '@expo/vector-icons';
+import { Modal } from 'react-native';
 
 // Comentario: Se integra TransaccionController para guardar transacciones en BD
-const controller = TransaccionController;
+
 
 export default function FormularioTransaccion() {
   const [screen, setScreen]=useState('default');
@@ -15,8 +16,11 @@ export default function FormularioTransaccion() {
   const [monto, setMonto] = useState("");
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [gasto, setGasto] = useState("");
   const [guardando, setGuardando] = useState(false);
+  const controller = TransaccionController;
+
+const [modalVisible, setModalVisible] = useState(false);
+
 
     const [fecha, setFecha] = useState(() => {
     const hoy = new Date();
@@ -27,7 +31,7 @@ export default function FormularioTransaccion() {
   const fechaActual = new Date().toISOString().split("T")[0];
   // Mostrar alerta y guardar en BD
   const mostrarAlerta = async () => {
-    if (!nombre && !monto && !categoria && !fecha && !descripcion && !gasto) {
+    if (!nombre && !monto && !categoria && !descripcion) {
       Alert.alert("Todos los campos están vacíos");
     } else if (!nombre.trim()) {
       Alert.alert("Nombre no puede estar vacío");
@@ -37,15 +41,9 @@ export default function FormularioTransaccion() {
       Alert.alert("Monto debe ser numérico");
     } else if (!categoria.trim()) {
       Alert.alert("Categoría no puede estar vacía");
-    } else if (!fecha.trim()) {
-      Alert.alert("Fecha no puede estar vacía");
     } else if (!descripcion.trim()) {
       Alert.alert("Descripción no puede estar vacía");
-    } else if (!gasto.trim()) {
-      Alert.alert("Gasto no puede estar vacío");
-    } else if (gasto.toLowerCase() !== "si" && gasto.toLowerCase() !== "no") {
-      Alert.alert("Gasto debe ser 'Si' o 'No'");
-    } else {
+    }  else {
       // Llamar al controlador para guardar la transacción en BD
       try {
         setGuardando(true);
@@ -55,7 +53,6 @@ export default function FormularioTransaccion() {
           categoria: categoria.trim(),
           fecha: fecha.trim(),
           descripcion: descripcion.trim(),
-          es_gasto: gasto.toLowerCase()
         });
 
         if (res.success) {
@@ -67,9 +64,8 @@ export default function FormularioTransaccion() {
               setNombre('');
               setMonto('');
               setCategoria('');
-              setFecha('');
+              setFecha(fechaActual);
               setDescripcion('');
-              setGasto('');
               setScreen('Transacciones');
             }}]
           );
@@ -90,16 +86,17 @@ export default function FormularioTransaccion() {
               return <TransaccionesScreen/>
           default:
   return (
+
     <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
                  style={styles.backgrounds} >
      <View style={styles.encabezado}>  
                   
-                  <TouchableOpacity onPress={() => setScreen('homee')}>
-                           <Image
-                            style={styles.logo}
-                            source={require('../assets/Logo.jpeg')}
-                           ></Image>  
-                           </TouchableOpacity> 
+           <TouchableOpacity onPress={() => setScreen('homee')}>
+            <Image
+              style={styles.logo}
+              source={require('../assets/Logo.jpeg')}
+            ></Image>  
+           </TouchableOpacity> 
      
                </View>
     <ScrollView contentContainerStyle={styles.container}>
@@ -127,12 +124,16 @@ export default function FormularioTransaccion() {
         />
 
         <Text style={styles.texto}>Categoría</Text>
-        <TextInput
-          style={styles.inputs}
-          placeholder="Ej. Servicios"
-          value={categoria}
-          onChangeText={setCategoria}
-        />
+
+        <Pressable 
+          style={styles.inputs} 
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={{ color: categoria ? '#000' : '#777', fontSize: 15 }}>
+            {categoria || "Selecciona categoría"}
+          </Text>
+        </Pressable>
+
 
         <Text style={styles.texto}>Fecha</Text>
         <TextInput
@@ -170,10 +171,69 @@ export default function FormularioTransaccion() {
       </View>
      
     </ScrollView>
+    <Modal
+      transparent={true}
+      animationType="fade"
+      visible={modalVisible}
+      onRequestClose={() => setModalVisible(false)}
+    >
+      <View style={{
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+        <View style={{
+          width: 250,
+          backgroundColor: "#dfe0b6ff",
+          padding: 20,
+          borderRadius: 15,
+          alignItems: "center",
+        }}>
+
+          <Pressable
+            onPress={() => {
+              setCategoria("Oficio");
+              setModalVisible(false);
+            }}>
+            <Text style={{
+              fontSize: 20,
+              paddingVertical: 10,
+              color: "#163f49ff",
+              fontWeight: "bold"
+            }}>Oficio</Text>
+          </Pressable>
+
+          <Pressable
+            onPress={() => {
+              setCategoria("Personal");
+              setModalVisible(false);
+            }}>
+            <Text style={{
+              fontSize: 20,
+              paddingVertical: 10,
+              color: "#15464cff",
+              fontWeight: "bold"
+            }}>Personal</Text>
+          </Pressable>
+
+          <Pressable onPress={() => setModalVisible(false)}>
+            <Text style={{
+              fontSize: 17,
+              marginTop: 15,
+              color: "red",
+              fontWeight: "600"
+            }}>Cancelar</Text>
+          </Pressable>
+
+        </View>
+      </View>
+    </Modal>    
     </ImageBackground>
   );
 }
 }
+
 
 const styles = StyleSheet.create({
   container: {
