@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, View, Image, ImageBackground, ScrollView,TouchableOpacity,} from 'react-native';
-import HomeScreen from './HomeScreen';
+import React from 'react';
+import { Text, StyleSheet, View, Image, ScrollView, TouchableOpacity,} from 'react-native';
 import { Ionicons } from  '@expo/vector-icons';
 
-export default function GraficaScreen() {
-	const [screen, setScreen] = useState('default');
-
-	if (screen === 'home') return <HomeScreen />;
+export default function GraficaScreen({ navigation }) {
 
 	
 	const alimentacion = 6000;
@@ -29,12 +25,12 @@ export default function GraficaScreen() {
 	}
 
 	return (
-		<ImageBackground source={require('../assets/fondo1.jpg')} resizeMode="cover" style={styles.backgrounds}>
+		<View style={styles.backgrounds}>
 			<View style={styles.encabezado}>
 				<View style={{ flexDirection: 'row', width: 90 }}>
 					<Image style={[styles.menuhamburgesa, { marginRight: 10 }]} source={require('../assets/menu.png')} />
 				</View>
-				<TouchableOpacity onPress={() => setScreen('home')}>
+				<TouchableOpacity onPress={() => navigation?.navigate && navigation.navigate('Menu')}>
 					<Image style={styles.logo} source={require('../assets/logo.jpg')} />
 				</TouchableOpacity>
 			</View>
@@ -45,9 +41,9 @@ export default function GraficaScreen() {
 					<Text style={styles.subtitle}>Gastos recientes del cliente</Text>
 
 					<View style={styles.chart}>
-						{renderBar('Alimentación', alimentacion, '#03051fff')}
-						{renderBar('Transporte', transporte, '#064f86ff')}
-						{renderBar('Entretenimiento', entretenimiento, '#c97e2dff')}
+						{renderBar('Alimentación', alimentacion, '#023047')}
+						{renderBar('Transporte', transporte, '#045C8C')}
+						{renderBar('Entretenimiento', entretenimiento, '#013243')}
 					</View>
 
 					<Text style={styles.total}>Total: ${Math.floor(total)}</Text>
@@ -55,7 +51,7 @@ export default function GraficaScreen() {
 			</ScrollView>
 
 			<Image style={styles.ayuda} source={require('../assets/help.png')} />
-		</ImageBackground>
+		</View>
 	);
 }
 
@@ -66,17 +62,16 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		width: '100%',
 		height: '100%',
+		backgroundColor: '#F5E6D3',
 	},
 	encabezado: {
 		justifyContent: 'space-between',
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: '#EEF5DB',
-		padding: 10,
-		borderRadius: 10,
-		marginBottom: 0,
+		backgroundColor: 'transparent',
+		paddingHorizontal: 14,
+		paddingVertical: 12,
 		width: '100%',
-		height: '10%',
 	},
 	Container: {
 		alignItems: 'center',
@@ -86,22 +81,22 @@ const styles = StyleSheet.create({
 		width: '90%',
 		flexDirection: 'column',
 		minHeight: 300,
-		backgroundColor: '#EEF5DB',
+		backgroundColor: '#001F3F',
 		justifyContent: 'flex-start',
 		marginVertical: 10,
 		borderRadius: 10,
-		padding: 15,
+		padding: 18,
 	},
 	titulo: {
 		fontSize: 24,
 		fontWeight: 'bold',
 		marginBottom: 8,
 		textAlign: 'center',
-		color: '#2ecc71',
+		color: '#F5E6D3',
 	},
 	subtitle: {
 		fontSize: 14,
-		color: '#333',
+		color: '#F5E6D3',
 		marginBottom: 12,
 		textAlign: 'center',
 	},
@@ -118,12 +113,13 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		width: 110,
-		fontWeight: 'bold',
+		fontWeight: '700',
+		color: '#F5E6D3',
 	},
 	barContainer: {
 		flex: 1,
 		height: 28,
-		backgroundColor: '#e6e6e6',
+		backgroundColor: '#E8D9C8',
 		borderRadius: 14,
 		overflow: 'hidden',
 		marginHorizontal: 8,
@@ -134,13 +130,15 @@ const styles = StyleSheet.create({
 	value: {
 		width: 80,
 		textAlign: 'right',
-		fontWeight: 'bold',
+		fontWeight: '700',
+		color: '#F5E6D3',
 	},
 	total: {
 		marginTop: 12,
-		fontWeight: 'bold',
+		fontWeight: '700',
 		fontSize: 16,
 		textAlign: 'center',
+		color: '#001F3F',
 	},
 	menuhamburgesa: {
 		width: 35,
@@ -150,7 +148,7 @@ const styles = StyleSheet.create({
 		width: 100,
 		height: 70,
 		borderRadius: 45,
-		borderColor: '#b7ba9bff',
+		borderColor: '#F5E6D3',
 		borderWidth: 5,
 	},
 	ayuda: {

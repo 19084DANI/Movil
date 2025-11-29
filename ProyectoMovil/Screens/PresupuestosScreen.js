@@ -48,8 +48,8 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
-             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
+            minimumValue={0} color='#001F3F' onValueChange={(value)=>setPrecio(value)
+             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
            
 
         </View>
@@ -61,8 +61,8 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(alimentacion)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3500}
-            minimumValue={2000} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
-             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
+            minimumValue={2000} color='#001F3F' onValueChange={(value)=>setAlimentacion(value)
+             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
            
 
         </View>
@@ -74,8 +74,8 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(transporte)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3200}
-            minimumValue={3000} color='#5030efff' onValueChange={(value)=>setTransporte(value)
-             } thumbTintColor='#000000ff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
+            minimumValue={3000} color='#001F3F' onValueChange={(value)=>setTransporte(value)
+             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
            
 
         </View>
@@ -87,13 +87,13 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(entretenimiento)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={1500}
-            minimumValue={900} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
-             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
+            minimumValue={900} color='#001F3F' onValueChange={(value)=>setEntretenimiento(value)
+             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
            
 
         </View>
         <View style={{width:120}}>
-          <Button color='#79B7B4' title='Actualizar'></Button>
+          <Button color='#F7EFE6' title='Actualizar'></Button>
         </View>
 
         <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
@@ -134,7 +134,7 @@ paddingHorizontal:10
 texto1:{
   fontSize:27,
   fontWeight:'bold',
-  color:'#fff'
+  color:'#001F3F'
 },
 
 slider:{
@@ -152,7 +152,7 @@ encabezado:{
   justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
-backgroundColor: '#EEF5DB',
+backgroundColor: '#F5E6D3',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
@@ -163,7 +163,7 @@ height: '10%',
 encabezado2:{
   
 alignItems: "center",
-backgroundColor: '#EEF5DB',
+backgroundColor: '#F5E6D3',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
@@ -209,7 +209,7 @@ elementos:{
   
  width: 350,
     height: 150,
-    backgroundColor: '#a5c3a7',
+  backgroundColor: '#E8D9C8',
     justifyContent: 'space-between',
     //alignItems: 'center',
     marginVertical: 10,

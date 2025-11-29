@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 45,
-    borderColor: '#2d526eff',
+    borderColor: '#001F3F',
     borderWidth: 3,
     position: 'absolute',
     left: -35,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   encabezado: {
     justifyContent: 'center',
     alignItems: "center",
-    backgroundColor: '#e5e9dbff',
+    backgroundColor: '#F5E6D3',
     padding: 10,
     width: '100%',
     height: '10%',
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   formContainer: {
     width: 450,
     height: 900,
-    backgroundColor: "#182735ff",
+    backgroundColor: "#001F3F",
     borderRadius: 40,
     padding: 20,
     alignItems: "center",
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   formContainer2: {
     width: '100%',
     height: '100%',
-    backgroundColor: "#EEF5DB",
+    backgroundColor: "#F5E6D3",
     borderRadius: 20,
     padding: 20,
     alignItems: "center",
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 17,
     padding: 8,
-    backgroundColor: "#dde2ceff",
+    backgroundColor: "#F7EFE6",
     marginBottom: 10,
     marginTop: 10,
     color: '#333',
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     height: 150,
     padding: 8,
-    backgroundColor: "#dde2ceff",
+    backgroundColor: "#F7EFE6",
     marginBottom: 10,
     color: '#333',
     fontSize: 15,
@@ -250,15 +250,17 @@ const styles = StyleSheet.create({
   Button: {
     width: 150,
     height: 45,
-    backgroundColor: '#226485ff',
+    backgroundColor: '#F7EFE6',
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
+    borderWidth: 1,
+    borderColor: '#D1C6B5',
   },
   textoBoton: {
     fontSize: 14,
     fontWeight: '600',
-    color: 'white',
+    color: '#001F3F',
   }
 });
