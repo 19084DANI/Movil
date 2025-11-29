@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Alert, Button, StyleSheet, ScrollView, Image, ImageBackground, Pressable} from "react-native";
+import { View, Text, TextInput, Alert, StyleSheet, ScrollView, Image, ImageBackground, Pressable, Modal} from "react-native";
 import HomeScreen from './HomeScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
@@ -43,7 +43,7 @@ const [modalVisible, setModalVisible] = useState(false);
       Alert.alert("Categoría no puede estar vacía");
     } else if (!descripcion.trim()) {
       Alert.alert("Descripción no puede estar vacía");
-    }  else {
+    } else {
       // Llamar al controlador para guardar la transacción en BD
       try {
         setGuardando(true);
@@ -134,15 +134,6 @@ const [modalVisible, setModalVisible] = useState(false);
           </Text>
         </Pressable>
 
-
-        <Text style={styles.texto}>Fecha</Text>
-        <TextInput
-          style={styles.inputs}
-          value={fecha}
-          editable={false}
-          selectTextOnFocus={false}
-          placeholderTextColor='#777'
-        />
 
         <Text style={styles.texto}>Descripción</Text>
         <TextInput
