@@ -87,7 +87,7 @@ export default function FormularioTransaccion() {
       return <TransaccionesScreen />;
     default:
       return (
-        <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover' style={styles.backgrounds} >
+        <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover' style={styles.backgrounds} >
           
           <View style={styles.encabezado}>
             <TouchableOpacity onPress={() => setScreen('homee')}>

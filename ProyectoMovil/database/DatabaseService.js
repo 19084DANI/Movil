@@ -38,7 +38,46 @@ class DatabaseService {
           contrasena TEXT NOT NULL,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+        
+        CREATE TABLE IF NOT EXISTS presupuestos (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          categoria TEXT NOT NULL,
+          monto REAL NOT NULL,
+          limite REAL NOT NULL,
+          fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        CREATE TABLE IF NOT EXISTS transacciones (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nombre TEXT NOT NULL,
+          monto REAL NOT NULL,
+          categoria TEXT NOT NULL,
+          fecha TEXT NOT NULL,
+          descripcion TEXT NOT NULL,
+          fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
       `);
+
+      // Migración: agregar columna 'limite' si no existe
+      try {
+        // Verificar si la columna existe consultando la tabla
+        const tableInfo = await this.db.getAllAsync(`PRAGMA table_info(presupuestos)`);
+        const hasLimiteColumn = tableInfo.some(col => col.name === 'limite');
+        
+        if (!hasLimiteColumn) {
+          // Agregar la columna con un valor por defecto para registros existentes
+          await this.db.execAsync(`
+            ALTER TABLE presupuestos ADD COLUMN limite REAL DEFAULT 0;
+          `);
+          // Actualizar registros existentes con un valor por defecto basado en el monto
+          await this.db.execAsync(`
+            UPDATE presupuestos SET limite = monto * 1.5 WHERE limite IS NULL;
+          `);
+          console.log('Columna limite agregada a presupuestos');
+        }
+      } catch (error) {
+        console.error('Error al verificar/agregar columna limite:', error.message);
+      }
 
       console.log('SQLite database initialized');
       return true;

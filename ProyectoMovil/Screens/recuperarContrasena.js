@@ -1,13 +1,9 @@
 import { Text, StyleSheet, View, TextInput, Alert, Image, ActivityIndicator, Pressable } from 'react-native';
 import React, { useState } from 'react';
-
-import HomeScreen from './HomeScreen';
-import IniciarSeScreen from './IniciarSeScreen';
 import { Ionicons } from '@expo/vector-icons';
 import AuthController from '../controllers/AuthController';
 
-export default function RecuperarContrasena() {
-    const [screen, setScreen] = useState('default');
+export default function RecuperarContrasena({ navigation }) {
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [confirmarContrasena, setConfirmarContrasena] = useState('');
@@ -32,7 +28,7 @@ export default function RecuperarContrasena() {
                             setEmail('');
                             setContrasena('');
                             setConfirmarContrasena('');
-                            setScreen('Iniciar sesion');
+                            navigation.navigate('IniciarSeScreen');
                         }
                     }
                 ]
@@ -42,21 +38,13 @@ export default function RecuperarContrasena() {
         }
     };
 
-    switch (screen) {
-        case 'Iniciar sesion':
-            return <IniciarSeScreen />;
-        
-        case 'HomeScreen':
-            return <HomeScreen />;
-
-        default:
-            return (
+    return (
                 <View style={styles.ImageBackground}>
                     
                     <View style={styles.contSup}>
                         <Pressable 
                             style={[styles.btnBack, { backgroundColor: THEME_COLOR }]} 
-                            onPress={() => setScreen('HomeScreen')}
+                            onPress={() => navigation.goBack()}
                         >
                             <Ionicons name="arrow-back" size={24} color="white" />
                         </Pressable>
@@ -128,7 +116,6 @@ export default function RecuperarContrasena() {
                     </View>
                 </View>
             );
-    }
 }
 
 const styles = StyleSheet.create({

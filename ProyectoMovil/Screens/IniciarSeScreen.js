@@ -1,12 +1,10 @@
 import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,Switch, ActivityIndicator, Pressable} from 'react-native'
 import {useState} from 'react'
-import RecuperarContrasena from './RecuperarContrasena';
-import HomeScreen from './HomeScreen';
 import { Ionicons } from '@expo/vector-icons';
 import AuthController from '../controllers/AuthController';
-import RegistroScreen from './RegistroScreen';
-export default function IniciarSeScreen (){
-    const [screen, setScreen]=useState('default');
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export default function IniciarSeScreen ({ navigation }){
     const[usuario,setusuario]= useState('');
     const[keyword,setkeyword]= useState('');
     const[loading, setLoading] = useState(false);
@@ -19,24 +17,28 @@ export default function IniciarSeScreen (){
         setLoading(false);
 
         if (result.success) {
+          // Guardar datos del usuario en AsyncStorage
+          if (result.user) {
+            const userData = {
+              id: result.user.id,
+              nombre: result.user.nombre,
+              correo: result.user.correo,
+              telefono: result.user.telefono
+            };
+            await AsyncStorage.setItem('currentUser', JSON.stringify(userData));
+            console.log('Usuario guardado en AsyncStorage:', userData);
+          }
         Alert.alert("Éxito", result.message || "Inicio de sesión exitoso",[{text: "Aceptar",
             onPress: () => {                            
               setusuario('');
               setkeyword('');
-                setScreen('Iniciar sesion');
+              navigation.navigate('Menu');
              }
              }]);
         } else {
             Alert.alert("Error", result.error || "Error al iniciar sesión");
         }
     }
-
-  switch(screen){
-     case 'recuperar':
-       return<RecuperarContrasena/>
-     case 'Iniciar sesion':
-      return<HomeScreen/>
-    default:
   return (
         <View style={styles.ImageBackground}>
           <View style={styles.contSup}></View> 
@@ -81,7 +83,7 @@ export default function IniciarSeScreen (){
 
           <View style={styles.btn}>              
               <Pressable 
-              onPress={() => setScreen('recuperar')}
+              onPress={() => navigation.navigate('RecuperarContrasena')}
               style={styles.botonOlvidar}              
               >
                 <Text style={styles.textoOlvidar}>Olvide mi contraseña</Text>
@@ -90,19 +92,29 @@ export default function IniciarSeScreen (){
           </View>
           <View style={styles.separador4}></View>  
           <View style={styles.btn}>
+                {loading ? (
+                  <ActivityIndicator size="large" color="#23555fa0" />
+                ) : (
+                  <Pressable 
+                   style={styles.botones}
+                   onPress={mostrarAlerta}
+                   >
+                    <Text style={styles.textoBoton}>INICIAR SESIÓN</Text>
+                   </Pressable>
+                )}
+          </View>
+          <View style={styles.separador4}></View>  
+          <View style={styles.btn}>
                 <Pressable 
                  style={styles.botones}
-                onPress={()=>setScreen('Iniciar sesion')}
+                onPress={()=> navigation.navigate('RegistroScreen')}
                 >
               <Text style={styles.textoBoton}>REGISTRARSE</Text>
              </Pressable> 
           </View>  
           <View style={styles.contInf}></View>   
         </View>
-      )
-        
-    }
-    
+      );
 }
 
 const styles = StyleSheet.create({
