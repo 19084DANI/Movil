@@ -57,7 +57,7 @@ export default function IniciarSeScreen ({ navigation }){
           </View>    
           <View style={styles.separador2}></View>     
             <View style={[styles.titulo3,{zIndex:1}]}>
-            <Text style={styles.TextIngresarTitulo} >Ingrese su Usuario y Contraseña</Text>              
+            <Text style={styles.TextIngresarTitulo} >Ingrese su Correo y Contraseña</Text>              
           </View>  
           <View style={styles.separador}></View>   
 
@@ -81,17 +81,14 @@ export default function IniciarSeScreen ({ navigation }){
 
           <View style={[styles.separador5,{zIndex:1}]}></View> 
 
-          <View style={styles.btn}>              
-              <Pressable 
-              onPress={() => navigation.navigate('RecuperarContrasena')}
-              style={styles.botonOlvidar}              
-              >
-                <Text style={styles.textoOlvidar}>Olvide mi contraseña</Text>
-              </Pressable>
+
                             
-          </View>
+         
           <View style={styles.separador4}></View>  
+              
+
           <View style={styles.btn}>
+
                 {loading ? (
                   <ActivityIndicator size="large" color="#23555fa0" />
                 ) : (
@@ -102,8 +99,7 @@ export default function IniciarSeScreen ({ navigation }){
                     <Text style={styles.textoBoton}>INICIAR SESIÓN</Text>
                    </Pressable>
                 )}
-          </View>
-          <View style={styles.separador4}></View>  
+          </View> 
           <View style={styles.btn}>
                 <Pressable 
                  style={styles.botones}
@@ -111,6 +107,12 @@ export default function IniciarSeScreen ({ navigation }){
                 >
               <Text style={styles.textoBoton}>REGISTRARSE</Text>
              </Pressable> 
+              <Pressable 
+              onPress={() => navigation.navigate('RecuperarContrasena')}
+              style={styles.botonOlvidar}              
+              >
+                <Text style={styles.textoOlvidar}>Olvide mi contraseña</Text>
+              </Pressable>            
           </View>  
           <View style={styles.contInf}></View>   
         </View>
@@ -124,7 +126,8 @@ contPrincipal:{
   contSup:{ //cuadrito de arriba
     backgroundColor:'#EEF5DB',
     padding:'9%',
-    borderRadius:0,
+    borderBottomWidth:3,
+    borderColor:'#d2d8c0ff',  
     justifyContent:'flex-start',
     zIndex:0,
   },
@@ -132,8 +135,10 @@ contInf: {
   backgroundColor: '#EEF5DB',
   position: 'absolute',
   bottom:20,
-  width: '87%',       
-  height: '83%',         
+  width: '92%',       
+  height: '83%',  
+  borderWidth:3,
+  borderColor:'#1d3540ff',       
   borderRadius: 50,   
   alignSelf: 'center', 
   zIndex:0,
@@ -174,7 +179,7 @@ separador5: {
     borderRadius:75,
     overflow:'hidden',
     borderColor:'#113c42ff',
-    borderWidth:5,
+    borderWidth:3,
 },
 titulo:{
    // backgroundColor:'#fff',
@@ -231,20 +236,28 @@ btn:{
   alignSelf:'center'
 },
 botonOlvidar:{
-  borderBottomColor:'#180f3fff',
-  borderBottomWidth:1,
   marginBottom:15,
   marginTop:80,
+  zIndex: 2,
+  elevation: 2,
+  position: 'relative',
+  width:180,
+  height:40,
+  alignItem:'center',
+  justifyContent:'center',
+  overflow:'hidden',
+  position:'absolute',
+  right:-9,
+
 },
 textoOlvidar:{
   fontSize:15,
   fontWeight:'550',
   color:'#1a3e91ff',
-  shadowColor:'#160d6fff',
-  shadowOffset:{
-    height:1,
-    width:0,
-  }
+  textDecorationLine:'underline',
+  zIndex: 3,
+  elevation: 2,
+  position: 'relative',
 },
   botones:{
     width:160,

@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     borderRadius:15,
     alignItems:'center',
     justifyContent:'center',
+    elevation:6,
     shadowColor:'#777',
     marginBottom:30,
     shadowOffset:{

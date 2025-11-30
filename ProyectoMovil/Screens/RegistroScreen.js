@@ -1,13 +1,15 @@
-import {Text, StyleSheet, View, TextInput, Button, Image, Alert} from 'react-native';
+import {Text, StyleSheet, View, TextInput, Button, Image, Alert,Pressable} from 'react-native';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../data/AuthContext';
-
+import { Ionicons } from '@expo/vector-icons';
 export default function RegistroScreen({ navigation }){
     const { signUp, isLoading } = useContext(AuthContext);
     const [nombre, setNombre] = useState('');
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const THEME_COLOR = '#136F63'; 
+
 
     // Validaciones //
     
@@ -55,22 +57,35 @@ export default function RegistroScreen({ navigation }){
     };
 
     return (
-        <View style={{flex:1, backgroundColor:'#F5E6D3'}}>
+        <View style={{flex:1,
+         backgroundColor:'#bab8acff',
+         alignItems:'center',
+         justifyContent:'center',
+         }}>
          <View style={styles.encabezado}>  
+            <Pressable 
+            style={[styles.btnBack, { backgroundColor: THEME_COLOR }]} 
+            onPress={() => navigation.goBack()}
+            >
+            <Ionicons name="arrow-back" size={24} color="white" />
+            </Pressable>
             </View>
+
         <View style={styles.container}>
             <Image
                source={require('../assets/Logo.jpeg')}
                style={styles.logo}
             />
         <Text style={styles.titulo}>¡Regístrate!</Text>
-
+        <Text style={styles.tituloDescrip}>¡Llena los campos Para Comezar!</Text>
+         <Text style={styles.textoInputs}>Ingrese el Nombre</Text>
         <TextInput
            style={styles.input}
            placeholder='Nombre'
            value={nombre}
            onChangeText={setNombre}
         />
+        <Text style={styles.textoInputs}>Ingrese Su Correo</Text>
        <TextInput
            style={styles.input}
            placeholder='Correo'
@@ -78,6 +93,7 @@ export default function RegistroScreen({ navigation }){
            onChangeText={setCorreo}
            keyboardType='email-address'
         />
+        <Text style={styles.textoInputs}>Ingrese Su Teléfono</Text>
          <TextInput
            style={styles.input}
            placeholder='Teléfono'
@@ -85,6 +101,7 @@ export default function RegistroScreen({ navigation }){
            onChangeText={setTelefono}
            keyboardType='phone-pad'
         />
+        <Text style={styles.textoInputs}>Ingrese Su Contraseña</Text>
          <TextInput
            style={styles.input}
            placeholder='Contraseña'
@@ -93,12 +110,39 @@ export default function RegistroScreen({ navigation }){
            secureTextEntry
         />
 
-        <View style={{width: '100%', marginTop:10}}>
-          <Button title={isLoading ? 'Creando...' : 'Crear Cuenta'} color='#000000' onPress={crearCuenta} disabled={isLoading} />
+        <View style={{
+         width: '100%', 
+         marginTop:10,
+         alignItems:'center',
+         justifyContent:'center'         
+
+        }}>
+            <Pressable 
+             style={styles.botones}
+            title={isLoading ? 'Creando...' : 'Crear Cuenta'} 
+             onPress={crearCuenta}
+              disabled={isLoading}
+            >
+            <Text style={styles.textoBoton}>CREAR CUENTA</Text>
+             </Pressable>         
+         
         </View>
 
-        <View style={{ marginTop: 15 }}>
-            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#000000' onPress={() => navigation.navigate('IniciarSeScreen')} />
+        <View style={{ 
+         marginTop:-15,
+         alignItems:'center',
+         justifyContent:'center'         
+
+            }}>
+   
+
+            <Pressable 
+             style={styles.botonesIniciar}
+            onPress={() => navigation.navigate('IniciarSeScreen')}
+              disabled={isLoading}
+            >
+            <Text style={styles.textoBoton}>¿Ya tienes una cuenta? Inicia Sesión</Text>
+             </Pressable>                         
         </View>
         </View>
         </View>
@@ -106,65 +150,132 @@ export default function RegistroScreen({ navigation }){
 }
 const styles= StyleSheet.create({
     container:{
-        flex: 1,
-        backgroundColor: '#F5E6D3',
+        width:'90%',
+        height:'80%',
+        borderWidth:3,
+        borderColor:'#2a4f51ff',
+        borderRadius:20,
+        backgroundColor: '#ebecdb',
         alignItems: 'center',
+        marginBottom:50,
         justifyContent: 'center',
         paddingHorizontal:20,
     },
     logo:{
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginBottom:20,
-        borderWidth: 2,
-        borderColor: '#001F3F'
+        width: 140,
+        height: 140,
+        borderRadius: 80,
+        borderWidth: 3,
+        borderColor: '#072e2cff',
+        overflow:'hidden',
+        position:'absolute',
+        top:-80,
     },
     titulo:{
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 5,
+        marginTop:80,
+        color: '#001F3F',
+    },
+    tituloDescrip:{
+        fontSize: 20,
+        fontWeight: '600',
+        marginBottom: 40,
         color: '#001F3F',
     },
     input:{
-        width: '100%',
-        padding: 10,
+        width: '95%',
+        padding: 12,
         borderRadius: 20,
-        marginBottom: 15,
+        marginBottom: 25,
+        marginTop:5,
         borderWidth: 1,
         borderColor: '#001F3F',
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
+        fontWeight:'650',
     },
-    menuhamburgesa:{
 
-    width: 35,
-    height: 35,
-},
-utransaccion:{
-justifyContent:'center',
-fontSize: 24,
-fontWeight: 'bold'
+    utransaccion:{
+    justifyContent:'center',
+    fontSize: 24,
+    fontWeight: 'bold'
 
-},
-logo:{
+    },
 
-width: 100,
-height: 70,
-borderRadius: 45,
-borderColor: '#EEF5DB',
-borderWidth:5
-},
-    encabezado:{
-justifyContent:'space-between',
-flexDirection: 'row',
-alignItems: "center",
-backgroundColor: '#001F3F',
-padding: 10,
-borderRadius:10,
-marginBottom:0,
-width: '100%',
-height: '10%',
+encabezado:{
+    justifyContent:'space-between',
+    flexDirection: 'row',
+    alignItems: "center",
+    backgroundColor: '#2a4f51ff',
+    marginBottom:25,
+    padding: 40,
+    width: '100%',
+    height: '12%',
+
 
 },
+contPrincipral:{
+    height:15,
+    width:150,
+    backgroundColor:'#ffffffff',
+    borderRadius:15,
+    borderColor:'#000',
+    borderWidth:3,
+},
+textoInputs:{
+    fontSize:16.5,
+    fontWeight:'600',
+    color:'#1c474aff',
+},
+    btnBack: {
+        width: 45,
+        height: 45,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow:'hidden',
+        position:'absolute',
+        top:40,
+        left:15,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    botones:{
+        width:160,
+        height:40,
+        backgroundColor:'#23555fa0',
+        borderRadius:15,
+        alignItems:'center',
+        justifyContent:'center',
+        shadowColor:'#a9a9a9ff',
+        marginBottom:50,
+        shadowOffset:{
+        height:4,
+        width:0,
+        }
+    },
+    botonesIniciar:{
+        width:250,
+        height:40,
+        backgroundColor:'#23555fa0',
+        borderRadius:15,
+        alignItems:'center',
+        justifyContent:'center',
+        shadowColor:'#a9a9a9ff',
+        marginBottom:50,
+        shadowOffset:{
+        height:4,
+        width:0,
+        }
+    },
+  textoBoton:{
+    fontSize:15,
+    fontWeight:'550',
+    color:'white',
+  }
 
 });
