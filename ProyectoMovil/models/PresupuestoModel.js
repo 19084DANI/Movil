@@ -114,6 +114,29 @@ class PresupuestoModel {
       };
     }
   }
+ 
+  // Eliminar categoría si la quieren implementar
+  async delete (id) {
+    try {
+        const db = await DatabaseService.openDB();
+
+        await db.runAsync(
+            `DELETE FROM presupuestos WHERE id = ?`,
+            [id]
+        );
+        return {
+            success: true,
+            message: 'Presupuesto eliminado exitosamente'
+        };  
+    } catch (error) {
+        console.error('Error en PresupuestoModel.delete:', error);
+        return {
+            success: false,
+            error: error.message || 'Error al eliminar el presupuesto'
+        };
+    }
+  }
+
 
 
 }
