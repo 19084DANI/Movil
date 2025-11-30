@@ -55,5 +55,46 @@ class PresupuestoController {
         }
         return result;
     }
-    
+    //Obtener todos
+    async obtenerPresupuestos(){
+        const result = await PresupuestoModel.getAll();
+        return result.data || [];
+    }
+    //Obtener por ID
+    async obtenerPresupuestosPorId(id){
+        const result = await PresupuestoModel.getById(id);
+        return result.data;
+    }
+    //Editar Presupuesto
+    async editarPresupuesto(id, data) {
+        const validation = this.validatePresupuesto(data);
+        if (!validation.valid) {
+            return { success: false, error: validation.message };
+        }
+
+        const totalResult = await PresupuestoModel.getSumaPresupuestos();
+        const totalActual = totalResult.data?.total || 0;
+
+        // Obtener presupuesto previo para recalcular
+    const viejo = await PresupuestoModel.getById(id);
+    const montoViejo = viejo.data?.monto || 0;
+
+    const totalSinViejo = totalActual - montoViejo;
+    const nuevoTotal = totalSinViejo + parseFloat(data.monto);
+
+    if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX) {
+      return {
+        success: false,
+        error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
+      };
+    }
+
+    const result = await PresupuestoModel.update(id, data);
+
+    if (result.success) {
+      this.notifyListeners();
+    }
+
+    return result;
+    }
 }
