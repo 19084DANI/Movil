@@ -201,5 +201,35 @@ class PresupuestoModel {
       };
     }
   }
+
+  // Actualizar categoría y límite (sin cambiar monto)
+  async updateCategoriaYLimite(id, categoria, limite) {
+    try {
+      const db = await DatabaseService.openDB();
+
+      await db.runAsync(
+        `UPDATE presupuestos
+         SET categoria = ?, limite = ?
+         WHERE id = ?`,
+        [
+          categoria.trim(),
+          parseFloat(limite),
+          id
+        ]
+      );
+
+      return {
+        success: true,
+        message: 'Categoría y límite actualizados exitosamente'
+      };
+
+    } catch (error) {
+      console.error('Error en PresupuestoModel.updateCategoriaYLimite:', error);
+      return {
+        success: false,
+        error: error.message || 'Error al actualizar la categoría y límite'
+      };
+    }
+  }
 }
     export default new PresupuestoModel();

@@ -133,6 +133,24 @@ class PresupuestoController {
         return result;
     }
 
+    // Editar categoría y límite (sin cambiar monto)
+    async editarCategoriaYLimite(id, categoria, limite) {
+        if (!categoria || !categoria.trim()) {
+            return { success: false, error: "La categoría es obligatoria" };
+        }
+        if (limite === undefined || limite === null || isNaN(limite) || parseFloat(limite) <= 0) {
+            return { success: false, error: "El límite debe ser un número mayor a 0" };
+        }
+
+        const result = await PresupuestoModel.updateCategoriaYLimite(id, categoria.trim(), parseFloat(limite));
+
+        if (result.success) {
+            this.notifyListeners();
+        }
+
+        return result;
+    }
+
     // Eliminar
     async eliminarPresupuesto(id){
         const result = await PresupuestoModel.delete(id);

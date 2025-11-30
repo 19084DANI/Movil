@@ -2,6 +2,7 @@ import {View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, A
 import React, { useEffect, useState } from "react";
 import HomeScreen from "./HomeScreen";
 import NuevoPresupuestoScreen from "./NuevoPresupuestoScreen";
+import EditarPresuScreen from "./EditarPresuScreen";
 import { Ionicons } from "@expo/vector-icons";
 import PresupuestoController from "../controllers/PresupuestoController";
 import Slider from "@react-native-community/slider";
@@ -12,6 +13,7 @@ export default function PresupuestosScreen() {
   const [presupuestos, setPresupuestos] = useState([]);
   const [valoresTemporales, setValoresTemporales] = useState({});
   const [loading, setLoading] = useState(false);
+  const [presupuestoAEditar, setPresupuestoAEditar] = useState(null);
 
   // Calcular total automáticamente desde valores temporales o guardados
   const calcularTotal = () => {
@@ -149,6 +151,17 @@ export default function PresupuestosScreen() {
             return <HomeScreen/>
         case 'nuevop':
           return <NuevoPresupuestoScreen onBack={() => setScreen('default')} />
+        case 'editar':
+          return (
+            <EditarPresuScreen 
+              onBack={async () => {
+                setScreen('default');
+                setPresupuestoAEditar(null);
+                await cargarPresupuestos(); // Recargar para mostrar cambios
+              }} 
+              presupuesto={presupuestoAEditar}
+            />
+          )
 
         default:
     return (
@@ -204,6 +217,17 @@ export default function PresupuestosScreen() {
                 maximumTrackTintColor='#fff' 
                 minimumTrackTintColor='#3f1ae2ff'
               />
+              <View style={styles.botonEditarContainer}>
+                <TouchableOpacity 
+                  style={styles.botonEditar}
+                  onPress={() => {
+                    setPresupuestoAEditar(presupuesto);
+                    setScreen('editar');
+                  }}
+                >
+                  <Text style={styles.botonEditarTexto}>Editar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           );
         })}
@@ -330,7 +354,7 @@ fontWeight: 'bold'
 elementos:{
   
  width: 350,
-    height: 150,
+    height: 180,
     backgroundColor: '#a5c3a7',
     justifyContent: 'space-between',
     //alignItems: 'center',
@@ -351,6 +375,26 @@ totalText: {
   color: '#fff',
   textAlign: 'center',
   fontStyle: 'italic',
+},
+
+botonEditarContainer: {
+  marginTop: 10,
+  alignItems: 'flex-end',
+},
+
+botonEditar: {
+  backgroundColor: '#79B7B4',
+  paddingHorizontal: 20,
+  paddingVertical: 8,
+  borderRadius: 8,
+  borderWidth: 1,
+  borderColor: '#001F3F',
+},
+
+botonEditarTexto: {
+  color: '#001F3F',
+  fontSize: 16,
+  fontWeight: 'bold',
 },
 
 })
