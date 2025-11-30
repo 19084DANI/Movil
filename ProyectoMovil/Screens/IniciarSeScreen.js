@@ -2,6 +2,7 @@ import { Text, StyleSheet, View ,Image,TextInput,Alert,Button,TouchableOpacity,S
 import {useState} from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import AuthController from '../controllers/AuthController';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function IniciarSeScreen ({ navigation }){
     const[usuario,setusuario]= useState('');
@@ -16,6 +17,17 @@ export default function IniciarSeScreen ({ navigation }){
         setLoading(false);
 
         if (result.success) {
+          // Guardar datos del usuario en AsyncStorage
+          if (result.user) {
+            const userData = {
+              id: result.user.id,
+              nombre: result.user.nombre,
+              correo: result.user.correo,
+              telefono: result.user.telefono
+            };
+            await AsyncStorage.setItem('currentUser', JSON.stringify(userData));
+            console.log('Usuario guardado en AsyncStorage:', userData);
+          }
         Alert.alert("Éxito", result.message || "Inicio de sesión exitoso",[{text: "Aceptar",
             onPress: () => {                            
               setusuario('');
