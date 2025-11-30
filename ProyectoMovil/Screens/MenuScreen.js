@@ -187,7 +187,10 @@ export default function MenuScreen ({ navigation }) {
         >
           <Ionicons name={menuOpen ? 'close' : 'menu'} size={28} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Ahorra+</Text>
+        <Image
+        source={require('../assets/Logo.jpeg')}
+        style={styles.logo}
+        />
         <TouchableOpacity 
           style={styles.logoButton}
           onPress={handleBackToMenu}
@@ -242,7 +245,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
-    backgroundColor: '#001F3F',
+    backgroundColor: '#355559ff',
     paddingHorizontal: 16,
     paddingVertical: 20,
     paddingTop: 15,
@@ -459,4 +462,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+    logo:{
+        width: 80,
+        height: 80,
+        borderRadius: 80,
+        borderWidth: 3,
+        borderColor: '#072e2cff',
+        overflow:'hidden',
+        position:'absolute',
+        left:157,
+        bottom:-10,
+    },
 });

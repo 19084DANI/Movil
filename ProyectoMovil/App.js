@@ -22,7 +22,7 @@ export default function App() {
   if (!ready) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F5E6D3' }}>
-        <Text style={{ color: '#001F3F' }}>Inicializando...</Text>
+        <Text style={{ color: '#003f30ff' }}>Inicializando...</Text>
       </View>
     );
   }

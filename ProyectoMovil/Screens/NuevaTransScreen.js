@@ -90,9 +90,6 @@ export default function FormularioTransaccion() {
         <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover' style={styles.backgrounds} >
           
           <View style={styles.encabezado}>
-            <TouchableOpacity onPress={() => setScreen('homee')}>
-              <Image style={styles.logo} source={require('../assets/Logo.jpeg')} />
-            </TouchableOpacity>
           </View>
 
           <ScrollView contentContainerStyle={styles.container}>
@@ -172,36 +169,32 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   logo: {
-    width: 80,
-    height: 80,
-    borderRadius: 45,
+    width: 90,
+    height: 90,
+    borderRadius: 60,
     borderColor: '#001F3F',
     borderWidth: 3,
     position: 'absolute',
     left: -35,
-    top: -10,
+    top: -70,
   },
-  encabezado: {
-    justifyContent: 'center',
-    alignItems: "center",
-    backgroundColor: '#F5E6D3',
-    padding: 10,
-    width: '100%',
-    height: '10%',
-  },
+
   formContainer: {
-    width: 450,
-    height: 900,
-    backgroundColor: "#001F3F",
-    borderRadius: 40,
+    width: '99%',
+    height: 850,
+    backgroundColor: "#1a4050ff",
+    borderRadius: 15,
+    borderWidth:3,
+    borderColor:'#2b5868ff',
     padding: 20,
     alignItems: "center",
+    justifyContent:'center',
   },
   formContainer2: {
-    width: '100%',
-    height: '100%',
+    width: '108%',
+    height: '103%',
     backgroundColor: "#F5E6D3",
-    borderRadius: 20,
+    borderRadius: 15,
     padding: 20,
     alignItems: "center",
   },
@@ -221,6 +214,7 @@ const styles = StyleSheet.create({
     borderColor: '#b0b0b0ff',
     borderWidth: 2,
     borderRadius: 17,
+
     padding: 8,
     backgroundColor: "#F7EFE6",
     marginBottom: 10,
@@ -234,6 +228,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderWidth: 2,
     borderRadius: 15,
+    textAlign:'left',
+    textAlignVertical:'top',   
     height: 150,
     padding: 8,
     backgroundColor: "#F7EFE6",
@@ -250,17 +246,17 @@ const styles = StyleSheet.create({
   Button: {
     width: 150,
     height: 45,
-    backgroundColor: '#F7EFE6',
+    backgroundColor: '#164b46ff',
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
     borderWidth: 1,
-    borderColor: '#D1C6B5',
+    borderColor: '#265d63ff',
   },
   textoBoton: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#001F3F',
+    color: '#f5f6f8ff',
   }
 });

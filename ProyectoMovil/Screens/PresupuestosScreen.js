@@ -384,9 +384,9 @@ fontWeight: 'bold'
 
 elementos:{
   
- width: 350,
+    width:'100%',
     height: 180,
-    backgroundColor: '#a5c3a7',
+    backgroundColor: '#2dc037ff',
     justifyContent: 'space-between',
     //alignItems: 'center',
     marginVertical: 10,
