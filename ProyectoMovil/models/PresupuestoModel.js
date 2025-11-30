@@ -86,4 +86,34 @@ class PresupuestoModel {
     }
   }
 
+  // Actualizar monto de una categoría
+  async updateMonto(id, montoNuevo) {
+    try {
+      const db = await DatabaseService.openDB();
+
+      await db.runAsync(
+        `UPDATE presupuestos
+         SET monto = ?
+         WHERE id = ?`,
+        [
+          parseFloat(montoNuevo),
+          id
+        ]
+      );
+
+      return {
+        success: true,
+        message: 'Monto actualizado exitosamente'
+      };
+
+    } catch (error) {
+      console.error('Error en PresupuestoModel.updateMonto:', error);
+      return {
+        success: false,
+        error: error.message || 'Error al actualizar el monto'
+      };
+    }
+  }
+
+
 }
