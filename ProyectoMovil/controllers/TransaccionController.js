@@ -17,12 +17,18 @@ class TransaccionController {
 
   // Validar datos de transacción
   validateTransaccion(data) {
+    const montoNum = Number(data.monto);
+    
     if (!data.nombre || !data.nombre.trim()) {
       return { valid: false, message: 'El nombre es obligatorio' };
     }
-    if (!data.monto || isNaN(data.monto) || parseFloat(data.monto) <= 0) {
+   if (data.monto === undefined || data.monto === null) {
+      return { valid: false, message: 'El monto es obligatorio' };
+    }
+    if (isNaN(montoNum) || montoNum <= 0) {
       return { valid: false, message: 'El monto debe ser un número positivo' };
     }
+
     if (!data.categoria || !data.categoria.trim()) {
       return { valid: false, message: 'La categoría es obligatoria' };
     }

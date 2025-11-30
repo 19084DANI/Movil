@@ -142,27 +142,30 @@ class TransaccionModel {
   }
 
   // Obtener total de gastos (suma de todas las transacciones)
-  async getTotalGastos() {
-    try {
-      const db = await DatabaseService.openDB();
-      
-      const result = await db.getFirstAsync(
-        `SELECT SUM(monto) AS total FROM transacciones`
-      );
+ async getTotalGastos() {
+  try {
+    const db = await DatabaseService.openDB();
+    
+    const result = await db.getFirstAsync(
+      `SELECT SUM(monto) AS total FROM transacciones`
+    );
 
-      return {
-        success: true,
-        total: result?.total ? parseFloat(result.total) : 0
-      };
-    } catch (error) {
-      console.error('Error in TransaccionModel.getTotalGastos:', error);
-      return {
-        success: false,
-        error: error.message || 'Error al calcular total de gastos',
-        total: 0
-      };
-    }
+    // Convertir a número seguro
+    const total = result?.total ? Number(result.total) : 0;
+
+    return {
+      success: true,
+      data: { total }
+    };
+  } catch (error) {
+    console.error('Error in TransaccionModel.getTotalGastos:', error);
+    return {
+      success: false,
+      error: error.message || 'Error al calcular total de gastos',
+      data: { total: 0 }
+    };
   }
+ }
 }
 
 export default new TransaccionModel();

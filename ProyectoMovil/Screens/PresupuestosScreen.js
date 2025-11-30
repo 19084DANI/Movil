@@ -51,6 +51,29 @@ export default function PresupuestosScreen() {
       cargarPresupuestos();
     }
   }, [screen]);
+  const eliminarPresupuesto = async (id) => {
+  Alert.alert(
+    "Eliminar Presupuesto",
+    "¿Seguro que quieres eliminar este presupuesto?",
+    [{ text: "Cancelar", style: "cancel" },
+      {
+        text: "Eliminar",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            const result = await PresupuestoController.eliminarPresupuesto(id);
+            if (result.success) {
+              await cargarPresupuestos();
+              PresupuestoController.notifyListeners();
+            } else {
+              Alert.alert("Error", "No se pudo eliminar el presupuesto");
+            }
+          } catch (error) {
+            Alert.alert("Error", "Hubo un problema al eliminar");
+            }
+          }
+       }]);
+};
 
   const handleGuardar = async () => {
     setLoading(true);
@@ -228,6 +251,14 @@ export default function PresupuestosScreen() {
                   <Text style={styles.botonEditarTexto}>Editar</Text>
                 </TouchableOpacity>
               </View>
+              <View style={styles.botonEliminarContainer}>
+              <TouchableOpacity style={styles.botonEliminar}
+                onPress={() => eliminarPresupuesto(presupuesto.id)}
+              >
+                <Text style={styles.botonEliminarTexto}>Eliminar</Text>
+              </TouchableOpacity>
+              </View>
+
             </View>
           );
         })}
@@ -396,6 +427,26 @@ botonEditarTexto: {
   fontSize: 16,
   fontWeight: 'bold',
 },
+
+botonEliminarContainer: {
+  marginTop: -10,
+},
+botonEliminar: {
+  backgroundColor: "#d9534f",
+  padding: 4,
+  borderRadius: 10,
+  paddingHorizontal: 20,
+  paddingVertical: 8,
+  borderWidth: 1,
+  borderColor: '#001F3F',
+  width:'30%'
+},
+botonEliminarTexto: {
+  color: "white",
+  textAlign: "center",
+  fontWeight: "bold",
+},
+
 
 })
 
