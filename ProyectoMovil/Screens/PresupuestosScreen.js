@@ -134,3 +134,102 @@ export default function PresupuestosScreen() {
     </ImageBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%"
+  },
+
+  encabezado: {
+    width: "100%",
+    padding: 20,
+    alignItems: "center",
+    backgroundColor: "#e5e9dbff"
+  },
+
+  tituloHeader: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#000"
+  },
+
+  container: {
+    padding: 20,
+    alignItems: "center"
+  },
+
+  cardGeneral: {
+    backgroundColor: "#182735",
+    width: 350,
+    padding: 25,
+    borderRadius: 20,
+    marginBottom: 20
+  },
+
+  titulo: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 10
+  },
+
+  tituloSecundario: {
+    fontSize: 23,
+    fontWeight: "bold",
+    marginBottom: 15,
+    color: "#000"
+  },
+
+  texto: {
+    fontSize: 18,
+    color: "#ddd",
+    marginTop: 5
+  },
+
+  dinero: {
+    fontWeight: "bold",
+    fontSize: 20
+  },
+
+  alerta: {
+    marginTop: 10,
+    color: "red",
+    fontWeight: "bold",
+    fontSize: 16
+  },
+
+  listaContainer: {
+    width: 350,
+    backgroundColor: "#eef5db",
+    borderRadius: 15,
+    padding: 20
+  },
+
+  item: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 12,
+    marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+
+  nombreItem: {
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+
+  montoItem: {
+    fontSize: 16,
+    color: "#333"
+  },
+
+  botonAgregar: {
+    position: "absolute",
+    bottom: 40,
+    right: 30
+  }
+});
