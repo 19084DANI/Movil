@@ -1,10 +1,10 @@
-import { Text, StyleSheet, View, ImageBackground, ScrollView, Image } from 'react-native'
-import Slider from '@react-native-community/slider';
-import { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { Button } from 'react-native';
-import HomeScreen from './HomeScreen';
-import { Ionicons } from  '@expo/vector-icons';
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Alert} from "react-native";
+import React, { useEffect, useState } from "react";
+import HomeScreen from "./HomeScreen";
+import NuevoPresupuestoScreen from "./NuevoPresupuestoScreen";
+import { Ionicons } from "@expo/vector-icons";
+import PresupuestoController from "../controllers/PresupuestoController";
+
 export default function PresupuestosScreen() {
   const [screen, setScreen]=useState('default');
   const [preciot, setPrecio]=useState(0);
@@ -18,9 +18,21 @@ export default function PresupuestosScreen() {
         default:
     return (
       
-      <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover'
+      <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
         style={styles.backgrounds} >
-
+          <View style={styles.encabezado}>  
+             <Image
+              style={styles.menuhamburgesa}
+              source={require('../assets/menu.png')}
+             ></Image>     
+             <TouchableOpacity onPress={() => setScreen('home')}>
+             <Image
+              style={styles.logo}
+              source={require('../assets/logo.jpg')}
+             ></Image>  
+             </TouchableOpacity>
+          </View>
+          
           <View style={styles.contenido}>
      <ScrollView showsVerticalScrollIndicator={false}>
 
@@ -36,8 +48,8 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#001F3F' onValueChange={(value)=>setPrecio(value)
-             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
+            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
+             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
         </View>
@@ -49,8 +61,8 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(alimentacion)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3500}
-            minimumValue={2000} color='#001F3F' onValueChange={(value)=>setAlimentacion(value)
-             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
+            minimumValue={2000} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
+             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
         </View>
@@ -62,8 +74,8 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(transporte)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3200}
-            minimumValue={3000} color='#001F3F' onValueChange={(value)=>setTransporte(value)
-             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
+            minimumValue={3000} color='#5030efff' onValueChange={(value)=>setTransporte(value)
+             } thumbTintColor='#000000ff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
            
 
         </View>
@@ -75,13 +87,13 @@ export default function PresupuestosScreen() {
             <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(entretenimiento)}</Text>
              </View>
            <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={1500}
-            minimumValue={900} color='#001F3F' onValueChange={(value)=>setEntretenimiento(value)
-             } thumbTintColor='#001F3F' maximumTrackTintColor='#F7EFE6' minimumTrackTintColor='#D1C6B5'></Slider>
+            minimumValue={900} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
+             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
            
 
         </View>
         <View style={{width:120}}>
-          <Button color='#F7EFE6' title='Actualizar'></Button>
+          <Button color='#79B7B4' title='Actualizar'></Button>
         </View>
 
         <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
@@ -92,7 +104,9 @@ export default function PresupuestosScreen() {
         </View>
       </ScrollView>
         </View>
-         
+          <View style={styles.encabezado2}>
+          
+          </View>
 
       </ImageBackground>
       
@@ -120,7 +134,7 @@ paddingHorizontal:10
 texto1:{
   fontSize:27,
   fontWeight:'bold',
-  color:'#001F3F'
+  color:'#fff'
 },
 
 slider:{
@@ -138,7 +152,7 @@ encabezado:{
   justifyContent:'space-between',
 flexDirection: 'row',
 alignItems: "center",
-backgroundColor: '#F5E6D3',
+backgroundColor: '#EEF5DB',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
@@ -149,7 +163,7 @@ height: '10%',
 encabezado2:{
   
 alignItems: "center",
-backgroundColor: '#F5E6D3',
+backgroundColor: '#EEF5DB',
 padding: 10,
 borderRadius:10,
 marginBottom:0,
@@ -195,7 +209,7 @@ elementos:{
   
  width: 350,
     height: 150,
-  backgroundColor: '#E8D9C8',
+    backgroundColor: '#a5c3a7',
     justifyContent: 'space-between',
     //alignItems: 'center',
     marginVertical: 10,
