@@ -39,5 +39,13 @@ class PresupuestoController {
 
         const nuevoTotal = totalActual + parseFloat(data.monto);
 
+        //Validar límite
+        if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX){
+            return {
+                success: false,
+                error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
+            };
+        }
+
     }
 }
