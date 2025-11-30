@@ -1,11 +1,13 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from "react-native";
 import React, { useState } from "react";
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+
 import PresupuestoController from "../controllers/PresupuestoController";
 
 export default function NuevoPresupuestoScreen({ navigation }) {
   const [nombre, setNombre] = useState("");
   const [categoria, setCategoria] = useState("");
   const [monto, setMonto] = useState("");
+
   const handleGuardar = async () => {
     const data = {
       nombre,
@@ -15,10 +17,11 @@ export default function NuevoPresupuestoScreen({ navigation }) {
 
     const result = await PresupuestoController.crearPresupuesto(data);
 
-    if (!result.success){
-        Alert.alert("Error", result.error);
-        return;
+    if (!result.success) {
+      Alert.alert("Error", result.error);
+      return;
     }
+
     Alert.alert("Éxito", "Presupuesto creado correctamente");
     navigation.goBack();
   };
@@ -60,6 +63,7 @@ export default function NuevoPresupuestoScreen({ navigation }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

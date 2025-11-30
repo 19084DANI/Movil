@@ -1,81 +1,88 @@
+// Controlador de Presupuestos
+
 import PresupuestoModel from "../models/PresupuestoModel";
 
 class PresupuestoController {
-    constructor() {
-        this.listeners = [];
-        this.initialized = false;
-        this.PRESUPUESTO_GENERAL_MAX = 15000; // limite general
+  constructor() {
+    this.listeners = [];
+    this.initialized = false;
+    this.PRESUPUESTO_GENERAL_MAX = 15000; // límite general
+  }
+
+  // Inicializar
+  async initialize() {
+    if (this.initialized) return;
+    this.initialized = true;
+  }
+
+  // Validar presupuesto
+  validatePresupuesto(data) {
+    if (!data.nombre || !data.nombre.trim()) {
+      return { valid: false, message: "El nombre del presupuesto es obligatorio" };
     }
-    // Inicializar 
-    async initialized() {
-        if (this.initialized) return;
-        this.initialized = true;
+    if (!data.categoria || !data.categoria.trim()) {
+      return { valid: false, message: "La categoría es obligatoria" };
+    }
+    if (!data.monto || isNaN(data.monto) || parseFloat(data.monto) <= 0) {
+      return { valid: false, message: "El monto debe ser un número positivo" };
+    }
+    return { valid: true, message: "" };
+  }
+
+  // Crear un nuevo presupuesto
+  async crearPresupuesto(data) {
+    const validation = this.validatePresupuesto(data);
+    if (!validation.valid) {
+      return { success: false, error: validation.message };
     }
 
-    // Validar Presupuesto
-    validatePresupuesto(data){
-        if (!data.nombre || !data.nombre.trim()) {
-            return { valid: false, message: "El nombre del presupuesto es obligatorio" };
-        }
-        if (!data.categoria || !data.categoria.trim()) {
-            return { valid: false, message: "La categoría es obligatoria" };
-        }
-        if (!data.monto || isNaN(data.monto) || parseFloat(data.monto) <= 0){
-            return { valid: false, message: "El monto debe ser un número positivo" };
-        }
-        return{ valid: true, message: "" };    
+    // Obtener total actual
+    const totalResult = await PresupuestoModel.getSumaPresupuestos();
+    const totalActual = totalResult.data?.total || 0;
+
+    const nuevoTotal = totalActual + parseFloat(data.monto);
+
+    // Validar límite
+    if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX) {
+      return {
+        success: false,
+        error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
+      };
     }
 
-    //Crear un nuevo presupuesto
-    async crearPresupuesto(data) {
-        const validation = this.validatePresupuesto(data);
-        if (!validation.valid){
-            return { success: false, error: validation.message };
-        }
+    // Crear en DB
+    const result = await PresupuestoModel.create(data);
 
-        //Obtener total actual
-        const totalResult = await PresupuestoModel.getSumaPresupuestos();
-        const totalActual = totalResult.data?.total || 0;
-
-        const nuevoTotal = totalActual + parseFloat(data.monto);
-
-        //Validar límite
-        if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX){
-            return {
-                success: false,
-                error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
-            };
-        }
-
-        //Crear en BD
-        const result = await PresupuestoModel.create(data);
-
-        if (result.success) {
-            this.notifyListeners();
-        }
-        return result;
+    if (result.success) {
+      this.notifyListeners();
     }
-    //Obtener todos
-    async obtenerPresupuestos(){
-        const result = await PresupuestoModel.getAll();
-        return result.data || [];
-    }
-    //Obtener por ID
-    async obtenerPresupuestosPorId(id){
-        const result = await PresupuestoModel.getById(id);
-        return result.data;
-    }
-    //Editar Presupuesto
-    async editarPresupuesto(id, data) {
-        const validation = this.validatePresupuesto(data);
-        if (!validation.valid) {
-            return { success: false, error: validation.message };
-        }
 
-        const totalResult = await PresupuestoModel.getSumaPresupuestos();
-        const totalActual = totalResult.data?.total || 0;
+    return result;
+  }
 
-        // Obtener presupuesto previo para recalcular
+  // Obtener todos
+  async obtenerPresupuestos() {
+    const result = await PresupuestoModel.getAll();
+    return result.data || [];
+  }
+
+  // Obtener por ID
+  async obtenerPresupuestoPorId(id) {
+    const result = await PresupuestoModel.getById(id);
+    return result.data;
+  }
+
+  // Editar un presupuesto
+  async editarPresupuesto(id, data) {
+    const validation = this.validatePresupuesto(data);
+    if (!validation.valid) {
+      return { success: false, error: validation.message };
+    }
+
+    const totalResult = await PresupuestoModel.getSumaPresupuestos();
+    const totalActual = totalResult.data?.total || 0;
+
+    // Obtener presupuesto previo para recalcular
     const viejo = await PresupuestoModel.getById(id);
     const montoViejo = viejo.data?.monto || 0;
 
@@ -96,28 +103,28 @@ class PresupuestoController {
     }
 
     return result;
-    }
+  }
 
-    // Eliminar
-    async eliminarPresupuesto(id){
-        const result = await PresupuestoModel.delete(id);
-        if (result.success) {
-            this.notifyListeners();
-        }
-        return result;
+  // Eliminar
+  async eliminarPresupuesto(id) {
+    const result = await PresupuestoModel.delete(id);
+    if (result.success) {
+      this.notifyListeners();
     }
+    return result;
+  }
 
-    //Total general
-    async obtenerTotalPresupuestos() {
-        return await PresupuestoModel.getSumaPresupuestos();
-    }
+  // Total general
+  async obtenerTotalPresupuestos() {
+    return await PresupuestoModel.getSumaPresupuestos();
+  }
 
-    // Listeners
-    addListener(callback) {
-        this.listeners.push(callback);
-    }
+  // LISTENERS (igual que Transacciones)
+  addListener(callback) {
+    this.listeners.push(callback);
+  }
 
-    removeListener(callback) {
+  removeListener(callback) {
     this.listeners = this.listeners.filter((l) => l !== callback);
   }
 
