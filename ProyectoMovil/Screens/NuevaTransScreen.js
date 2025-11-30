@@ -116,12 +116,27 @@ export default function FormularioTransaccion() {
                 />
 
                 <Text style={styles.texto}>Categoría</Text>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Ej. Servicios"
-                  value={categoria}
-                  onChangeText={setCategoria}
-                />
+                <View style={styles.categoriaContainer}>
+                  {['Oficio', 'Personal', 'Fijo'].map((opt) => (
+                    <TouchableOpacity
+                      key={opt}
+                      style={[
+                        styles.categoriaBtn,
+                        categoria === opt && styles.categoriaBtnSelected,
+                      ]}
+                      onPress={() => setCategoria(opt)}
+                    >
+                      <Text
+                        style={[
+                          styles.categoriaBtnText,
+                          categoria === opt && styles.categoriaBtnTextSelected,
+                        ]}
+                      >
+                        {opt}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
 
                 <Text style={styles.texto}>Fecha</Text>
                 <TextInput
@@ -259,4 +274,34 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#f5f6f8ff',
   }
+  ,
+  categoriaContainer: {
+    width: '80%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  categoriaBtn: {
+    flex: 1,
+    marginHorizontal: 6,
+    paddingVertical: 10,
+    borderRadius: 12,
+    backgroundColor: '#F7EFE6',
+    borderWidth: 2,
+    borderColor: '#b0b0b0ff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoriaBtnSelected: {
+    backgroundColor: '#79B7B4',
+    borderColor: '#79B7B4',
+  },
+  categoriaBtnText: {
+    color: '#001F3F',
+    fontWeight: '600',
+  },
+  categoriaBtnTextSelected: {
+    color: '#fff',
+  },
 });
