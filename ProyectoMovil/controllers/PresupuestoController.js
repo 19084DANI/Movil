@@ -47,5 +47,13 @@ class PresupuestoController {
             };
         }
 
+        //Crear en BD
+        const result = await PresupuestoModel.create(data);
+
+        if (result.success) {
+            this.notifyListeners();
+        }
+        return result;
     }
+    
 }
