@@ -1,23 +1,11 @@
 
 import { StyleSheet, Text, View, Button, Image, ImageBackground,Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { Ionicons } from  '@expo/vector-icons';
 
-//import de iniciar sesion
-import IniciarSeScreen from './IniciarSeScreen';
-import RegistroScreen from './RegistroScreen';
+export default function Login({ navigation }){
 
-export default function Login(){
-
-  const [screen, setScreen]=useState('default');
-  switch(screen){
-     case 'IniciarSesion':
-       return<IniciarSeScreen/>
-     case 'Registro':
-      return<RegistroScreen/>
-    default:
   return (
-
       <View style={styles.ImageBackground}>
        <View style={styles.contSup}></View> 
 
@@ -41,14 +29,14 @@ export default function Login(){
 
           <Pressable 
           style={styles.botones}
-          onPress={()=> setScreen('IniciarSesion')}
+          onPress={()=> navigation.navigate('IniciarSeScreen')}
           >
           <Text style={styles.textoBoton}>INICIAR SESION</Text>
           </Pressable>
 
            <Pressable 
           style={styles.botones}
-          onPress={()=>setScreen('Registro')}
+          onPress={()=> navigation.navigate('RegistroScreen')}
           >
           <Text style={styles.textoBoton}>REGISTRARSE</Text>
           </Pressable> 
@@ -58,9 +46,7 @@ export default function Login(){
                       
       <View style={styles.contInf}></View>
   </View>
-    )      
-  }
-   
+  );
 }
 
 const styles = StyleSheet.create({

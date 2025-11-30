@@ -3,7 +3,7 @@ import { useContext, useState } from 'react';
 import { AuthContext } from '../data/AuthContext';
 
 export default function RegistroScreen({ navigation }){
-    const { registro, loading } = useContext(AuthContext);
+    const { signUp, isLoading } = useContext(AuthContext);
     const [nombre, setNombre] = useState('');
     const [correo, setCorreo] = useState('');
     const [telefono, setTelefono] = useState('');
@@ -35,16 +35,19 @@ export default function RegistroScreen({ navigation }){
         }
 
         try {
-            const result = await registro(nombre, correo, telefono, contrasena);
+            const result = await signUp(nombre, correo, telefono, contrasena);
             if (result.success) {
-                Alert.alert("Éxito", `Cuenta creada para: ${nombre}\nCorreo: ${correo}`);
-                // Navegar al Home y evitar volver a la pantalla de auth
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: 'HomeDrawer' }],
-                });
+                Alert.alert("Éxito", `Cuenta creada para: ${nombre}\nCorreo: ${correo}`, [
+                    {
+                        text: "Aceptar",
+                        onPress: () => {
+                            // Navegar a la pantalla de inicio de sesión después del registro
+                            navigation.navigate('IniciarSeScreen');
+                        }
+                    }
+                ]);
             } else {
-                Alert.alert("Error", result.error || "Error al crear la cuenta");
+                Alert.alert("Error", result.message || "Error al crear la cuenta");
             }
         } catch (error) {
             Alert.alert("Error", "Error al crear la cuenta: " + error.message);
@@ -91,11 +94,11 @@ export default function RegistroScreen({ navigation }){
         />
 
         <View style={{width: '100%', marginTop:10}}>
-          <Button title={loading ? 'Creando...' : 'Crear Cuenta'} color='#000000' onPress={crearCuenta} disabled={loading} />
+          <Button title={isLoading ? 'Creando...' : 'Crear Cuenta'} color='#000000' onPress={crearCuenta} disabled={isLoading} />
         </View>
 
         <View style={{ marginTop: 15 }}>
-            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#000000' onPress={() => navigation.navigate('IniciarSesion')} />
+            <Button title='¿Ya tienes una cuenta? Inicia Sesión' color='#000000' onPress={() => navigation.navigate('IniciarSeScreen')} />
         </View>
         </View>
         </View>
