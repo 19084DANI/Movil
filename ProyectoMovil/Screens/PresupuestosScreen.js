@@ -26,10 +26,12 @@ export default function PresupuestosScreen() {
       const presupuestosData = await PresupuestoController.obtenerPresupuestos();
       setPresupuestos(presupuestosData);
       
-      // Inicializar valores temporales con los valores guardados
+      // Inicializar valores temporales con los valores guardados de la BD
+      // Esto asegura que la barra muestre la posición correcta basada en monto/limite
       const valoresIniciales = {};
       presupuestosData.forEach(p => {
-        valoresIniciales[p.categoria] = p.monto || 0;
+        // Usar el monto guardado, asegurándose de que sea un número
+        valoresIniciales[p.categoria] = parseFloat(p.monto) || 0;
       });
       setValoresTemporales(valoresIniciales);
     } catch (error) {
@@ -48,7 +50,7 @@ export default function PresupuestosScreen() {
     }
   }, [screen]);
 
-  const handleActualizar = async () => {
+  const handleGuardar = async () => {
     setLoading(true);
     try {
       // Función auxiliar para actualizar o crear presupuesto
@@ -56,11 +58,8 @@ export default function PresupuestosScreen() {
         try {
           const existente = presupuestos.find(p => p.categoria === categoria);
           if (existente) {
-            // Actualizar existente
-            const result = await PresupuestoController.editarPresupuesto(existente.id, {
-              categoria,
-              monto: parseFloat(monto)
-            });
+            // Actualizar existente usando el método más eficiente
+            const result = await PresupuestoController.actualizarMonto(existente.id, parseFloat(monto));
             if (!result.success) {
               console.error(`Error al actualizar ${categoria}:`, result.error);
               throw new Error(result.error || `Error al actualizar ${categoria}`);
@@ -69,7 +68,8 @@ export default function PresupuestosScreen() {
             // Crear nuevo
             const result = await PresupuestoController.crearPresupuesto({
               categoria,
-              monto: parseFloat(monto)
+              monto: parseFloat(monto),
+              limite: parseFloat(monto) * 1.5 // Límite por defecto
             });
             if (!result.success) {
               console.error(`Error al crear ${categoria}:`, result.error);
@@ -83,8 +83,10 @@ export default function PresupuestosScreen() {
       };
 
       // Actualizar o crear cada presupuesto con los valores temporales
+      // Guardar todos los valores, incluyendo 0
       for (const [categoria, monto] of Object.entries(valoresTemporales)) {
-        if (monto > 0) {
+        // Guardar cualquier valor válido (>= 0), incluyendo 0
+        if (monto !== undefined && monto !== null && !isNaN(monto) && parseFloat(monto) >= 0) {
           await actualizarOCrear(categoria, monto);
         }
       }
@@ -95,16 +97,17 @@ export default function PresupuestosScreen() {
       // Recargar los datos desde la BD (esto mantendrá los valores guardados)
       await cargarPresupuestos();
 
-      Alert.alert('Éxito', 'Presupuestos actualizados correctamente');
+      Alert.alert('Éxito', 'Presupuestos guardados correctamente');
     } catch (error) {
-      console.error('Error al actualizar presupuestos:', error);
-      Alert.alert('Error', error.message || 'No se pudieron actualizar los presupuestos');
+      console.error('Error al guardar presupuestos:', error);
+      Alert.alert('Error', error.message || 'No se pudieron guardar los presupuestos');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSliderChange = (categoria, value) => {
+    // Solo actualizar el valor temporal en la UI, sin guardar en BD
     setValoresTemporales(prev => ({
       ...prev,
       [categoria]: value
@@ -112,20 +115,30 @@ export default function PresupuestosScreen() {
   };
 
   const getValorTemporal = (categoria) => {
-    return valoresTemporales[categoria] || 0;
+    // Si hay un valor temporal, usarlo (cambios no guardados)
+    if (valoresTemporales[categoria] !== undefined) {
+      return valoresTemporales[categoria];
+    }
+    // Si no, usar el monto guardado del presupuesto
+    const presupuesto = presupuestos.find(p => p.categoria === categoria);
+    return presupuesto ? (presupuesto.monto || 0) : 0;
   };
 
   const getLimiteMaximo = (categoria) => {
-    // Límites por defecto razonables, pero permitir valores más altos
+    // Buscar el presupuesto para obtener su límite guardado
+    const presupuesto = presupuestos.find(p => p.categoria === categoria);
+    if (presupuesto && presupuesto.limite) {
+      return parseFloat(presupuesto.limite);
+    }
+    // Si no tiene límite guardado, usar límite por defecto
     const valorActual = getValorTemporal(categoria);
-    // Si el valor actual es mayor que el límite por defecto, usar valor * 2
     const limitesPorDefecto = {
       'Alimentación': 5000,
       'Transporte': 5000,
       'Entretenimiento': 3000
     };
     const limiteDefecto = limitesPorDefecto[categoria] || 10000;
-    return Math.max(limiteDefecto, valorActual * 1.5); // Al menos 1.5x el valor actual
+    return Math.max(limiteDefecto, valorActual * 1.5);
   };
 
   const getLimiteMinimo = (categoria) => {
@@ -171,6 +184,9 @@ export default function PresupuestosScreen() {
           const maxValue = getLimiteMaximo(presupuesto.categoria);
           const minValue = getLimiteMinimo(presupuesto.categoria);
           
+          // Asegurar que el valor esté dentro del rango del slider
+          const valorSlider = Math.max(minValue, Math.min(maxValue, parseFloat(valorActual) || 0));
+          
           return (
             <View key={presupuesto.id} style={styles.elementos}>
               <View style={styles.textoslide}>
@@ -181,7 +197,7 @@ export default function PresupuestosScreen() {
                 style={[{width:300, height: 50}, styles.slider]} 
                 maximumValue={maxValue}
                 minimumValue={minValue} 
-                value={valorActual}
+                value={valorSlider}
                 color='#5030efff' 
                 onValueChange={(value) => handleSliderChange(presupuesto.categoria, value)}
                 thumbTintColor='#3700ffff' 
@@ -194,8 +210,8 @@ export default function PresupuestosScreen() {
         <View style={{width:120}}>
           <Button 
             color='#79B7B4' 
-            title={loading ? 'Guardando...' : 'Actualizar'}
-            onPress={handleActualizar}
+            title={loading ? 'Guardando...' : 'Guardar'}
+            onPress={handleGuardar}
             disabled={loading}
           />
         </View>

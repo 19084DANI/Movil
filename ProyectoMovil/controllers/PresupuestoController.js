@@ -20,6 +20,12 @@ class PresupuestoController {
         if (data.monto === undefined || data.monto === null || isNaN(data.monto) || parseFloat(data.monto) < 0){
             return { valid: false, message: "El monto debe ser un número válido" };
         }
+        // Validar limite si está presente
+        if (data.limite !== undefined && data.limite !== null) {
+            if (isNaN(data.limite) || parseFloat(data.limite) <= 0) {
+                return { valid: false, message: "El límite debe ser un número mayor a 0" };
+            }
+        }
         return{ valid: true, message: "" };    
     }
 
@@ -93,6 +99,38 @@ class PresupuestoController {
     }
 
     return result;
+    }
+
+    // Actualizar solo el monto (más eficiente para sliders)
+    async actualizarMonto(id, montoNuevo) {
+        if (montoNuevo === undefined || montoNuevo === null || isNaN(montoNuevo) || parseFloat(montoNuevo) < 0) {
+            return { success: false, error: "El monto debe ser un número válido" };
+        }
+
+        const totalResult = await PresupuestoModel.getSumaPresupuestos();
+        const totalActual = totalResult.data?.total || 0;
+
+        // Obtener presupuesto previo para recalcular
+        const viejo = await PresupuestoModel.getById(id);
+        const montoViejo = viejo.data?.monto || 0;
+
+        const totalSinViejo = totalActual - montoViejo;
+        const nuevoTotal = totalSinViejo + parseFloat(montoNuevo);
+
+        if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX) {
+            return {
+                success: false,
+                error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
+            };
+        }
+
+        const result = await PresupuestoModel.updateMonto(id, montoNuevo);
+
+        if (result.success) {
+            this.notifyListeners();
+        }
+
+        return result;
     }
 
     // Eliminar

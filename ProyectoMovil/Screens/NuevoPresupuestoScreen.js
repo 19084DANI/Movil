@@ -1,20 +1,27 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ImageBackground, ScrollView} from "react-native";
 import React, { useState } from "react";
 import PresupuestoController from "../controllers/PresupuestoController";
 
 export default function NuevoPresupuestoScreen({ navigation, onBack }) {
   const [nombre, setNombre] = useState("");
-  const [categoria, setCategoria] = useState("");
-  const [monto, setMonto] = useState("");
+  const [limite, setLimite] = useState("");
+
   const handleGuardar = async () => {
-    if (!categoria.trim() || !monto.trim()) {
+    if (!nombre.trim() || !limite.trim()) {
       Alert.alert("Error", "Por favor complete todos los campos");
       return;
     }
 
+    const limiteNum = parseFloat(limite);
+    if (isNaN(limiteNum) || limiteNum <= 0) {
+      Alert.alert("Error", "El límite debe ser un número mayor a 0");
+      return;
+    }
+
     const data = {
-      categoria: categoria.trim(),
-      monto: parseFloat(monto)
+      categoria: nombre.trim(), // Usamos categoria como nombre del presupuesto
+      monto: 0, // Valor inicial en 0
+      limite: limiteNum // Límite máximo
     };
 
     const result = await PresupuestoController.crearPresupuesto(data);
@@ -41,81 +48,152 @@ export default function NuevoPresupuestoScreen({ navigation, onBack }) {
     ]);
   };
 
+  const handleCancelar = () => {
+    if (onBack) {
+      onBack();
+    } else if (navigation) {
+      navigation.goBack();
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <ImageBackground 
+      source={require('../assets/fondo2.jpg')} 
+      resizeMode='cover'
+      style={styles.backgrounds}
+    >
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.contenido}>
+          <View style={styles.tituloContainer}>
+            <Text style={styles.titulo}>Nuevo Presupuesto</Text>
+          </View>
 
-      <Text style={styles.titulo}>Nuevo Presupuesto</Text>
+          <View style={styles.formContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Nombre del presupuesto</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ej: Alimentación, Transporte..."
+                placeholderTextColor="#999"
+                value={nombre}
+                onChangeText={setNombre}
+              />
+            </View>
 
-      <Text style={styles.label}>Nombre del presupuesto</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Ej: Comida, Viajes..."
-        value={nombre}
-        onChangeText={setNombre}
-      />
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Límite (Monto máximo)</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Ej: 5000"
+                placeholderTextColor="#999"
+                value={limite}
+                onChangeText={setLimite}
+                keyboardType="numeric"
+              />
+            </View>
 
-      <Text style={styles.label}>Categoría</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Ej: Hogar, Transporte, Ocio..."
-        value={categoria}
-        onChangeText={setCategoria}
-      />
+            <View style={styles.botonesContainer}>
+              <TouchableOpacity 
+                style={[styles.boton, styles.botonCancelar]} 
+                onPress={handleCancelar}
+              >
+                <Text style={styles.botonTextoCancelar}>Cancelar</Text>
+              </TouchableOpacity>
 
-      <Text style={styles.label}>Monto asignado</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Ej: 500"
-        value={monto}
-        onChangeText={setMonto}
-        keyboardType="numeric"
-      />
-
-      <TouchableOpacity style={styles.boton} onPress={handleGuardar}>
-        <Text style={styles.botonTexto}>Guardar Presupuesto</Text>
-      </TouchableOpacity>
-
-    </View>
+              <TouchableOpacity 
+                style={[styles.boton, styles.botonGuardar]} 
+                onPress={handleGuardar}
+              >
+                <Text style={styles.botonTexto}>Guardar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 const styles = StyleSheet.create({
-  container: {
+  backgrounds: {
     flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  scrollContent: {
+    flexGrow: 1,
     padding: 20,
-    backgroundColor: "#ffffff",
+  },
+  contenido: {
+    flex: 1,
+    paddingTop: 30,
+  },
+  tituloContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
   },
   titulo: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 25,
-    color: "#333",
-    textAlign: "center"
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#001F3F',
+    textAlign: 'center',
+  },
+  formContainer: {
+    backgroundColor: '#E8D9C8',
+    borderRadius: 15,
+    padding: 20,
+    borderWidth: 2,
+    borderColor: '#001F3F',
+  },
+  inputContainer: {
+    marginBottom: 20,
   },
   label: {
-    marginTop: 10,
-    fontSize: 16,
-    color: "#444",
-    fontWeight: "bold"
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#001F3F',
+    marginBottom: 8,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 5,
+    backgroundColor: '#F7EFE6',
+    borderWidth: 2,
+    borderColor: '#001F3F',
+    borderRadius: 10,
+    padding: 15,
     fontSize: 16,
-    backgroundColor: "#f9f9f9",
+    color: '#001F3F',
+  },
+  botonesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    gap: 15,
   },
   boton: {
-    marginTop: 30,
-    backgroundColor: "#4CAF50",
+    flex: 1,
     padding: 15,
     borderRadius: 10,
-    alignItems: "center",
+    alignItems: 'center',
+    borderWidth: 2,
+  },
+  botonCancelar: {
+    backgroundColor: '#F5E6D3',
+    borderColor: '#001F3F',
+  },
+  botonGuardar: {
+    backgroundColor: '#001F3F',
+    borderColor: '#001F3F',
   },
   botonTexto: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 18,
-    fontWeight: "bold"
+    fontWeight: 'bold',
+  },
+  botonTextoCancelar: {
+    color: '#001F3F',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

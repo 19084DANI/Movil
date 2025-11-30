@@ -11,11 +11,12 @@ class PresupuestoModel {
       const db = await DatabaseService.openDB();
 
       await db.runAsync(
-        `INSERT INTO presupuestos (categoria, monto)
-         VALUES (?, ?)`,
+        `INSERT INTO presupuestos (categoria, monto, limite)
+         VALUES (?, ?, ?)`,
         [
           presupuestoData.categoria.trim(),
-          parseFloat(presupuestoData.monto)
+          parseFloat(presupuestoData.monto || 0), // Valor actual, inicializado en 0
+          parseFloat(presupuestoData.limite) // Límite máximo
         ]
       );
 
@@ -40,7 +41,7 @@ class PresupuestoModel {
       const db = await DatabaseService.openDB();
 
       const result = await db.getAllAsync(
-        `SELECT id, categoria, monto, fecha_creacion
+        `SELECT id, categoria, monto, limite, fecha_creacion
          FROM presupuestos
          ORDER BY id DESC`
       );
@@ -65,7 +66,7 @@ class PresupuestoModel {
       const db = await DatabaseService.openDB();
 
       const result = await db.getFirstAsync(
-        `SELECT id, categoria, monto, fecha_creacion
+        `SELECT id, categoria, monto, limite, fecha_creacion
          FROM presupuestos
          WHERE id = ?`,
         [id]
