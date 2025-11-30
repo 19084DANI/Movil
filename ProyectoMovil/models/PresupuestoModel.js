@@ -33,7 +33,7 @@ class PresupuestoModel {
     }
 
   }
-  
+
 // Obtener todos los presupuestos (todas las categorías)
   async getAll() {
     try {
@@ -56,6 +56,32 @@ class PresupuestoModel {
         success: false,
         error: error.message || 'Error al obtener presupuestos',
         data: []
+      };
+    }
+  }
+  // Obtener presupuesto por ID
+  async getById(id) {
+    try {
+      const db = await DatabaseService.openDB();
+
+      const result = await db.getFirstAsync(
+        `SELECT id, categoria, monto, fecha_creacion
+         FROM presupuestos
+         WHERE id = ?`,
+        [id]
+      );
+
+      return {
+        success: true,
+        data: result || null
+      };
+
+    } catch (error) {
+      console.error('Error en PresupuestoModel.getById:', error);
+      return {
+        success: false,
+        error: error.message || 'Error al obtener el presupuesto',
+        data: null
       };
     }
   }
