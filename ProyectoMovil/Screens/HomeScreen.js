@@ -1,18 +1,26 @@
 import { Text, StyleSheet, View, Image, ImageBackground, Button, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react';
 import TransaccionController from '../controllers/TransaccionController';
+import PresupuestoController from '../controllers/PresupuestoController';
 import { Ionicons } from '@expo/vector-icons';
 
 const controller = TransaccionController;
 export default function BotonesScreen() {
   const [transacciones, setTransacciones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [presupuestoTotal, setPresupuestoTotal] = useState(0);
+  const [gastosTotal, setGastosTotal] = useState(0);
+  const [saldoDisponible, setSaldoDisponible] = useState(0);
 
   const cargarTransacciones = useCallback(async () => {
     try {
       setLoading(true);
       const data = await controller.obtenerTransacciones();
       setTransacciones(data);
+      
+      // Calcular total de gastos
+      const totalGastos = data.reduce((sum, trans) => sum + (parseFloat(trans.monto) || 0), 0);
+      setGastosTotal(totalGastos);
     } catch (error) {
       Alert.alert('Error', error.message || 'Error al cargar transacciones');
     } finally {
@@ -20,18 +28,48 @@ export default function BotonesScreen() {
     }
   }, []);
 
+  const cargarPresupuesto = useCallback(async () => {
+    try {
+      const result = await PresupuestoController.obtenerTotalPresupuestos();
+      if (result.success) {
+        const total = result.data?.total || 0;
+        setPresupuestoTotal(total);
+      }
+    } catch (error) {
+      console.error('Error al cargar presupuesto:', error);
+    }
+  }, []);
+
+  const calcularSaldo = useCallback(() => {
+    const saldo = presupuestoTotal - gastosTotal;
+    setSaldoDisponible(saldo >= 0 ? saldo : 0);
+  }, [presupuestoTotal, gastosTotal]);
+
   useEffect(() => {
     const init = async () => {
       await controller.initialize();
+      await cargarPresupuesto();
       await cargarTransacciones();
     };
     init();
-    controller.addListener(cargarTransacciones);
+    
+    const actualizarDatos = () => {
+      cargarTransacciones();
+      cargarPresupuesto();
+    };
+    
+    controller.addListener(actualizarDatos);
+    PresupuestoController.addListener(actualizarDatos);
 
     return () => {
-      controller.removeListener(cargarTransacciones);
+      controller.removeListener(actualizarDatos);
+      PresupuestoController.removeListener(actualizarDatos);
     };
-  }, [cargarTransacciones]);
+  }, [cargarTransacciones, cargarPresupuesto]);
+
+  useEffect(() => {
+    calcularSaldo();
+  }, [calcularSaldo]);
 
   const recentTransacciones = [...transacciones]
     .sort((a, b) => {
@@ -69,7 +107,7 @@ export default function BotonesScreen() {
               <View style={styles.saldo}>
                 <View>
                   <Text style={styles.textosaldo}>Saldo Disponible:</Text>
-                  <Text style={styles.textsaldo2}>$2100.00</Text>
+                  <Text style={styles.textsaldo2}>${saldoDisponible.toFixed(2)}</Text>
                 </View>
 
                 <View style={styles.botonPresupuesto}>
@@ -83,13 +121,13 @@ export default function BotonesScreen() {
 
               <View style={styles.cuadros}>
                 <View style={styles.elementos2}>
-                  <Text style={styles.textoi}>Ingresos:</Text>
-                  <Text style={styles.num}>$8000.00</Text>
+                  <Text style={styles.textoi}>Presupuestos:</Text>
+                  <Text style={styles.num}>${presupuestoTotal.toFixed(2)}</Text>
                 </View>
 
                 <View style={styles.elementos22}>
                   <Text style={styles.textoi}>Gastos:</Text>
-                  <Text style={styles.num}>$5900.00</Text>
+                  <Text style={styles.num}>${gastosTotal.toFixed(2)}</Text>
                 </View>
 
                 <View style={styles.elementos2}>

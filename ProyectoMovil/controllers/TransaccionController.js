@@ -93,6 +93,11 @@ class TransaccionController {
     return result;
   }
 
+  // Obtener total de gastos
+  async obtenerTotalGastos() {
+    return await TransaccionModel.getTotalGastos();
+  }
+
   
   addListener(callback) {
     this.listeners.push(callback);

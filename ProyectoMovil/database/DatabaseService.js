@@ -38,6 +38,23 @@ class DatabaseService {
           contrasena TEXT NOT NULL,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+        
+        CREATE TABLE IF NOT EXISTS presupuestos (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          categoria TEXT NOT NULL,
+          monto REAL NOT NULL,
+          fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+        
+        CREATE TABLE IF NOT EXISTS transacciones (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          nombre TEXT NOT NULL,
+          monto REAL NOT NULL,
+          categoria TEXT NOT NULL,
+          fecha TEXT NOT NULL,
+          descripcion TEXT NOT NULL,
+          fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
       `);
 
       console.log('SQLite database initialized');

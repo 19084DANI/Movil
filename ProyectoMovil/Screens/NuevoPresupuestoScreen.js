@@ -2,15 +2,19 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from "react
 import React, { useState } from "react";
 import PresupuestoController from "../controllers/PresupuestoController";
 
-export default function NuevoPresupuestoScreen({ navigation }) {
+export default function NuevoPresupuestoScreen({ navigation, onBack }) {
   const [nombre, setNombre] = useState("");
   const [categoria, setCategoria] = useState("");
   const [monto, setMonto] = useState("");
   const handleGuardar = async () => {
+    if (!categoria.trim() || !monto.trim()) {
+      Alert.alert("Error", "Por favor complete todos los campos");
+      return;
+    }
+
     const data = {
-      nombre,
-      categoria,
-      monto
+      categoria: categoria.trim(),
+      monto: parseFloat(monto)
     };
 
     const result = await PresupuestoController.crearPresupuesto(data);
@@ -19,8 +23,22 @@ export default function NuevoPresupuestoScreen({ navigation }) {
         Alert.alert("Error", result.error);
         return;
     }
-    Alert.alert("Éxito", "Presupuesto creado correctamente");
-    navigation.goBack();
+    
+    // Notificar a los listeners
+    PresupuestoController.notifyListeners();
+    
+    Alert.alert("Éxito", "Presupuesto creado correctamente", [
+      {
+        text: "OK",
+        onPress: () => {
+          if (onBack) {
+            onBack();
+          } else if (navigation) {
+            navigation.goBack();
+          }
+        }
+      }
+    ]);
   };
 
   return (

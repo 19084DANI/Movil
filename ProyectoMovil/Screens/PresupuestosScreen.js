@@ -9,15 +9,133 @@ import Slider from "@react-native-community/slider";
 
 export default function PresupuestosScreen() {
   const [screen, setScreen]=useState('default');
-  const [preciot, setPrecio]=useState(0);
-  const [alimentacion, setAlimentacion]=useState(0);
-  const [transporte, setTransporte]=useState(0);
-  const [entretenimiento, setEntretenimiento]=useState(0);
+  const [presupuestos, setPresupuestos] = useState([]);
+  const [valoresTemporales, setValoresTemporales] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // Calcular total automáticamente desde valores temporales o guardados
+  const calcularTotal = () => {
+    const valores = Object.values(valoresTemporales);
+    return valores.reduce((sum, val) => sum + (parseFloat(val) || 0), 0);
+  };
+  const preciot = calcularTotal();
+
+  // Cargar presupuestos existentes
+  const cargarPresupuestos = async () => {
+    try {
+      const presupuestosData = await PresupuestoController.obtenerPresupuestos();
+      setPresupuestos(presupuestosData);
+      
+      // Inicializar valores temporales con los valores guardados
+      const valoresIniciales = {};
+      presupuestosData.forEach(p => {
+        valoresIniciales[p.categoria] = p.monto || 0;
+      });
+      setValoresTemporales(valoresIniciales);
+    } catch (error) {
+      console.error('Error al cargar presupuestos:', error);
+    }
+  };
+
+  useEffect(() => {
+    cargarPresupuestos();
+  }, []);
+
+  // Recargar cuando se regrese de NuevoPresupuestoScreen
+  useEffect(() => {
+    if (screen === 'default') {
+      cargarPresupuestos();
+    }
+  }, [screen]);
+
+  const handleActualizar = async () => {
+    setLoading(true);
+    try {
+      // Función auxiliar para actualizar o crear presupuesto
+      const actualizarOCrear = async (categoria, monto) => {
+        try {
+          const existente = presupuestos.find(p => p.categoria === categoria);
+          if (existente) {
+            // Actualizar existente
+            const result = await PresupuestoController.editarPresupuesto(existente.id, {
+              categoria,
+              monto: parseFloat(monto)
+            });
+            if (!result.success) {
+              console.error(`Error al actualizar ${categoria}:`, result.error);
+              throw new Error(result.error || `Error al actualizar ${categoria}`);
+            }
+          } else {
+            // Crear nuevo
+            const result = await PresupuestoController.crearPresupuesto({
+              categoria,
+              monto: parseFloat(monto)
+            });
+            if (!result.success) {
+              console.error(`Error al crear ${categoria}:`, result.error);
+              throw new Error(result.error || `Error al crear ${categoria}`);
+            }
+          }
+        } catch (error) {
+          console.error(`Error en actualizarOCrear para ${categoria}:`, error);
+          throw error;
+        }
+      };
+
+      // Actualizar o crear cada presupuesto con los valores temporales
+      for (const [categoria, monto] of Object.entries(valoresTemporales)) {
+        if (monto > 0) {
+          await actualizarOCrear(categoria, monto);
+        }
+      }
+
+      // Notificar a los listeners para que HomeScreen se actualice
+      PresupuestoController.notifyListeners();
+
+      // Recargar los datos desde la BD (esto mantendrá los valores guardados)
+      await cargarPresupuestos();
+
+      Alert.alert('Éxito', 'Presupuestos actualizados correctamente');
+    } catch (error) {
+      console.error('Error al actualizar presupuestos:', error);
+      Alert.alert('Error', error.message || 'No se pudieron actualizar los presupuestos');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSliderChange = (categoria, value) => {
+    setValoresTemporales(prev => ({
+      ...prev,
+      [categoria]: value
+    }));
+  };
+
+  const getValorTemporal = (categoria) => {
+    return valoresTemporales[categoria] || 0;
+  };
+
+  const getLimiteMaximo = (categoria) => {
+    // Límites por defecto razonables, pero permitir valores más altos
+    const valorActual = getValorTemporal(categoria);
+    // Si el valor actual es mayor que el límite por defecto, usar valor * 2
+    const limitesPorDefecto = {
+      'Alimentación': 5000,
+      'Transporte': 5000,
+      'Entretenimiento': 3000
+    };
+    const limiteDefecto = limitesPorDefecto[categoria] || 10000;
+    return Math.max(limiteDefecto, valorActual * 1.5); // Al menos 1.5x el valor actual
+  };
+
+  const getLimiteMinimo = (categoria) => {
+    return 0;
+  };
    switch(screen){
         case 'home':
             return <HomeScreen/>
         case 'nuevop':
-          return <NuevoPresupuestoScreen></NuevoPresupuestoScreen>
+          return <NuevoPresupuestoScreen onBack={() => setScreen('default')} />
 
         default:
     return (
@@ -38,55 +156,48 @@ export default function PresupuestosScreen() {
           <View style={styles.textoslide}>
           <Text style={styles.texto1}>Presupuesto{'\n'}Total:</Text>
            
-            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot)}</Text>
+            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(preciot).toLocaleString()}</Text>
              </View>
-           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={80000}
-            minimumValue={0} color='#5030efff' onValueChange={(value)=>setPrecio(value)
-             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
-           
-
+           <View style={styles.totalInfo}>
+             <Text style={styles.totalText}>
+               Total calculado automáticamente
+             </Text>
+           </View>
         </View>
 
-         <View style={styles.elementos}>
-           <View style={styles.textoslide}>
-          <Text style={styles.texto1}>Alimentación</Text>
-           
-            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(alimentacion)}</Text>
-             </View>
-           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3500}
-            minimumValue={2000} color='#5030efff' onValueChange={(value)=>setAlimentacion(value)
-             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
-           
-
-        </View>
-
-         <View style={styles.elementos}>
-           <View style={styles.textoslide}>
-          <Text style={styles.texto1}>Transporte</Text>
-           
-            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(transporte)}</Text>
-             </View>
-           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={3200}
-            minimumValue={3000} color='#5030efff' onValueChange={(value)=>setTransporte(value)
-             } thumbTintColor='#000000ff' maximumTrackTintColor='#fff' minimumTrackTintColor='#751a1aff'></Slider>
-           
-
-        </View>
-             
-         <View style={styles.elementos}>
-          <View style={styles.textoslide}>
-          <Text style={styles.texto1}>Entretenimiento</Text>
-           
-            <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(entretenimiento)}</Text>
-             </View>
-           <Slider style={[{width:300, height: 50}, styles.slider]} maximumValue={1500}
-            minimumValue={900} color='#5030efff' onValueChange={(value)=>setEntretenimiento(value)
-             } thumbTintColor='#3700ffff' maximumTrackTintColor='#fff' minimumTrackTintColor='#3f1ae2ff'></Slider>
-           
-
-        </View>
+        {/* Renderizar dinámicamente todos los presupuestos */}
+        {presupuestos.map((presupuesto) => {
+          const valorActual = getValorTemporal(presupuesto.categoria);
+          const maxValue = getLimiteMaximo(presupuesto.categoria);
+          const minValue = getLimiteMinimo(presupuesto.categoria);
+          
+          return (
+            <View key={presupuesto.id} style={styles.elementos}>
+              <View style={styles.textoslide}>
+                <Text style={styles.texto1}>{presupuesto.categoria}</Text>
+                <Text style={[{fontSize:30}, styles.precio]} >$: {Math.floor(valorActual).toLocaleString()}</Text>
+              </View>
+              <Slider 
+                style={[{width:300, height: 50}, styles.slider]} 
+                maximumValue={maxValue}
+                minimumValue={minValue} 
+                value={valorActual}
+                color='#5030efff' 
+                onValueChange={(value) => handleSliderChange(presupuesto.categoria, value)}
+                thumbTintColor='#3700ffff' 
+                maximumTrackTintColor='#fff' 
+                minimumTrackTintColor='#3f1ae2ff'
+              />
+            </View>
+          );
+        })}
         <View style={{width:120}}>
-          <Button color='#79B7B4' title='Actualizar'></Button>
+          <Button 
+            color='#79B7B4' 
+            title={loading ? 'Guardando...' : 'Actualizar'}
+            onPress={handleActualizar}
+            disabled={loading}
+          />
         </View>
 
         <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
@@ -210,6 +321,20 @@ elementos:{
     marginVertical: 10,
     borderRadius: 10,
     padding:15,
+},
+
+totalInfo: {
+  marginTop: 10,
+  padding: 10,
+  backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  borderRadius: 8,
+},
+
+totalText: {
+  fontSize: 12,
+  color: '#fff',
+  textAlign: 'center',
+  fontStyle: 'italic',
 },
 
 })

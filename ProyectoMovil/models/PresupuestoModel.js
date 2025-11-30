@@ -160,5 +160,45 @@ class PresupuestoModel {
         };
     }
   }
+
+  // Obtener suma de presupuestos (alias para getTotal)
+  async getSumaPresupuestos() {
+    const result = await this.getTotal();
+    return {
+      success: result.success,
+      data: { total: result.total },
+      error: result.error
+    };
+  }
+
+  // Actualizar presupuesto completo
+  async update(id, data) {
+    try {
+      const db = await DatabaseService.openDB();
+
+      await db.runAsync(
+        `UPDATE presupuestos
+         SET categoria = ?, monto = ?
+         WHERE id = ?`,
+        [
+          data.categoria.trim(),
+          parseFloat(data.monto),
+          id
+        ]
+      );
+
+      return {
+        success: true,
+        message: 'Presupuesto actualizado exitosamente'
+      };
+
+    } catch (error) {
+      console.error('Error en PresupuestoModel.update:', error);
+      return {
+        success: false,
+        error: error.message || 'Error al actualizar el presupuesto'
+      };
+    }
+  }
 }
     export default new PresupuestoModel();
