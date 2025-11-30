@@ -6,4 +6,9 @@ class PresupuestoController {
         this.initialized = false;
         this.PRESUPUESTO_GENERAL_MAX = 15000; // limite general
     }
+    // Inicializar 
+    async initialized() {
+        if (this.initialized) return;
+        this.initialized = true;
+    }
 }
