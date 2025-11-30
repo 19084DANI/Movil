@@ -137,6 +137,28 @@ class PresupuestoModel {
     }
   }
 
+  // Obtener total sumado del presupuesto general
+  async getTotal(){
+    try {
+        const db = await DatabaseService.openDB();
 
+        const result = await db.getFirstAsync(
+            `SELECT SUM(monto) AS total FROM presupuestos`
+        );
 
+        return {
+            success: true,
+            total: result?.total ? parseFloat(result.total) : 0
+        };
+
+    }   catch (error) {
+        console.error('Error en PresupuestoModel.getTotal:', error);
+        return {
+            success: false,
+            error: error.message || 'Error al calcular total',
+            total: 0
+        };
+    }
+  }
 }
+    export default new PresupuestoModel();
