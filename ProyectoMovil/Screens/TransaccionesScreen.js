@@ -95,17 +95,10 @@ export default function TransaccionesScreen() {
     default:
       return (
         <ImageBackground
-          source={require('../assets/fondo1.jpg')}
+          source={require('../assets/fondo2.jpg')}
           resizeMode='cover'
           style={styles.backgrounds}
         >
-
-          <View style={styles.encabezado}>
-            <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')} />
-            <TouchableOpacity onPress={() => setScreen('homeee')}>
-              <Image style={styles.logo} source={require('../assets/logo.jpg')} />
-            </TouchableOpacity>
-          </View>
 
           <View style={styles.Titulo}>
             <Text style={styles.texto2}>Transacciones</Text>
@@ -150,7 +143,7 @@ export default function TransaccionesScreen() {
             </View>
           )}
 
-          <View style={styles.encabezado2} />
+          
         </ImageBackground>
       );
   }
@@ -167,21 +160,25 @@ const styles = StyleSheet.create({
 
   encabezado: {
     flexDirection: 'row',
-    alignItems: "center",
+    alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#EEF5DB',
+    backgroundColor: '#F5E6D3',
     padding: 12,
     borderRadius: 10,
     width: '100%',
     height: '10%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#001F3F',
   },
 
   encabezado2: {
-    backgroundColor: '#EEF5DB',
+    backgroundColor: '#F5E6D3',
     padding: 10,
     borderRadius: 10,
     width: '100%',
     height: '10%',
+    borderTopWidth: 1,
+    borderTopColor: '#001F3F',
   },
 
   menuhamburgesa: {
@@ -204,9 +201,9 @@ const styles = StyleSheet.create({
   },
 
   texto2: {
-    fontSize: 42,
+    fontSize: 36,
     fontWeight: 'bold',
-    color: '#070707ff',
+    color: '#001F3F',
   },
 
   botones: {
@@ -231,12 +228,12 @@ const styles = StyleSheet.create({
 
   elementos: {
     width: '90%',
-    backgroundColor: '#a5c3a7',
+    backgroundColor: '#E8D9C8',
     marginVertical: 14,
     borderRadius: 18,
-    padding: 28,
-    borderWidth: 2,
-    borderColor: '#7fa88a',
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#D1C6B5',
   },
 
   headerTransaccion: {
@@ -246,9 +243,9 @@ const styles = StyleSheet.create({
   },
 
   monto: {
-    fontSize: 36,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#001F3F',
   },
 
   acciones: {
@@ -260,9 +257,11 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#5ba3a1',
+    backgroundColor: '#F7EFE6',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D1C6B5',
   },
 
   btnEliminar: {
@@ -275,8 +274,8 @@ const styles = StyleSheet.create({
   },
 
   btnTexto: {
-    color: '#fff',
-    fontSize: 18,
+    color: '#001F3F',
+    fontSize: 16,
     fontWeight: 'bold',
   },
 
@@ -285,14 +284,14 @@ const styles = StyleSheet.create({
   },
 
   textoNombre: {
-    fontSize: 26,
-    color: '#fff',
+    fontSize: 20,
+    color: '#001F3F',
     fontWeight: 'bold',
   },
 
   textoCategoria: {
-    fontSize: 18,
-    color: '#fff',
+    fontSize: 16,
+    color: '#001F3F',
   },
 
   fecha: {
@@ -302,18 +301,18 @@ const styles = StyleSheet.create({
 
   textoDescripcion: {
     fontSize: 16,
-    color: '#fff',
+    color: '#001F3F',
   },
 
   textoFecha: {
-    fontSize: 16,
-    color: '#fff',
+    fontSize: 14,
+    color: '#001F3F',
   },
 
   textTipo: {
-    fontSize: 16,
+    fontSize: 14,
     marginTop: 10,
-    color: '#fff',
+    color: '#001F3F',
   },
 
   contenedorAgregar: {
@@ -338,7 +337,7 @@ const styles = StyleSheet.create({
 
   loadingText: {
     marginTop: 10,
-    color: '#666',
+    color: '#001F3F',
     fontSize: 16,
   },
 
@@ -348,12 +347,12 @@ const styles = StyleSheet.create({
   },
 
   emptyText: {
-    fontSize: 20,
-    color: '#999',
+    fontSize: 18,
+    color: '#001F3F',
   },
 
   emptySubtext: {
-    fontSize: 16,
-    color: '#bbb',
+    fontSize: 14,
+    color: '#444',
   },
 });

@@ -57,7 +57,7 @@ export default function BotonesScreen() {
 
   return (
     <ImageBackground
-      source={require('../assets/fondo1.jpg')}
+      source={require('../assets/fondo2.jpg')}
       resizeMode='cover'
       style={styles.backgrounds}>
 
@@ -128,12 +128,14 @@ const styles = StyleSheet.create({
   encabezado: {
     justifyContent: 'space-between',
     flexDirection: 'row',
-    alignItems: "center",
-    backgroundColor: '#EEF5DB',
-    padding: 10,
+    alignItems: 'center',
+    backgroundColor: '#F5E6D3',
+    padding: 12,
     borderRadius: 10,
     width: '100%',
-    height: 80
+    height: 90,
+    borderBottomWidth: 1,
+    borderBottomColor: '#001F3F'
   },
 
   Container: {
@@ -143,8 +145,8 @@ const styles = StyleSheet.create({
 
   elementos: {
     width: '92%',
-    backgroundColor: '#EEF5DB',
-    padding: 15,
+    backgroundColor: '#E8D9C8',
+    padding: 16,
     borderRadius: 15,
     marginTop: 15,
   },
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
   saldo: {
     width: '100%',
     height: 100,
-    backgroundColor: '#ADD6BC',
+    backgroundColor: '#F7EFE6',
     borderRadius: 12,
     padding: 15,
     flexDirection: 'row',
@@ -175,14 +177,14 @@ const styles = StyleSheet.create({
 
   elementos2: {
     width: '30%',
-    backgroundColor: '#ADD6BC',
+    backgroundColor: '#F7EFE6',
     borderRadius: 10,
     padding: 10,
   },
 
   elementos22: {
     width: '30%',
-    backgroundColor: '#F9D423',
+    backgroundColor: '#E8D9C8',
     borderRadius: 10,
     padding: 10,
   },
@@ -190,13 +192,13 @@ const styles = StyleSheet.create({
   textosaldo: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#476c57ff',
+    color: '#001F3F',
   },
 
   textsaldo2: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: '#001F3F',
   },
 
   textoi: {
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
   num: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#001F3F',
   },
 
   utransaccion: {
@@ -224,13 +226,13 @@ const styles = StyleSheet.create({
 
   listaContenedor: {
     width: '100%',
-    backgroundColor: '#ADD6BC',
+    backgroundColor: '#F7EFE6',
     padding: 10,
     borderRadius: 15,
   },
 
   cardTransaccion: {
-    backgroundColor: '#EEF5DB',
+    backgroundColor: '#F5E6D3',
     padding: 15,
     borderRadius: 12,
     marginBottom: 12
@@ -249,7 +251,7 @@ const styles = StyleSheet.create({
 
   cardCategoria: {
     fontSize: 14,
-    color: '#555'
+    color: '#001F3F'
   },
 
   cardFooter: {
@@ -286,7 +288,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 40,
     borderWidth: 4,
-    borderColor: '#b7ba9bff'
+    borderColor: '#001F3F'
   },
 
   mas: {
@@ -310,11 +312,11 @@ const styles = StyleSheet.create({
 
   emptyText: {
     fontSize: 16,
-    color: '#666'
+    color: '#001F3F'
   },
 
   emptySubtext: {
     fontSize: 14,
-    color: '#999'
+    color: '#444'
   }
 });
