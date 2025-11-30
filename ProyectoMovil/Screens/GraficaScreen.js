@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Text,StyleSheet,View,Image,ScrollView,TouchableOpacity,ActivityIndicator,} from "react-native";
+import {Text,StyleSheet,View,Image,ScrollView,TouchableOpacity,ActivityIndicator, ImageBackground} from "react-native";
 import TransaccionController from "../controllers/TransaccionController";
 import PresupuestoController from "../controllers/PresupuestoController";
 
@@ -113,6 +113,7 @@ export default function GraficaScreen({ navigation }) {
   function BarRow({ label, value, total, color }) {
     const pct = Math.max(3, Math.round((value / total) * 100));
     return (
+	
       <View style={styles.row} key={label}>
         <Text style={styles.label}>{label}</Text>
         <View style={styles.barContainer}>
@@ -132,6 +133,11 @@ export default function GraficaScreen({ navigation }) {
   }
 
   return (
+		<ImageBackground
+			  source={require('../assets/fondo2.jpg')}
+			  resizeMode='cover'
+			  style={styles.backgrounds}>
+		
     <ScrollView contentContainerStyle={styles.Container}>
     
 
@@ -201,13 +207,15 @@ export default function GraficaScreen({ navigation }) {
 
       <View style={{ height: 40 }} />
     </ScrollView>
+	</ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   Container: {
     padding: 18,
-    backgroundColor: "#F5E6D3",
+    width:'100%',
+	height:'100%',
     paddingBottom: 50,
   },
   header: {

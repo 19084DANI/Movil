@@ -46,11 +46,7 @@ class UserModel {
     }
   }
 
-  /**
-   * Busca un usuario por correo electrónico
-   * @param {string} email - Correo electrónico del usuario
-   * @returns {Promise<Object>} Usuario encontrado o null
-   */
+
   async findByEmail(email) {
     try {
       const result = await databaseService.select(
