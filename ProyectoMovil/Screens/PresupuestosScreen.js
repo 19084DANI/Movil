@@ -18,7 +18,7 @@ export default function PresupuestosScreen() {
         default:
     return (
       
-      <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
+      <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover'
         style={styles.backgrounds} >
           <View style={styles.encabezado}>  
              <Image
