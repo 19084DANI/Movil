@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
 
   elementos: {
     width: '92%',
-    backgroundColor: '#E8D9C8',
+    backgroundColor: '#08314a5a',
     padding: 16,
     borderRadius: 15,
     marginTop: 15,

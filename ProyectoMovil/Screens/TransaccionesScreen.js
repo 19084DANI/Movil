@@ -4,13 +4,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import HomeScreen from './HomeScreen';
 import NuevaTransScreen from './NuevaTransScreen';
 import TransaccionController from '../controllers/TransaccionController';
+import EditarTransScreen from './EditarTransScreen';
 
 const controller = TransaccionController;
 
-export default function TransaccionesScreen() {
+export default function TransaccionesScreen({ navigation }) {
   const [screen, setScreen] = useState('default');
   const [transacciones, setTransacciones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editId, setEditId] = useState(null);
+
 
   const cargarTransacciones = useCallback(async () => {
     try {
@@ -59,14 +62,30 @@ export default function TransaccionesScreen() {
     );
   };
 
-  const renderTransaccion = ({ item }) => (
+  const renderTransaccion = ({ item }) => {
+    const handleEdit = () => {
+      if (!item.id) {
+        Alert.alert("Error", "No se pudo obtener el ID de la transacción");
+        return;
+      }
+      if (navigation && navigation.navigate) {
+        navigation.navigate("EditarTransScreen", { id: item.id });
+      } else {
+        Alert.alert("Error", "No se pudo acceder a la navegación");
+      }
+    };
+
+    return (
     <View style={styles.elementos}>
       <View style={styles.headerTransaccion}>
         <Text style={styles.monto}>${item.monto.toFixed(2)}</Text>
         <View style={styles.acciones}>
-          <TouchableOpacity style={styles.btnEditar}>
-            <Text style={styles.btnTexto}>✎</Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btnEditar}
+          onPress={handleEdit}
+        >
+          <Text style={styles.btnTexto}>✎</Text>
+        </TouchableOpacity>
           <TouchableOpacity style={styles.btnEliminar} onPress={() => handleEliminar(item)}>
             <Text style={styles.btnTexto}>X</Text>
           </TouchableOpacity>
@@ -85,13 +104,18 @@ export default function TransaccionesScreen() {
 
       <Text style={styles.textTipo}>{item.es_gasto ? 'Gasto' : 'Ingreso'}</Text>
     </View>
-  );
+    );
+  };
 
   switch (screen) {
     case 'homeee':
       return <HomeScreen />;
     case 'nuevaTrans':
       return <NuevaTransScreen />;
+    case 'editarTrans':
+      return <EditarTransScreen id={editId} volver={() => setScreen('default')} />;
+
+
     default:
       return (
         <ImageBackground
@@ -227,7 +251,7 @@ const styles = StyleSheet.create({
   },
 
   elementos: {
-    width: '90%',
+    width:320,
     backgroundColor: '#E8D9C8',
     marginVertical: 14,
     borderRadius: 18,

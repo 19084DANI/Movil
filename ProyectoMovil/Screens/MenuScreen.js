@@ -3,12 +3,29 @@ import React, { useState, useRef, useEffect } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Transacciones from './TransaccionesScreen';
+import EditarTransScreen from './EditarTransScreen';
 import PresupuestosScreen from './PresupuestosScreen';
 import Home from './HomeScreen';
 import NuevaTransScreen from './NuevaTransScreen';
 import GraficaScreen from './GraficaScreen';
+
+const TransStack = createNativeStackNavigator();
+
+function TransaccionesStack() {
+  return (
+    <TransStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <TransStack.Screen name="TransaccionesMain" component={Transacciones} />
+      <TransStack.Screen name="EditarTransScreen" component={EditarTransScreen} />
+    </TransStack.Navigator>
+  );
+}
 
 export default function MenuScreen ({ navigation }) {
 
@@ -97,7 +114,7 @@ export default function MenuScreen ({ navigation }) {
       case 'presupuesto':
         return <PresupuestosScreen/>
       case 'transacciones':
-        return <Transacciones/>
+        return <TransaccionesStack/>
       case 'gastos':
         return <NuevaTransScreen/>
       case 'grafica':

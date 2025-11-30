@@ -236,9 +236,9 @@ export default function PresupuestosScreen() {
                 value={valorSlider}
                 color='#5030efff' 
                 onValueChange={(value) => handleSliderChange(presupuesto.categoria, value)}
-                thumbTintColor='#3700ffff' 
+                thumbTintColor='#00d5ffff' 
                 maximumTrackTintColor='#fff' 
-                minimumTrackTintColor='#3f1ae2ff'
+                minimumTrackTintColor='#308694ff'
               />
               <View style={styles.botonEditarContainer}>
                 <TouchableOpacity 
@@ -316,7 +316,6 @@ texto1:{
 
 slider:{
 paddingHorizontal: 12,
-
 },
 backgrounds: {
   flex: 1,
@@ -386,7 +385,7 @@ elementos:{
   
     width:'100%',
     height: 180,
-    backgroundColor: '#2dc037ff',
+    backgroundColor: '#0d3e5161',
     justifyContent: 'space-between',
     //alignItems: 'center',
     marginVertical: 10,
@@ -420,6 +419,9 @@ botonEditar: {
   borderRadius: 8,
   borderWidth: 1,
   borderColor: '#001F3F',
+  overflow:'hidden',
+  position:'absolute',
+  top:-3,
 },
 
 botonEditarTexto: {
