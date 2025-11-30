@@ -1,9 +1,11 @@
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Alert} from "react-native";
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, ImageBackground, Alert, Image, Button} from "react-native";
 import React, { useEffect, useState } from "react";
 import HomeScreen from "./HomeScreen";
 import NuevoPresupuestoScreen from "./NuevoPresupuestoScreen";
 import { Ionicons } from "@expo/vector-icons";
 import PresupuestoController from "../controllers/PresupuestoController";
+import Slider from "@react-native-community/slider";
+
 
 export default function PresupuestosScreen() {
   const [screen, setScreen]=useState('default');
@@ -14,24 +16,15 @@ export default function PresupuestosScreen() {
    switch(screen){
         case 'home':
             return <HomeScreen/>
+        case 'nuevop':
+          return <NuevoPresupuestoScreen></NuevoPresupuestoScreen>
 
         default:
     return (
       
       <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover'
         style={styles.backgrounds} >
-          <View style={styles.encabezado}>  
-             <Image
-              style={styles.menuhamburgesa}
-              source={require('../assets/menu.png')}
-             ></Image>     
-             <TouchableOpacity onPress={() => setScreen('home')}>
-             <Image
-              style={styles.logo}
-              source={require('../assets/logo.jpg')}
-             ></Image>  
-             </TouchableOpacity>
-          </View>
+
           
           <View style={styles.contenido}>
      <ScrollView showsVerticalScrollIndicator={false}>
@@ -97,10 +90,12 @@ export default function PresupuestosScreen() {
         </View>
 
         <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
+          <TouchableOpacity onPress={() => setScreen('nuevop')}>
           <Image
               style={styles.agregar}
               source={require('../assets/plus.png')}
-             ></Image> 
+             ></Image>
+              </TouchableOpacity>
         </View>
       </ScrollView>
         </View>
