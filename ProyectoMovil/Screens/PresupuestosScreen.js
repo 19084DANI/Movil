@@ -16,6 +16,8 @@ export default function PresupuestosScreen() {
    switch(screen){
         case 'home':
             return <HomeScreen/>
+        case 'nuevop':
+          return <NuevoPresupuestoScreen></NuevoPresupuestoScreen>
 
         default:
     return (
@@ -88,10 +90,12 @@ export default function PresupuestosScreen() {
         </View>
 
         <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
+          <TouchableOpacity onPress={() => setScreen('nuevop')}>
           <Image
               style={styles.agregar}
               source={require('../assets/plus.png')}
-             ></Image> 
+             ></Image>
+              </TouchableOpacity>
         </View>
       </ScrollView>
         </View>
