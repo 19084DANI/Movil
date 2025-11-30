@@ -23,8 +23,16 @@ class PresupuestoController {
         if (!data.monto || isNaN(data.monto) || parseFloat(data.monto) <= 0){
             return { valid: false, message: "El monto debe ser un número positivo" };
         }
-        return{
-            valid: true, message: ""
-        };
+        return{ valid: true, message: "" };    
+    }
+
+    //Crear un nuevo presupuesto
+    async crearPresupuesto(data) {
+        const validation = this.validatePresupuesto(data);
+        if (!validation.valid){
+            return { success: false, error: validation.message };
+        }
+
+        
     }
 }
