@@ -18,21 +18,9 @@ export default function PresupuestosScreen() {
         default:
     return (
       
-      <ImageBackground source={require('../assets/fondo1.jpg')} resizeMode='cover'
+      <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover'
         style={styles.backgrounds} >
-          <View style={styles.encabezado}>  
-             <Image
-              style={styles.menuhamburgesa}
-              source={require('../assets/menu.png')}
-             ></Image>     
-             <TouchableOpacity onPress={() => setScreen('home')}>
-             <Image
-              style={styles.logo}
-              source={require('../assets/logo.jpg')}
-             ></Image>  
-             </TouchableOpacity>
-          </View>
-          
+
           <View style={styles.contenido}>
      <ScrollView showsVerticalScrollIndicator={false}>
 
@@ -104,9 +92,7 @@ export default function PresupuestosScreen() {
         </View>
       </ScrollView>
         </View>
-          <View style={styles.encabezado2}>
-          
-          </View>
+         
 
       </ImageBackground>
       

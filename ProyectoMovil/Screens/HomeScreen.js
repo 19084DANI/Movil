@@ -57,7 +57,7 @@ export default function BotonesScreen() {
 
   return (
     <ImageBackground
-      source={require('../assets/fondo1.jpg')}
+      source={require('../assets/fondo2.jpg')}
       resizeMode='cover'
       style={styles.backgrounds}>
 

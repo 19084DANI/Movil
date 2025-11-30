@@ -95,17 +95,10 @@ export default function TransaccionesScreen() {
     default:
       return (
         <ImageBackground
-          source={require('../assets/fondo1.jpg')}
+          source={require('../assets/fondo2.jpg')}
           resizeMode='cover'
           style={styles.backgrounds}
         >
-
-          <View style={styles.encabezado}>
-            <Image style={styles.menuhamburgesa} source={require('../assets/menu.png')} />
-            <TouchableOpacity onPress={() => setScreen('homeee')}>
-              <Image style={styles.logo} source={require('../assets/logo.jpg')} />
-            </TouchableOpacity>
-          </View>
 
           <View style={styles.Titulo}>
             <Text style={styles.texto2}>Transacciones</Text>
@@ -150,7 +143,7 @@ export default function TransaccionesScreen() {
             </View>
           )}
 
-          <View style={styles.encabezado2} />
+          
         </ImageBackground>
       );
   }
