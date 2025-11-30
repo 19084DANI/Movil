@@ -97,4 +97,37 @@ class PresupuestoController {
 
     return result;
     }
+
+    // Eliminar
+    async eliminarPresupuesto(id){
+        const result = await PresupuestoModel.delete(id);
+        if (result.success) {
+            this.notifyListeners();
+        }
+        return result;
+    }
+
+    //Total general
+    async obtenerTotalPresupuestos() {
+        return await PresupuestoModel.getSumaPresupuestos();
+    }
+
+    // Listeners
+    addListener(callback) {
+        this.listeners.push(callback);
+    }
+
+    removeListener(callback) {
+    this.listeners = this.listeners.filter((l) => l !== callback);
+  }
+
+  notifyListeners() {
+    this.listeners.forEach((callback) => {
+      if (typeof callback === "function") {
+        callback();
+      }
+    });
+  }
 }
+
+export default new PresupuestoController();
