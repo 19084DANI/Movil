@@ -20,5 +20,15 @@ export default function PresupuestosScreen() {
     const total = lista.reduce((acc, p) => acc + parseFloat(p.monto), 0);
     setTotalUsado(total);
   };
-  
+     useEffect(() => {
+    cargarPresupuestos();
+    PresupuestoController.addListener(cargarPresupuestos);
+
+    return () => {
+      PresupuestoController.removeListener(cargarPresupuestos);
+    };
+  }, []);
+
+  if (screen === "home") return <HomeScreen />;
+  if (screen === "nuevo") return <NuevoPresupuestoScreen />;
 }
