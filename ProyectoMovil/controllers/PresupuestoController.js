@@ -33,6 +33,11 @@ class PresupuestoController {
             return { success: false, error: validation.message };
         }
 
-        
+        //Obtener total actual
+        const totalResult = await PresupuestoModel.getSumaPresupuestos();
+        const totalActual = totalResult.data?.total || 0;
+
+        const nuevoTotal = totalActual + parseFloat(data.monto);
+
     }
 }
