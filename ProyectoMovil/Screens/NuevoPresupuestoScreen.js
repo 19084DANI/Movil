@@ -59,5 +59,45 @@ export default function NuevoPresupuestoScreen({ navigation }) {
 
     </View>
   );
-  
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#ffffff",
+  },
+  titulo: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 25,
+    color: "#333",
+    textAlign: "center"
+  },
+  label: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#444",
+    fontWeight: "bold"
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 5,
+    fontSize: 16,
+    backgroundColor: "#f9f9f9",
+  },
+  boton: {
+    marginTop: 30,
+    backgroundColor: "#4CAF50",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  botonTexto: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+});
