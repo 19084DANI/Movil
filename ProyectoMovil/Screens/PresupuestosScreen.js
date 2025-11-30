@@ -31,4 +31,12 @@ export default function PresupuestosScreen() {
 
   if (screen === "home") return <HomeScreen />;
   if (screen === "nuevo") return <NuevoPresupuestoScreen />;
+
+  return (
+    <ImageBackground
+      source={require("../assets/fondo1.jpg")}
+      resizeMode="cover"
+      style={styles.background}
+    ></ImageBackground>
+  )
 }
