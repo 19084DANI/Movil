@@ -4,32 +4,32 @@ import PresupuestoController from "../controllers/PresupuestoController";
 
 export default function EditarPresuScreen({ navigation, onBack, presupuesto }) {
   const [nombre, setNombre] = useState("");
-  const [limite, setLimite] = useState("");
+  const [montoAsignado, setMontoAsignado] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (presupuesto) {
       setNombre(presupuesto.categoria || "");
-      setLimite(presupuesto.limite ? presupuesto.limite.toString() : "");
+      setMontoAsignado(presupuesto.monto ? presupuesto.monto.toString() : "");
     }
   }, [presupuesto]);
 
   const handleGuardar = async () => {
-    if (!nombre.trim() || !limite.trim()) {
+    if (!nombre.trim() || !montoAsignado.trim()) {
       Alert.alert("Error", "Por favor complete todos los campos");
       return;
     }
 
-    const limiteNum = parseFloat(limite);
-    if (isNaN(limiteNum) || limiteNum <= 0) {
-      Alert.alert("Error", "El límite debe ser un número mayor a 0");
+    const montoNum = parseFloat(montoAsignado);
+    if (isNaN(montoNum) || montoNum <= 0) {
+      Alert.alert("Error", "El monto asignado debe ser mayor a $0");
       return;
     }
 
     // Verificar si hay cambios
     const hayCambios = 
       nombre.trim() !== (presupuesto?.categoria || "") || 
-      limiteNum !== (presupuesto?.limite || 0);
+      montoNum !== (presupuesto?.monto || 0);
 
     if (!hayCambios) {
       Alert.alert("Información", "No se han realizado cambios");
@@ -39,7 +39,7 @@ export default function EditarPresuScreen({ navigation, onBack, presupuesto }) {
     // Mostrar confirmación
     Alert.alert(
       "Confirmar cambios",
-      `¿Está seguro de que desea guardar estos cambios?\n\nCategoría: ${nombre.trim()}\nLímite: $${limiteNum.toLocaleString()}`,
+      `¿Está seguro de que desea guardar estos cambios?\n\nCategoría: ${nombre.trim()}\nMonto asignado: $${montoNum.toLocaleString()}`,
       [
         {
           text: "Cancelar",
@@ -51,14 +51,14 @@ export default function EditarPresuScreen({ navigation, onBack, presupuesto }) {
         {
           text: "Guardar",
           onPress: async () => {
-            await guardarCambios(nombre.trim(), limiteNum);
+            await guardarCambios(nombre.trim(), montoNum);
           }
         }
       ]
     );
   };
 
-  const guardarCambios = async (categoria, limite) => {
+  const guardarCambios = async (categoria, monto) => {
     if (!presupuesto || !presupuesto.id) {
       Alert.alert("Error", "No se pudo identificar el presupuesto a editar");
       return;
@@ -66,14 +66,16 @@ export default function EditarPresuScreen({ navigation, onBack, presupuesto }) {
 
     setLoading(true);
     try {
-      const result = await PresupuestoController.editarCategoriaYLimite(
+      const result = await PresupuestoController.editarPresupuesto(
         presupuesto.id,
-        categoria,
-        limite
+        {
+          categoria: categoria,
+          monto: monto
+        }
       );
 
       if (!result.success) {
-        Alert.alert("Error", result.error);
+        Alert.alert("Error", result.error || "Error al actualizar el presupuesto");
         setLoading(false);
         return;
       }
@@ -137,13 +139,13 @@ export default function EditarPresuScreen({ navigation, onBack, presupuesto }) {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Límite (Monto máximo)</Text>
+              <Text style={styles.label}>Monto asignado</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Ej: 5000"
                 placeholderTextColor="#999"
-                value={limite}
-                onChangeText={setLimite}
+                value={montoAsignado}
+                onChangeText={setMontoAsignado}
                 keyboardType="numeric"
               />
             </View>

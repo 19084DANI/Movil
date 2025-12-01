@@ -49,9 +49,10 @@ export default function BotonesScreen() {
   }, []);
 
   const calcularSaldo = useCallback(() => {
-    const saldo = presupuestoTotal - gastosTotal;
+    // Nueva lógica: Saldo = Ingresos - Gastos
+    const saldo = ingresosTotal - gastosTotal;
     setSaldoDisponible(saldo >= 0 ? saldo : 0);
-  }, [presupuestoTotal, gastosTotal]);
+  }, [ingresosTotal, gastosTotal]);
 
   useEffect(() => {
     const init = async () => {
