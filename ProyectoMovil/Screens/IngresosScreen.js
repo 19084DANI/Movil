@@ -8,7 +8,7 @@ import EditarTransScreen from './EditarTransScreen';
 
 const controller = TransaccionController;
 
-export default function IngresosScreen({ navigation }) {
+export default function IngresosScreen({ onBack }) {
   const [screen, setScreen] = useState('default');
   const [transacciones, setTransacciones] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -120,11 +120,8 @@ export default function IngresosScreen({ navigation }) {
         Alert.alert("Error", "No se pudo obtener el ID del ingreso");
         return;
       }
-      if (navigation && navigation.navigate) {
-        navigation.navigate("EditarTransScreen", { id: item.id });
-      } else {
-        Alert.alert("Error", "No se pudo acceder a la navegación");
-      }
+      setEditId(item.id);
+      setScreen('editarTrans');
     };
 
     return (
@@ -258,8 +255,16 @@ export default function IngresosScreen({ navigation }) {
           style={styles.backgrounds}
         >
 
-          <View style={styles.Titulo}>
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={onBack}
+              disabled={!onBack}
+            >
+              <Text style={styles.backIcon}>{'‹'}</Text>
+            </TouchableOpacity>
             <Text style={styles.texto2}>Ingresos</Text>
+            <View style={{ width: 32 }} />
           </View>
 
           <View style={styles.botones}>
@@ -342,14 +347,32 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 
-  Titulo: {
+  header: {
     marginTop: 10,
+    marginBottom: 10,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     width: '100%',
+    paddingHorizontal: 20,
   },
-
+  backButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5E6D3',
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+  backIcon: {
+    fontSize: 22,
+    color: '#001F3F',
+    fontWeight: 'bold',
+  },
   texto2: {
-    fontSize: 36,
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#001F3F',
   },

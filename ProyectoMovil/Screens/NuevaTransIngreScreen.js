@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, TextInput, Alert, StyleSheet, ScrollView, Image, ImageBackground, Pressable } from "react-native";
-import IngresosScreen from './IngresosScreen';
 import { TouchableOpacity } from 'react-native';
 import TransaccionController from '../controllers/TransaccionController';
 import PresupuestoController from '../controllers/PresupuestoController';
@@ -8,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const controller = TransaccionController;
 
-export default function NuevaTransIngreScreen() {
+export default function NuevaTransIngreScreen({ onBack }) {
   const [screen, setScreen] = useState('default');
   const [nombre, setNombre] = useState("");
   const [monto, setMonto] = useState("");
@@ -124,8 +123,6 @@ export default function NuevaTransIngreScreen() {
   const disponible = categoriaInfo ? categoriaInfo.limite - categoriaInfo.monto : 0;
 
   switch (screen) {
-    case 'Ingresos':
-      return <IngresosScreen />;
     default:
       return (
         <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover' style={styles.backgrounds} >
@@ -135,8 +132,18 @@ export default function NuevaTransIngreScreen() {
 
           <View style={styles.formContainer}>
             <View style={styles.formContainer2}>
-              {/* Título estático */}
-              <Text style={styles.titulo}>Nuevo Ingreso</Text>
+              {/* Header con botón de regreso y título */}
+              <View style={styles.header}>
+                <Pressable
+                  style={styles.backButton}
+                  onPress={onBack}
+                  disabled={!onBack}
+                >
+                  <Text style={styles.backIcon}>{'‹'}</Text>
+                </Pressable>
+                <Text style={styles.titulo}>Nuevo Ingreso</Text>
+                <View style={{ width: 32 }} />
+              </View>
 
               {/* ScrollView solo para los campos */}
               <ScrollView 
@@ -303,6 +310,28 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     alignItems: "center",
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  backButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5E6D3',
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+  backIcon: {
+    fontSize: 22,
+    color: '#001F3F',
+    fontWeight: 'bold',
   },
   scrollView: {
     flex: 1,

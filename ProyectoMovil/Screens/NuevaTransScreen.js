@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, TextInput, Alert, StyleSheet, ScrollView, Image, ImageBackground, Pressable } from "react-native";
-import HomeScreen from './HomeScreen';
-import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
 import TransaccionController from '../controllers/TransaccionController';
 import PresupuestoController from '../controllers/PresupuestoController';
@@ -9,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const controller = TransaccionController;
 
-export default function FormularioTransaccion() {
+export default function FormularioTransaccion({ onBack }) {
   const [screen, setScreen] = useState('default');
   const [nombre, setNombre] = useState("");
   const [monto, setMonto] = useState("");
@@ -121,10 +119,6 @@ export default function FormularioTransaccion() {
   };
 
   switch (screen) {
-    case 'homee':
-      return <HomeScreen />;
-    case 'Transacciones':
-      return <TransaccionesScreen />;
     default:
       return (
         <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover' style={styles.backgrounds} >
@@ -134,8 +128,18 @@ export default function FormularioTransaccion() {
 
           <View style={styles.formContainer}>
             <View style={styles.formContainer2}>
-              {/* Título estático */}
-              <Text style={styles.titulo}>Nuevo Gasto</Text>
+              {/* Header con botón de regreso y título */}
+              <View style={styles.header}>
+                <Pressable
+                  style={styles.backButton}
+                  onPress={onBack}
+                  disabled={!onBack}
+                >
+                  <Text style={styles.backIcon}>{'‹'}</Text>
+                </Pressable>
+                <Text style={styles.titulo}>Nuevo Gasto</Text>
+                <View style={{ width: 32 }} />
+              </View>
 
               {/* ScrollView solo para los campos */}
               <ScrollView 
@@ -305,6 +309,28 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     alignItems: "center",
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  backButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5E6D3',
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+  backIcon: {
+    fontSize: 22,
+    color: '#001F3F',
+    fontWeight: 'bold',
   },
   scrollView: {
     flex: 1,

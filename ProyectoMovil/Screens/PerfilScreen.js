@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity, 
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function PerfilScreen({ navigation }) {
+export default function PerfilScreen({ navigation, onBack }) {
   const [userData, setUserData] = useState(null);
 
   // Cargar datos del usuario
@@ -60,6 +60,19 @@ export default function PerfilScreen({ navigation }) {
         contentContainerStyle={styles.profileContainer}
         showsVerticalScrollIndicator={false}
       >
+        {/* Header con botón de regreso */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={onBack ? onBack : () => navigation && navigation.goBack && navigation.goBack()}
+            disabled={!onBack && !navigation}
+          >
+            <Text style={styles.backIcon}>{'‹'}</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Perfil</Text>
+          <View style={{ width: 32 }} />
+        </View>
+
         {/* Foto de perfil */}
         <View style={styles.profileImageContainer}>
           <View style={styles.profileImageWrapper}>
@@ -131,6 +144,33 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 30,
     alignItems: 'center',
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  backButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5E6D3',
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+  backIcon: {
+    fontSize: 22,
+    color: '#001F3F',
+    fontWeight: 'bold',
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#001F3F',
   },
   profileImageContainer: {
     marginBottom: 30,

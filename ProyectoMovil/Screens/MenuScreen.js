@@ -1,9 +1,10 @@
-import { Text, StyleSheet, View, TouchableOpacity, ScrollView, Animated, Image, ImageBackground } from 'react-native'
-import React, { useState, useRef, useEffect } from 'react'
+import { Text, StyleSheet, View, TouchableOpacity, ScrollView, Animated, Image, ImageBackground, BackHandler } from 'react-native'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { StatusBar } from 'expo-status-bar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
 
 import Transacciones from './TransaccionesScreen';
 import EditarTransScreen from './EditarTransScreen';
@@ -33,6 +34,7 @@ function TransaccionesStack() {
 export default function MenuScreen ({ navigation }) {
 
   const [screen, setScreen] = useState('home');
+  const [history, setHistory] = useState(['home']);
   const [menuOpen, setMenuOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-280)).current;
   const [totalIngresos, setTotalIngresos] = useState(0);
@@ -82,28 +84,68 @@ export default function MenuScreen ({ navigation }) {
 
 
   const handleScreenChange = (screenName) => {
-    setScreen(screenName);
     setMenuOpen(false);
+    setHistory(prev => {
+      const current = prev[prev.length - 1];
+      if (current === screenName) {
+        return prev;
+      }
+      return [...prev, screenName];
+    });
+    setScreen(screenName);
   };
 
+  const handleBack = useCallback(() => {
+    setHistory(prev => {
+      if (prev.length <= 1) {
+        return prev;
+      }
+      const newHistory = prev.slice(0, -1);
+      const previousScreen = newHistory[newHistory.length - 1] || 'home';
+      setScreen(previousScreen);
+      return newHistory;
+    });
+  }, []);
+
   const handleBackToMenu = () => {
+    setHistory(['home']);
     setScreen('home');
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        // Si hay historial dentro del menú, navegar hacia atrás ahí
+        if (history.length > 1) {
+          handleBack();
+          return true; // Se maneja aquí, no salir de la pantalla de menú
+        }
+        // Si estamos ya en la pantalla raíz del menú, dejar que React Navigation maneje el back
+        return false;
+      };
+
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => {
+        subscription.remove();
+      };
+    }, [history, handleBack])
+  );
 
 
   // Renderizar contenido según la pantalla seleccionada
   const renderScreen = () => {
     switch(screen){
       case 'presupuesto':
-        return <PresupuestosScreen/>
+        return <PresupuestosScreen onBack={handleBack} />
       case 'transacciones':
-        return <TransaccionesStack/>
+        return <Transacciones onBack={handleBack} />
       case 'ingresos':
-        return <IngresosScreen/>
+        return <IngresosScreen onBack={handleBack} />
       case 'grafica':
-        return <GraficaScreen/>
+        return <GraficaScreen onBack={handleBack} />
       case 'perfil':
-        return <PerfilScreen navigation={navigation} />
+        return <PerfilScreen navigation={navigation} onBack={handleBack} />
       case 'home':
       default:
         return <Home/>

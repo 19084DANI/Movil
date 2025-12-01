@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import TransaccionController from "../controllers/TransaccionController";
 import PresupuestoController from "../controllers/PresupuestoController";
 
-export default function GraficaScreen({ navigation }) {
+export default function GraficaScreen({ onBack }) {
   const [loading, setLoading] = useState(true);
   const [transacciones, setTransacciones] = useState([]);
   const [presupTotal, setPresupTotal] = useState(0);
@@ -248,6 +248,19 @@ export default function GraficaScreen({ navigation }) {
       
       <ScrollView contentContainerStyle={styles.Container}>
         
+        {/* Encabezado con botón de regreso */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={onBack}
+            disabled={!onBack}
+          >
+            <Ionicons name="arrow-back" size={24} color="#001F3F" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Gráficas</Text>
+          <View style={{ width: 32 }} />
+        </View>
+
         {/* Gráfica Por Categoría */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
@@ -414,7 +427,29 @@ const styles = StyleSheet.create({
     padding: 18,
     width: '100%',
     paddingBottom: 50,
-    
+  },
+  header: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    paddingHorizontal: 4,
+  },
+  backButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E8D9C8',
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#001F3F',
   },
   card: {
     backgroundColor: '#F5E6D3',

@@ -9,7 +9,7 @@ import TransaccionController from "../controllers/TransaccionController";
 import Slider from "@react-native-community/slider";
 
 
-export default function PresupuestosScreen() {
+export default function PresupuestosScreen({ onBack }) {
   const [screen, setScreen]=useState('default');
   const [presupuestos, setPresupuestos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -170,6 +170,19 @@ export default function PresupuestosScreen() {
 
           
           <View style={styles.contenido}>
+
+        {/* Encabezado con botón de regreso */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={onBack}
+            disabled={!onBack}
+          >
+            <Text style={styles.backIcon}>{'‹'}</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Presupuestos</Text>
+          <View style={{ width: 32 }} />
+        </View>
      <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={styles.Titulo2}>
@@ -407,6 +420,33 @@ fechaTexto: {
 contenido: {
   padding:30,
   paddingBottom:40,
+},
+header: {
+  width: '100%',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginBottom: 10,
+},
+backButton: {
+  width: 32,
+  height: 32,
+  borderRadius: 16,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: '#F5E6D3',
+  borderWidth: 1,
+  borderColor: '#001F3F',
+},
+backIcon: {
+  fontSize: 22,
+  color: '#001F3F',
+  fontWeight: 'bold',
+},
+headerTitle: {
+  fontSize: 22,
+  fontWeight: 'bold',
+  color: '#001F3F',
 },
 
 textoslide:{
