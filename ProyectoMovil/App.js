@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
-import { AuthProvider } from './data/AuthContext';
+import { AuthProvider } from './contexts/AuthContext';
 import RootNavigator from './navigation/RootNavigator';
-import { initDatabase } from './data/database';
+import DatabaseService from './database/DatabaseService';
 
 export default function App() {
   const [ready, setReady] = useState(false);
@@ -11,7 +11,8 @@ export default function App() {
     // Inicializar base de datos cuando se carga la app
     (async () => {
       try {
-        await initDatabase();
+        await DatabaseService.init();
+        console.log('Base de datos inicializada correctamente');
         setReady(true);
       } catch (error) {
         console.error('Error inicializando app:', error);

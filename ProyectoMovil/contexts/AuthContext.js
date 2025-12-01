@@ -9,14 +9,13 @@ export const AuthProvider = ({ children }) => {
   const [isSignout, setIsSignout] = useState(false);
 
   useEffect(() => {
-    // Inicializar contexto de autenticación
+    //para inicializar autenticacion
     bootstrapAsync();
   }, []);
 
   const bootstrapAsync = async () => {
     try {
-      // Aquí puedes verificar si hay un usuario guardado
-      // Por ahora solo marcamos como listo
+      // verificar usuarios
       setIsLoading(false);
     } catch (e) {
       console.error('Error al restaurar sesión:', e);
@@ -25,9 +24,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const authContext = {
+    //buscar usuarios
     signIn: async (email, password) => {
       try {
-        // Buscar usuario en la base de datos
         const result = await databaseService.select(
           'usuarios',
           'correo = ?',
@@ -36,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
         if (result.success && result.data.length > 0) {
           const usuario = result.data[0];
-          // Aquí deberías verificar la contraseña (preferiblemente hasheada)
+          // verificar contraseña
           if (usuario.contrasena === password) {
             setUser(usuario);
             setIsSignout(false);

@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image, ImageBackground, Button, FlatList, ActivityIndicator, Alert, TouchableOpacity, ScrollView } from 'react-native'
+import { Text, StyleSheet, View, Image, ImageBackground, Button, ActivityIndicator, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react';
 import TransaccionController from '../controllers/TransaccionController';
 import PresupuestoController from '../controllers/PresupuestoController';
@@ -96,34 +96,6 @@ export default function BotonesScreen() {
     })
     .slice(0, 3);
 
-  const renderIngreso = ({ item }) => (
-    <TouchableOpacity activeOpacity={0.8}>
-      <View style={styles.cardTransaccion}>
-        <Text style={styles.cardMonto}>${item.monto.toFixed(2)}</Text>
-        <Text style={styles.cardTitulo}>{item.nombre}</Text>
-        <Text style={styles.cardCategoria}>{item.categoria}</Text>
-        <View style={styles.cardFooter}>
-          <Text style={styles.cardDescripcion}>{item.descripcion}</Text>
-          <Text style={styles.cardFecha}>{item.fecha}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
-  const renderGasto = ({ item }) => (
-    <TouchableOpacity activeOpacity={0.8}>
-      <View style={styles.cardTransaccion}>
-        <Text style={styles.cardMonto}>${item.monto.toFixed(2)}</Text>
-        <Text style={styles.cardTitulo}>{item.nombre}</Text>
-        <Text style={styles.cardCategoria}>{item.categoria}</Text>
-        <View style={styles.cardFooter}>
-          <Text style={styles.cardDescripcion}>{item.descripcion}</Text>
-          <Text style={styles.cardFecha}>{item.fecha}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-
   return (
     
     <ImageBackground
@@ -167,33 +139,51 @@ export default function BotonesScreen() {
               <Text style={styles.utransaccion}>Últimos Ingresos</Text>
 
               <View style={styles.listaContenedor}>
-                <FlatList
-                  data={recentIngresos}
-                  keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}
-                  renderItem={renderIngreso}
-                  ListEmptyComponent={
-                    <View style={styles.emptyContainer}>
-                      <Text style={styles.emptyText}>No hay ingresos</Text>
-                      <Text style={styles.emptySubtext}>Crea el primer ingreso</Text>
-                    </View>
-                  }
-                />
+                {recentIngresos.length > 0 ? (
+                  recentIngresos.map((item) => (
+                    <TouchableOpacity key={item.id ? item.id.toString() : Math.random().toString()} activeOpacity={0.8}>
+                      <View style={styles.cardTransaccion}>
+                        <Text style={styles.cardMonto}>${item.monto.toFixed(2)}</Text>
+                        <Text style={styles.cardTitulo}>{item.nombre}</Text>
+                        <Text style={styles.cardCategoria}>{item.categoria}</Text>
+                        <View style={styles.cardFooter}>
+                          <Text style={styles.cardDescripcion}>{item.descripcion}</Text>
+                          <Text style={styles.cardFecha}>{item.fecha}</Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>No hay ingresos</Text>
+                    <Text style={styles.emptySubtext}>Crea el primer ingreso</Text>
+                  </View>
+                )}
               </View>
 
               <Text style={styles.utransaccion}>Últimos Gastos</Text>
 
               <View style={styles.listaContenedor}>
-                <FlatList
-                  data={recentGastos}
-                  keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}
-                  renderItem={renderGasto}
-                  ListEmptyComponent={
-                    <View style={styles.emptyContainer}>
-                      <Text style={styles.emptyText}>No hay gastos</Text>
-                      <Text style={styles.emptySubtext}>Crea el primer gasto</Text>
-                    </View>
-                  }
-                />
+                {recentGastos.length > 0 ? (
+                  recentGastos.map((item) => (
+                    <TouchableOpacity key={item.id ? item.id.toString() : Math.random().toString()} activeOpacity={0.8}>
+                      <View style={styles.cardTransaccion}>
+                        <Text style={styles.cardMonto}>${item.monto.toFixed(2)}</Text>
+                        <Text style={styles.cardTitulo}>{item.nombre}</Text>
+                        <Text style={styles.cardCategoria}>{item.categoria}</Text>
+                        <View style={styles.cardFooter}>
+                          <Text style={styles.cardDescripcion}>{item.descripcion}</Text>
+                          <Text style={styles.cardFecha}>{item.fecha}</Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <View style={styles.emptyContainer}>
+                    <Text style={styles.emptyText}>No hay gastos</Text>
+                    <Text style={styles.emptySubtext}>Crea el primer gasto</Text>
+                  </View>
+                )}
               </View>
 
             </View>

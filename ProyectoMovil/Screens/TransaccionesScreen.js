@@ -60,7 +60,7 @@ export default function TransaccionesScreen({ navigation }) {
         }
       }
       
-      // Asegurar que el loading dure máximo 3 segundos
+      //  loading carga en 3 segundos
       const elapsed = Date.now() - startTime;
       const remainingTime = Math.max(0, 3000 - elapsed);
       

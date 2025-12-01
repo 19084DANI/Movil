@@ -1,6 +1,6 @@
 import {Text, StyleSheet, View, TextInput, Button, Image, Alert,Pressable} from 'react-native';
 import { useContext, useState } from 'react';
-import { AuthContext } from '../data/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 export default function RegistroScreen({ navigation }){
     const { signUp, isLoading } = useContext(AuthContext);
