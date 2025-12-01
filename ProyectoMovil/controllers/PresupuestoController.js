@@ -1,15 +1,66 @@
 import PresupuestoModel from "../models/PresupuestoModel";
+import TransaccionController from "./TransaccionController";
+import DatabaseService from '../database/DatabaseService';
 
 class PresupuestoController {
     constructor() {
         this.listeners = [];
         this.initialized = false;
-        this.PRESUPUESTO_GENERAL_MAX = 15000; // limite general
     }
+
     // Inicializar 
-    async initialized() {
+    async initialize() {
         if (this.initialized) return;
-        this.initialized = true;
+        try {
+            await DatabaseService.init();
+            this.initialized = true;
+            console.log('PresupuestoController initialized');
+        } catch (error) {
+            console.error('Error initializing PresupuestoController:', error);
+        }
+    }
+
+    // Obtener dinero disponible para asignar
+    // Dinero disponible = Total Ingresos - Total Gastos - Total Presupuestos Asignados
+    async obtenerDineroDisponible() {
+        try {
+            // Obtener total de ingresos
+            const ingresosResult = await TransaccionController.obtenerTotalIngresos();
+            const totalIngresos = ingresosResult.data?.total || 0;
+
+            // Obtener total de gastos
+            const gastosResult = await TransaccionController.obtenerTotalGastos();
+            const totalGastos = gastosResult.data?.total || 0;
+
+            // Obtener total de presupuestos asignados (suma de todos los montos)
+            const presupuestos = await this.obtenerPresupuestos();
+            const totalAsignado = presupuestos.reduce((sum, p) => sum + parseFloat(p.monto || 0), 0);
+
+            // Dinero disponible = ingresos - gastos - presupuestos asignados
+            const dineroDisponible = totalIngresos - totalGastos - totalAsignado;
+
+            return {
+                success: true,
+                data: {
+                    disponible: Math.max(0, dineroDisponible),
+                    totalIngresos,
+                    totalGastos,
+                    totalAsignado
+                }
+            };
+        } catch (error) {
+            console.error('Error al calcular dinero disponible:', error);
+            return {
+                success: false,
+                error: error.message,
+                data: {
+                    disponible: 0,
+                    totalIngresos: 0,
+                    totalGastos: 0,
+                    totalAsignado: 0
+                }
+            };
+        }
     }
 
     // Validar Presupuesto
@@ -17,132 +68,99 @@ class PresupuestoController {
         if (!data.categoria || !data.categoria.trim()) {
             return { valid: false, message: "La categoría es obligatoria" };
         }
-        if (data.monto === undefined || data.monto === null || isNaN(data.monto) || parseFloat(data.monto) < 0){
-            return { valid: false, message: "El monto debe ser un número válido" };
+        
+        // Validar limite (ahora es el monto asignado a esa categoría)
+        if (data.limite === undefined || data.limite === null) {
+            return { valid: false, message: "El monto a asignar es obligatorio" };
         }
-        // Validar limite si está presente
-        if (data.limite !== undefined && data.limite !== null) {
-            if (isNaN(data.limite) || parseFloat(data.limite) <= 0) {
-                return { valid: false, message: "El límite debe ser un número mayor a 0" };
-            }
+        if (isNaN(data.limite) || parseFloat(data.limite) <= 0) {
+            return { valid: false, message: "El monto debe ser mayor a 0" };
         }
+        
         return{ valid: true, message: "" };    
     }
 
-    //Crear un nuevo presupuesto
+    // Crear un nuevo presupuesto
     async crearPresupuesto(data) {
         const validation = this.validatePresupuesto(data);
         if (!validation.valid){
             return { success: false, error: validation.message };
         }
 
-        //Obtener total actual
-        const totalResult = await PresupuestoModel.getSumaPresupuestos();
-        const totalActual = totalResult.data?.total || 0;
+        // Obtener dinero disponible
+        const dineroDisponibleResult = await this.obtenerDineroDisponible();
+        const disponible = dineroDisponibleResult.data?.disponible || 0;
 
-        const nuevoTotal = totalActual + parseFloat(data.monto);
+        const montoAsignar = parseFloat(data.limite);
 
-        //Validar límite
-        if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX){
+        // Validar que no exceda el dinero disponible
+        if (montoAsignar > disponible) {
             return {
                 success: false,
-                error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
+                error: `No tienes suficiente dinero disponible. Disponible: $${disponible.toFixed(2)}`
             };
         }
 
-        //Crear en BD
-        const result = await PresupuestoModel.create(data);
+        // Crear presupuesto con el monto asignado
+        const result = await PresupuestoModel.create({
+            categoria: data.categoria,
+            monto: montoAsignar,
+            limite: montoAsignar
+        });
 
         if (result.success) {
             this.notifyListeners();
         }
         return result;
     }
-    //Obtener todos
+
+    // Obtener todos
     async obtenerPresupuestos(){
         const result = await PresupuestoModel.getAll();
         return result.data || [];
     }
-    //Obtener por ID
+
+    // Obtener por ID
     async obtenerPresupuestosPorId(id){
         const result = await PresupuestoModel.getById(id);
         return result.data;
     }
-    //Editar Presupuesto
+
+    // Editar Presupuesto (solo categoría y límite)
     async editarPresupuesto(id, data) {
-        const validation = this.validatePresupuesto(data);
-        if (!validation.valid) {
-            return { success: false, error: validation.message };
-        }
-
-        const totalResult = await PresupuestoModel.getSumaPresupuestos();
-        const totalActual = totalResult.data?.total || 0;
-
-        // Obtener presupuesto previo para recalcular
-    const viejo = await PresupuestoModel.getById(id);
-    const montoViejo = viejo.data?.monto || 0;
-
-    const totalSinViejo = totalActual - montoViejo;
-    const nuevoTotal = totalSinViejo + parseFloat(data.monto);
-
-    if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX) {
-      return {
-        success: false,
-        error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
-      };
-    }
-
-    const result = await PresupuestoModel.update(id, data);
-
-    if (result.success) {
-      this.notifyListeners();
-    }
-
-    return result;
-    }
-
-    // Actualizar solo el monto (más eficiente para sliders)
-    async actualizarMonto(id, montoNuevo) {
-        if (montoNuevo === undefined || montoNuevo === null || isNaN(montoNuevo) || parseFloat(montoNuevo) < 0) {
-            return { success: false, error: "El monto debe ser un número válido" };
-        }
-
-        const totalResult = await PresupuestoModel.getSumaPresupuestos();
-        const totalActual = totalResult.data?.total || 0;
-
-        // Obtener presupuesto previo para recalcular
-        const viejo = await PresupuestoModel.getById(id);
-        const montoViejo = viejo.data?.monto || 0;
-
-        const totalSinViejo = totalActual - montoViejo;
-        const nuevoTotal = totalSinViejo + parseFloat(montoNuevo);
-
-        if (nuevoTotal > this.PRESUPUESTO_GENERAL_MAX) {
-            return {
-                success: false,
-                error: `El presupuesto total excede el límite general de $${this.PRESUPUESTO_GENERAL_MAX}`
-            };
-        }
-
-        const result = await PresupuestoModel.updateMonto(id, montoNuevo);
-
-        if (result.success) {
-            this.notifyListeners();
-        }
-
-        return result;
-    }
-
-    // Editar categoría y límite (sin cambiar monto)
-    async editarCategoriaYLimite(id, categoria, limite) {
-        if (!categoria || !categoria.trim()) {
+        if (!data.categoria || !data.categoria.trim()) {
             return { success: false, error: "La categoría es obligatoria" };
         }
-        if (limite === undefined || limite === null || isNaN(limite) || parseFloat(limite) <= 0) {
-            return { success: false, error: "El límite debe ser un número mayor a 0" };
+        if (data.monto === undefined || data.monto === null || isNaN(data.monto) || parseFloat(data.monto) <= 0) {
+            return { success: false, error: "El monto asignado debe ser mayor a $0" };
         }
 
-        const result = await PresupuestoModel.updateCategoriaYLimite(id, categoria.trim(), parseFloat(limite));
+        // Obtener presupuesto actual
+        const presupuestoActual = await PresupuestoModel.getById(id);
+        if (!presupuestoActual.success || !presupuestoActual.data) {
+            return { success: false, error: "Presupuesto no encontrado" };
+        }
+
+        const montoAnterior = parseFloat(presupuestoActual.data.monto || 0);
+        const nuevoMonto = parseFloat(data.monto);
+        const diferencia = nuevoMonto - montoAnterior;
+
+        // Si se está aumentando el monto, verificar que haya dinero disponible
+        if (diferencia > 0) {
+            const dineroDisponibleResult = await this.obtenerDineroDisponible();
+            // El dinero disponible ya no incluye este presupuesto, así que sumamos su monto actual
+            const disponible = (dineroDisponibleResult.data?.disponible || 0) + montoAnterior;
+
+            if (nuevoMonto > disponible) {
+                return {
+                    success: false,
+                    error: `No tienes suficiente dinero disponible. Disponible: $${disponible.toFixed(2)}`
+                };
+            }
+        }
+
+        // Actualizar categoría y monto
+        const result = await PresupuestoModel.updateCategoriaYLimite(id, data.categoria.trim(), nuevoMonto);
 
         if (result.success) {
             this.notifyListeners();
@@ -160,9 +178,14 @@ class PresupuestoController {
         return result;
     }
 
-    //Total general
+    // Total general de presupuestos asignados
     async obtenerTotalPresupuestos() {
-        return await PresupuestoModel.getSumaPresupuestos();
+        const presupuestos = await this.obtenerPresupuestos();
+        const total = presupuestos.reduce((sum, p) => sum + parseFloat(p.limite || 0), 0);
+        return {
+            success: true,
+            data: { total }
+        };
     }
 
     // Listeners
@@ -171,16 +194,16 @@ class PresupuestoController {
     }
 
     removeListener(callback) {
-    this.listeners = this.listeners.filter((l) => l !== callback);
-  }
+        this.listeners = this.listeners.filter((l) => l !== callback);
+    }
 
-  notifyListeners() {
-    this.listeners.forEach((callback) => {
-      if (typeof callback === "function") {
-        callback();
-      }
-    });
-  }
+    notifyListeners() {
+        this.listeners.forEach((callback) => {
+            if (typeof callback === "function") {
+                callback();
+            }
+        });
+    }
 }
 
 export default new PresupuestoController();

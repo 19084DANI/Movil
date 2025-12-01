@@ -2,6 +2,7 @@
 
 import TransaccionModel from '../models/TransaccionModel';
 import PresupuestoModel from '../models/PresupuestoModel';
+import DatabaseService from '../database/DatabaseService';
 
 class TransaccionController {
   constructor() {
@@ -9,11 +10,16 @@ class TransaccionController {
     this.initialized = false;
   }
 
-  // Inicializar controlador (prepare la tabla si es necesario)
+  // Inicializar controlador
   async initialize() {
     if (this.initialized) return;
-    // La tabla se crea en DatabaseService.initialize()
-    this.initialized = true;
+    try {
+      await DatabaseService.init();
+      this.initialized = true;
+      console.log('TransaccionController initialized');
+    } catch (error) {
+      console.error('Error initializing TransaccionController:', error);
+    }
   }
 
   // Validar datos de transacción
@@ -23,15 +29,11 @@ class TransaccionController {
     if (!data.nombre || !data.nombre.trim()) {
       return { valid: false, message: 'El nombre es obligatorio' };
     }
-   if (data.monto === undefined || data.monto === null) {
+    if (data.monto === undefined || data.monto === null) {
       return { valid: false, message: 'El monto es obligatorio' };
     }
     if (isNaN(montoNum) || montoNum <= 0) {
       return { valid: false, message: 'El monto debe ser un número positivo' };
-    }
-
-    if (!data.categoria || !data.categoria.trim()) {
-      return { valid: false, message: 'La categoría es obligatoria' };
     }
     if (!data.fecha || !data.fecha.trim()) {
       return { valid: false, message: 'La fecha es obligatoria' };
@@ -39,9 +41,13 @@ class TransaccionController {
     if (!data.descripcion || !data.descripcion.trim()) {
       return { valid: false, message: 'La descripción es obligatoria' };
     }
- //   if (!data.es_gasto || (data.es_gasto.toLowerCase() !== 'si' && data.es_gasto.toLowerCase() !== 'no')) {
-   //   return { valid: false, message: 'Especifique si es gasto (Sí/No)' };
-    //}
+
+    // Si es gasto, la categoría es obligatoria
+    const esGasto = data.es_gasto !== undefined ? data.es_gasto : true;
+    if (esGasto && (!data.categoria || !data.categoria.trim())) {
+      return { valid: false, message: 'La categoría es obligatoria para gastos' };
+    }
+
     return { valid: true, message: '' };
   }
 
@@ -55,75 +61,55 @@ class TransaccionController {
       };
     }
 
-    // Validar presupuesto antes de crear la transacción
     const esGasto = transaccionData.es_gasto !== undefined ? transaccionData.es_gasto : true;
     const monto = parseFloat(transaccionData.monto);
-    const categoria = transaccionData.categoria.trim();
-
-    // Obtener presupuesto de la categoría
-    const presupuestoResult = await PresupuestoModel.getByCategoria(categoria);
-    if (!presupuestoResult.success || !presupuestoResult.data) {
-      return {
-        success: false,
-        error: 'No se encontró un presupuesto para esta categoría'
-      };
-    }
-
-    const presupuesto = presupuestoResult.data;
-    const montoActual = parseFloat(presupuesto.monto) || 0;
-    const limite = parseFloat(presupuesto.limite) || 0;
-
-    // Validaciones según el tipo de transacción
+    
+    // Si es GASTO, validar que haya presupuesto disponible en la categoría
     if (esGasto) {
-      // Si es gasto y el monto actual es 0 o menor, no permitir
-      if (montoActual <= 0) {
-        return {
-          success: false,
-          error: 'No puedes hacer gastos en esta categoría. El presupuesto está en 0. Agrega un ingreso primero.'
-        };
-      }
-      // Si el gasto excede el monto disponible, no permitir
-      if (monto > montoActual) {
-        return {
-          success: false,
-          error: `El gasto excede el monto disponible ($${montoActual.toFixed(2)}).`
-        };
-      }
-    } else {
-      // Si es ingreso y el monto actual ya alcanzó el límite, no permitir
-      if (montoActual >= limite) {
-        return {
-          success: false,
-          error: `No puedes agregar más ingresos. El presupuesto ya alcanzó su límite ($${limite.toFixed(2)}).`
-        };
-      }
-      // Si el ingreso haría que se exceda el límite, no permitir
-      if (montoActual + monto > limite) {
-        const maxPermitido = limite - montoActual;
-        return {
-          success: false,
-          error: `El ingreso excede el límite disponible. Solo puedes agregar hasta $${maxPermitido.toFixed(2)}.`
-        };
-      }
-    }
-
-    // Crear la transacción
-    const result = await TransaccionModel.create(transaccionData);
-    if (result.success) {
-      // Actualizar el presupuesto según el tipo de transacción
-      let nuevoMonto;
-      if (esGasto) {
-        nuevoMonto = Math.max(0, montoActual - monto);
-      } else {
-        nuevoMonto = Math.min(limite, montoActual + monto);
-      }
-
-      // Actualizar el monto del presupuesto
-      await PresupuestoModel.updateMonto(presupuesto.id, nuevoMonto);
+      const categoria = transaccionData.categoria.trim();
       
-      this.notifyListeners();
+      // Obtener presupuesto de la categoría
+      const presupuestoResult = await PresupuestoModel.getByCategoria(categoria);
+      if (!presupuestoResult.success || !presupuestoResult.data) {
+        return {
+          success: false,
+          error: 'No se encontró un presupuesto para esta categoría'
+        };
+      }
+
+      const presupuesto = presupuestoResult.data;
+      const montoDisponible = parseFloat(presupuesto.monto) || 0;
+
+      // Validar que el gasto no exceda el monto disponible en el presupuesto
+      if (monto > montoDisponible) {
+        return {
+          success: false,
+          error: `El gasto excede el monto disponible en esta categoría ($${montoDisponible.toFixed(2)}).`
+        };
+      }
+
+      // Crear la transacción
+      const result = await TransaccionModel.create(transaccionData);
+      if (result.success) {
+        // Restar el monto del presupuesto
+        const nuevoMonto = Math.max(0, montoDisponible - monto);
+        await PresupuestoModel.updateMonto(presupuesto.id, nuevoMonto);
+        
+        this.notifyListeners();
+      }
+      return result;
+    } else {
+      // Si es INGRESO, simplemente crear la transacción (sin afectar presupuestos)
+      const result = await TransaccionModel.create({
+        ...transaccionData,
+        categoria: transaccionData.categoria || 'Ingreso' // Categoría por defecto
+      });
+      
+      if (result.success) {
+        this.notifyListeners();
+      }
+      return result;
     }
-    return result;
   }
 
   // Obtener todas las transacciones
@@ -138,6 +124,48 @@ class TransaccionController {
     return result.data;
   }
 
+  // Obtener total de ingresos
+  async obtenerTotalIngresos() {
+    try {
+      const transacciones = await this.obtenerTransacciones();
+      const totalIngresos = transacciones
+        .filter(t => !t.es_gasto || t.es_gasto === 0)
+        .reduce((sum, t) => sum + parseFloat(t.monto || 0), 0);
+      
+      return {
+        success: true,
+        data: { total: totalIngresos }
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        data: { total: 0 }
+      };
+    }
+  }
+
+  // Obtener total de gastos
+  async obtenerTotalGastos() {
+    try {
+      const transacciones = await this.obtenerTransacciones();
+      const totalGastos = transacciones
+        .filter(t => t.es_gasto === 1 || t.es_gasto === true)
+        .reduce((sum, t) => sum + parseFloat(t.monto || 0), 0);
+      
+      return {
+        success: true,
+        data: { total: totalGastos }
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+        data: { total: 0 }
+      };
+    }
+  }
+
   // Actualizar transacción
   async editarTransaccion(id, transaccionData) {
     const validation = this.validateTransaccion(transaccionData);
@@ -148,7 +176,7 @@ class TransaccionController {
       };
     }
 
-    // Obtener la transacción anterior para revertir el cambio
+    // Obtener la transacción anterior para revertir cambios
     const transaccionAnterior = await this.obtenerTransaccionPorId(id);
     if (!transaccionAnterior) {
       return {
@@ -165,96 +193,75 @@ class TransaccionController {
     const montoNuevo = parseFloat(transaccionData.monto);
     const categoriaNueva = transaccionData.categoria.trim();
 
-    // Validar presupuesto para la nueva transacción
-    const presupuestoResult = await PresupuestoModel.getByCategoria(categoriaNueva);
-    if (!presupuestoResult.success || !presupuestoResult.data) {
-      return {
-        success: false,
-        error: 'No se encontró un presupuesto para esta categoría'
-      };
-    }
-
-    const presupuesto = presupuestoResult.data;
-    let montoActual = parseFloat(presupuesto.monto) || 0;
-    const limite = parseFloat(presupuesto.limite) || 0;
-
-    // Revertir el cambio anterior
+    // Solo afectar presupuestos si es/era gasto
     if (esGastoAnterior) {
-      montoActual = Math.min(limite, montoActual + montoAnterior);
-    } else {
-      montoActual = Math.max(0, montoActual - montoAnterior);
+      // Revertir el gasto anterior en el presupuesto
+      const presupuestoAnteriorResult = await PresupuestoModel.getByCategoria(categoriaAnterior);
+      if (presupuestoAnteriorResult.success && presupuestoAnteriorResult.data) {
+        const presupuestoAnterior = presupuestoAnteriorResult.data;
+        const montoAnteriorCat = parseFloat(presupuestoAnterior.monto) || 0;
+        const limiteAnterior = parseFloat(presupuestoAnterior.limite) || 0;
+        
+        // Devolver el monto al presupuesto
+        const montoRevertido = Math.min(limiteAnterior, montoAnteriorCat + montoAnterior);
+        await PresupuestoModel.updateMonto(presupuestoAnterior.id, montoRevertido);
+      }
     }
 
-    // Validar la nueva transacción
+    // Si el nuevo es gasto, validar y aplicar
     if (esGastoNuevo) {
-      if (montoActual <= 0) {
+      const presupuestoNuevoResult = await PresupuestoModel.getByCategoria(categoriaNueva);
+      if (!presupuestoNuevoResult.success || !presupuestoNuevoResult.data) {
         return {
           success: false,
-          error: 'No puedes hacer gastos en esta categoría. El presupuesto está en 0. Agrega un ingreso primero.'
+          error: 'No se encontró un presupuesto para esta categoría'
         };
-      }
-      if (montoNuevo > montoActual) {
-        return {
-          success: false,
-          error: `El gasto excede el monto disponible ($${montoActual.toFixed(2)}).`
-        };
-      }
-    } else {
-      if (montoActual >= limite) {
-        return {
-          success: false,
-          error: `No puedes agregar más ingresos. El presupuesto ya alcanzó su límite ($${limite.toFixed(2)}).`
-        };
-      }
-      if (montoActual + montoNuevo > limite) {
-        const maxPermitido = limite - montoActual;
-        return {
-          success: false,
-          error: `El ingreso excede el límite disponible. Solo puedes agregar hasta $${maxPermitido.toFixed(2)}.`
-        };
-      }
-    }
-
-    // Actualizar la transacción
-    const result = await TransaccionModel.update(id, transaccionData);
-    if (result.success) {
-      // Aplicar el nuevo cambio en el presupuesto
-      let nuevoMonto;
-      if (esGastoNuevo) {
-        nuevoMonto = Math.max(0, montoActual - montoNuevo);
-      } else {
-        nuevoMonto = Math.min(limite, montoActual + montoNuevo);
       }
 
-      await PresupuestoModel.updateMonto(presupuesto.id, nuevoMonto);
-      
-      // Si cambió de categoría, también actualizar la categoría anterior
-      if (categoriaAnterior !== categoriaNueva) {
-        const presupuestoAnteriorResult = await PresupuestoModel.getByCategoria(categoriaAnterior);
-        if (presupuestoAnteriorResult.success && presupuestoAnteriorResult.data) {
-          const presupuestoAnterior = presupuestoAnteriorResult.data;
-          const montoAnteriorCat = parseFloat(presupuestoAnterior.monto) || 0;
-          const limiteAnterior = parseFloat(presupuestoAnterior.limite) || 0;
+      const presupuestoNuevo = presupuestoNuevoResult.data;
+      const montoDisponible = parseFloat(presupuestoNuevo.monto) || 0;
 
-          let nuevoMontoAnterior;
-          if (esGastoAnterior) {
-            nuevoMontoAnterior = Math.min(limiteAnterior, montoAnteriorCat + montoAnterior);
-          } else {
-            nuevoMontoAnterior = Math.max(0, montoAnteriorCat - montoAnterior);
+      if (montoNuevo > montoDisponible) {
+        // Revertir cambios
+        if (esGastoAnterior) {
+          const presupuestoAnteriorResult = await PresupuestoModel.getByCategoria(categoriaAnterior);
+          if (presupuestoAnteriorResult.success && presupuestoAnteriorResult.data) {
+            const presupuestoAnterior = presupuestoAnteriorResult.data;
+            const montoAnteriorCat = parseFloat(presupuestoAnterior.monto) || 0;
+            const limiteAnterior = parseFloat(presupuestoAnterior.limite) || 0;
+            const montoRevertido = Math.max(0, montoAnteriorCat - montoAnterior);
+            await PresupuestoModel.updateMonto(presupuestoAnterior.id, montoRevertido);
           }
-
-          await PresupuestoModel.updateMonto(presupuestoAnterior.id, nuevoMontoAnterior);
         }
+        
+        return {
+          success: false,
+          error: `El gasto excede el monto disponible ($${montoDisponible.toFixed(2)}).`
+        };
       }
 
-      this.notifyListeners();
+      // Actualizar la transacción
+      const result = await TransaccionModel.update(id, transaccionData);
+      if (result.success) {
+        // Restar el nuevo monto del presupuesto nuevo
+        const nuevoMonto = Math.max(0, montoDisponible - montoNuevo);
+        await PresupuestoModel.updateMonto(presupuestoNuevo.id, nuevoMonto);
+        
+        this.notifyListeners();
+      }
+      return result;
+    } else {
+      // Si es ingreso, solo actualizar
+      const result = await TransaccionModel.update(id, transaccionData);
+      if (result.success) {
+        this.notifyListeners();
+      }
+      return result;
     }
-    return result;
   }
 
   // Eliminar transacción
   async eliminarTransaccion(id) {
-    // Obtener la transacción antes de eliminarla para revertir el cambio en presupuesto
     const transaccion = await this.obtenerTransaccionPorId(id);
     if (!transaccion) {
       return {
@@ -265,27 +272,22 @@ class TransaccionController {
 
     const result = await TransaccionModel.delete(id);
     if (result.success) {
-      // Revertir el cambio en el presupuesto
+      // Si era un gasto, devolver el monto al presupuesto
       const esGasto = transaccion.es_gasto === 1 || transaccion.es_gasto === true;
-      const monto = parseFloat(transaccion.monto);
-      const categoria = transaccion.categoria.trim();
+      if (esGasto) {
+        const monto = parseFloat(transaccion.monto);
+        const categoria = transaccion.categoria.trim();
 
-      const presupuestoResult = await PresupuestoModel.getByCategoria(categoria);
-      if (presupuestoResult.success && presupuestoResult.data) {
-        const presupuesto = presupuestoResult.data;
-        const montoActual = parseFloat(presupuesto.monto) || 0;
-        const limite = parseFloat(presupuesto.limite) || 0;
+        const presupuestoResult = await PresupuestoModel.getByCategoria(categoria);
+        if (presupuestoResult.success && presupuestoResult.data) {
+          const presupuesto = presupuestoResult.data;
+          const montoActual = parseFloat(presupuesto.monto) || 0;
+          const limite = parseFloat(presupuesto.limite) || 0;
 
-        let nuevoMonto;
-        if (esGasto) {
-          // Si era un gasto, revertir sumando el monto
-          nuevoMonto = Math.min(limite, montoActual + monto);
-        } else {
-          // Si era un ingreso, revertir restando el monto
-          nuevoMonto = Math.max(0, montoActual - monto);
+          // Devolver el monto al presupuesto
+          const nuevoMonto = Math.min(limite, montoActual + monto);
+          await PresupuestoModel.updateMonto(presupuesto.id, nuevoMonto);
         }
-
-        await PresupuestoModel.updateMonto(presupuesto.id, nuevoMonto);
       }
 
       this.notifyListeners();
@@ -293,12 +295,6 @@ class TransaccionController {
     return result;
   }
 
-  // Obtener total de gastos
-  async obtenerTotalGastos() {
-    return await TransaccionModel.getTotalGastos();
-  }
-
-  
   addListener(callback) {
     this.listeners.push(callback);
   }
