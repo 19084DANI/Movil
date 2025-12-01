@@ -10,7 +10,7 @@ class TransaccionModel {
     try {
       const db = await DatabaseService.openDB();
       
-      await db.runAsync(
+      const result = db.runSync(
         `INSERT INTO transacciones (nombre, monto, categoria, fecha, descripcion, es_gasto) 
          VALUES (?, ?, ?, ?, ?, ?)`,
         [
@@ -41,7 +41,7 @@ class TransaccionModel {
     try {
       const db = await DatabaseService.openDB();
       
-      const result = await db.getAllAsync(
+      const result = db.getAllSync(
         `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion, es_gasto
          FROM transacciones
          ORDER BY fecha DESC`
@@ -66,7 +66,7 @@ class TransaccionModel {
     try {
       const db = await DatabaseService.openDB();
       
-      const result = await db.getFirstAsync(
+      const result = db.getFirstSync(
         `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion, es_gasto
          FROM transacciones
          WHERE id = ?`,
@@ -92,7 +92,7 @@ class TransaccionModel {
     try {
       const db = await DatabaseService.openDB();
       
-      await db.runAsync(
+      db.runSync(
         `UPDATE transacciones 
          SET nombre = ?, monto = ?, categoria = ?, fecha = ?, descripcion = ?, es_gasto = ?
          WHERE id = ?`,
@@ -125,7 +125,7 @@ class TransaccionModel {
     try {
       const db = await DatabaseService.openDB();
       
-      await db.runAsync(
+      db.runSync(
         `DELETE FROM transacciones WHERE id = ?`,
         [id]
       );
@@ -148,7 +148,7 @@ class TransaccionModel {
   try {
     const db = await DatabaseService.openDB();
     
-    const result = await db.getFirstAsync(
+    const result = db.getFirstSync(
       `SELECT SUM(monto) AS total FROM transacciones`
     );
 
