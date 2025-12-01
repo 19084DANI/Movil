@@ -12,6 +12,7 @@ import Home from './HomeScreen';
 import NuevaTransScreen from './NuevaTransScreen';
 import IngresosScreen from './IngresosScreen';
 import GraficaScreen from './GraficaScreen';
+import PerfilScreen from './PerfilScreen';
 import TransaccionController from '../controllers/TransaccionController';
 
 const TransStack = createNativeStackNavigator();
@@ -34,7 +35,6 @@ export default function MenuScreen ({ navigation }) {
   const [screen, setScreen] = useState('home');
   const [menuOpen, setMenuOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-280)).current;
-  const [userData, setUserData] = useState(null);
   const [totalIngresos, setTotalIngresos] = useState(0);
 
   // Cargar total de ingresos
@@ -79,40 +79,7 @@ export default function MenuScreen ({ navigation }) {
     }).start();
   }, [menuOpen, slideAnim]);
 
-  useEffect(() => {
-    // Cargar datos del usuario
-    const loadUserData = async () => {
-      try {
-        const userJson = await AsyncStorage.getItem('currentUser');
-        if (userJson) {
-          const user = JSON.parse(userJson);
-          setUserData(user);
-          console.log('Datos del usuario cargados:', user);
-        }
-      } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
-      }
-    };
-    loadUserData();
-  }, []);
 
-  // Recargar datos del usuario cuando se abre la pantalla de perfil
-  useEffect(() => {
-    if (screen === 'perfil') {
-      const loadUserData = async () => {
-        try {
-          const userJson = await AsyncStorage.getItem('currentUser');
-          if (userJson) {
-            const user = JSON.parse(userJson);
-            setUserData(user);
-          }
-        } catch (error) {
-          console.error('Error al cargar datos del usuario:', error);
-        }
-      };
-      loadUserData();
-    }
-  }, [screen]);
 
   const handleScreenChange = (screenName) => {
     setScreen(screenName);
@@ -123,16 +90,6 @@ export default function MenuScreen ({ navigation }) {
     setScreen('home');
   };
 
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('currentUser');
-      if (navigation) {
-        navigation.navigate('IniciarSeScreen');
-      }
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
-  };
 
   // Renderizar contenido según la pantalla seleccionada
   const renderScreen = () => {
@@ -146,74 +103,7 @@ export default function MenuScreen ({ navigation }) {
       case 'grafica':
         return <GraficaScreen/>
       case 'perfil':
-        return (
-          <ImageBackground
-            source={require('../assets/fondo2.jpg')}
-            resizeMode='cover'
-            style={styles.profileBackground}
-          >
-            <ScrollView 
-              contentContainerStyle={styles.profileContainer}
-              showsVerticalScrollIndicator={false}
-            >
-              {/* Foto de perfil */}
-              <View style={styles.profileImageContainer}>
-                <View style={styles.profileImageWrapper}>
-                  {userData ? (
-                    <Image
-                      source={require('../assets/Logo.jpeg')}
-                      style={styles.profileImage}
-                      resizeMode='cover'
-                    />
-                  ) : (
-                    <Ionicons name="person" size={80} color="#001F3F" />
-                  )}
-                </View>
-              </View>
-
-              {/* Nombre del usuario */}
-              <View style={styles.profileInfoCard}>
-                <Ionicons name="person-outline" size={24} color="#001F3F" style={styles.infoIcon} />
-                <View style={styles.infoContent}>
-                  <Text style={styles.infoLabel}>Nombre</Text>
-                  <Text style={styles.infoValue}>
-                    {userData?.nombre || 'Usuario'}
-                  </Text>
-                </View>
-              </View>
-
-              {/* Correo */}
-              <View style={styles.profileInfoCard}>
-                <Ionicons name="mail-outline" size={24} color="#001F3F" style={styles.infoIcon} />
-                <View style={styles.infoContent}>
-                  <Text style={styles.infoLabel}>Correo</Text>
-                  <Text style={styles.infoValue}>
-                    {userData?.correo || 'correo@ejemplo.com'}
-                  </Text>
-                </View>
-              </View>
-
-              {/* Frase inspiradora */}
-              <View style={styles.quoteCard}>
-                <Ionicons name="heart" size={28} color="#001F3F" style={styles.quoteIcon} />
-                <Text style={styles.quoteText}>
-                  "Cada pequeño ahorro es un paso hacia tus sueños"
-                </Text>
-                <Ionicons name="heart" size={28} color="#001F3F" style={styles.quoteIcon} />
-              </View>
-
-              {/* Botón de cerrar sesión */}
-              <TouchableOpacity 
-                style={styles.logoutButton}
-                onPress={handleLogout}
-                activeOpacity={0.8}
-              >
-                <Ionicons name="log-out-outline" size={24} color="#fff" style={styles.logoutIcon} />
-                <Text style={styles.logoutText}>Cerrar Sesión</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </ImageBackground>
-        )
+        return <PerfilScreen navigation={navigation} />
       case 'home':
       default:
         return <Home/>
@@ -372,138 +262,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#001F3F',
     marginBottom: 20,
-  },
-  profileBackground: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-  profileContainer: {
-    flexGrow: 1,
-    padding: 20,
-    paddingTop: 30,
-    alignItems: 'center',
-  },
-  profileImageContainer: {
-    marginBottom: 30,
-    alignItems: 'center',
-  },
-  profileImageWrapper: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: '#E8D9C8',
-    borderWidth: 4,
-    borderColor: '#001F3F',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
-  },
-  profileImage: {
-    width: '100%',
-    height: '100%',
-  },
-  profileInfoCard: {
-    width: '100%',
-    backgroundColor: '#E8D9C8',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#001F3F',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  infoIcon: {
-    marginRight: 15,
-  },
-  infoContent: {
-    flex: 1,
-  },
-  infoLabel: {
-    fontSize: 14,
-    color: '#001F3F',
-    fontWeight: '600',
-    marginBottom: 5,
-    opacity: 0.7,
-  },
-  infoValue: {
-    fontSize: 18,
-    color: '#001F3F',
-    fontWeight: 'bold',
-  },
-  quoteCard: {
-    width: '100%',
-    backgroundColor: '#F5E6D3',
-    borderRadius: 15,
-    padding: 25,
-    marginTop: 10,
-    marginBottom: 30,
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#001F3F',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  quoteIcon: {
-    marginVertical: 5,
-  },
-  quoteText: {
-    fontSize: 16,
-    color: '#001F3F',
-    fontWeight: '600',
-    textAlign: 'center',
-    fontStyle: 'italic',
-    lineHeight: 24,
-  },
-  logoutButton: {
-    width: '100%',
-    backgroundColor: '#001F3F',
-    borderRadius: 15,
-    padding: 18,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-    marginBottom: 30,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
-  },
-  logoutIcon: {
-    marginRight: 10,
-  },
-  logoutText: {
-    fontSize: 18,
-    color: '#fff',
-    fontWeight: 'bold',
   },
     logo:{
         width: 80,
