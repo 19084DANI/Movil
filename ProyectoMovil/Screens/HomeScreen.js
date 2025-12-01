@@ -11,6 +11,7 @@ export default function BotonesScreen() {
   const [presupuestoTotal, setPresupuestoTotal] = useState(0);
   const [gastosTotal, setGastosTotal] = useState(0);
   const [saldoDisponible, setSaldoDisponible] = useState(0);
+  const [ingresosTotal, setIngresosTotal] = useState(0);
 
   const cargarTransacciones = useCallback(async () => {
     try {
@@ -18,9 +19,15 @@ export default function BotonesScreen() {
       const data = await controller.obtenerTransacciones();
       setTransacciones(data);
       
-      // Calcular total de gastos
-      const totalGastos = data.reduce((sum, trans) => sum + (parseFloat(trans.monto) || 0), 0);
+      // Calcular total de gastos (solo los que son gastos)
+      const gastos = data.filter(t => t.es_gasto === 1 || t.es_gasto === true);
+      const totalGastos = gastos.reduce((sum, trans) => sum + (parseFloat(trans.monto) || 0), 0);
       setGastosTotal(totalGastos);
+      
+      // Calcular total de ingresos
+      const ingresos = data.filter(t => !t.es_gasto || t.es_gasto === 0);
+      const totalIngresos = ingresos.reduce((sum, trans) => sum + (parseFloat(trans.monto) || 0), 0);
+      setIngresosTotal(totalIngresos);
     } catch (error) {
       Alert.alert('Error', error.message || 'Error al cargar transacciones');
     } finally {
@@ -71,7 +78,8 @@ export default function BotonesScreen() {
     calcularSaldo();
   }, [calcularSaldo]);
 
-  const recentTransacciones = [...transacciones]
+  const recentIngresos = [...transacciones]
+    .filter(t => !t.es_gasto || t.es_gasto === 0)
     .sort((a, b) => {
       const da = new Date(a.fecha_creacion || a.fecha || 0).getTime();
       const db = new Date(b.fecha_creacion || b.fecha || 0).getTime();
@@ -79,7 +87,30 @@ export default function BotonesScreen() {
     })
     .slice(0, 3);
 
-  const renderTransaccion = ({ item }) => (
+  const recentGastos = [...transacciones]
+    .filter(t => t.es_gasto === 1 || t.es_gasto === true)
+    .sort((a, b) => {
+      const da = new Date(a.fecha_creacion || a.fecha || 0).getTime();
+      const db = new Date(b.fecha_creacion || b.fecha || 0).getTime();
+      return db - da;
+    })
+    .slice(0, 3);
+
+  const renderIngreso = ({ item }) => (
+    <TouchableOpacity activeOpacity={0.8}>
+      <View style={styles.cardTransaccion}>
+        <Text style={styles.cardMonto}>${item.monto.toFixed(2)}</Text>
+        <Text style={styles.cardTitulo}>{item.nombre}</Text>
+        <Text style={styles.cardCategoria}>{item.categoria}</Text>
+        <View style={styles.cardFooter}>
+          <Text style={styles.cardDescripcion}>{item.descripcion}</Text>
+          <Text style={styles.cardFecha}>{item.fecha}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderGasto = ({ item }) => (
     <TouchableOpacity activeOpacity={0.8}>
       <View style={styles.cardTransaccion}>
         <Text style={styles.cardMonto}>${item.monto.toFixed(2)}</Text>
@@ -131,24 +162,38 @@ export default function BotonesScreen() {
                 </View>
 
                 <View style={styles.elementos2}>
-                  <Text style={styles.textot}>Transacción</Text>
-                  <TouchableOpacity>
-                    <Image style={styles.mas} source={require('../assets/mas.png')} />
-                  </TouchableOpacity>
+                  <Text style={styles.textoi}>Ingresos:</Text>
+                  <Text style={styles.num}>${ingresosTotal.toFixed(2)}</Text>
                 </View>
               </View>
 
-              <Text style={styles.utransaccion}>Últimas Transacciones</Text>
+              <Text style={styles.utransaccion}>Últimos Ingresos</Text>
 
               <View style={styles.listaContenedor}>
                 <FlatList
-                  data={recentTransacciones}
+                  data={recentIngresos}
                   keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}
-                  renderItem={renderTransaccion}
+                  renderItem={renderIngreso}
                   ListEmptyComponent={
                     <View style={styles.emptyContainer}>
-                      <Text style={styles.emptyText}>No hay transacciones</Text>
-                      <Text style={styles.emptySubtext}>Crea la primera transacción</Text>
+                      <Text style={styles.emptyText}>No hay ingresos</Text>
+                      <Text style={styles.emptySubtext}>Crea el primer ingreso</Text>
+                    </View>
+                  }
+                />
+              </View>
+
+              <Text style={styles.utransaccion}>Últimos Gastos</Text>
+
+              <View style={styles.listaContenedor}>
+                <FlatList
+                  data={recentGastos}
+                  keyExtractor={(item) => item.id ? item.id.toString() : Math.random().toString()}
+                  renderItem={renderGasto}
+                  ListEmptyComponent={
+                    <View style={styles.emptyContainer}>
+                      <Text style={styles.emptyText}>No hay gastos</Text>
+                      <Text style={styles.emptySubtext}>Crea el primer gasto</Text>
                     </View>
                   }
                 />
@@ -358,3 +403,4 @@ const styles = StyleSheet.create({
     color: '#444'
   }
 });
+

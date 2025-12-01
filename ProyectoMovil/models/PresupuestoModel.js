@@ -87,6 +87,33 @@ class PresupuestoModel {
     }
   }
 
+  // Obtener presupuesto por categoría
+  async getByCategoria(categoria) {
+    try {
+      const db = await DatabaseService.openDB();
+
+      const result = await db.getFirstAsync(
+        `SELECT id, categoria, monto, limite, fecha_creacion
+         FROM presupuestos
+         WHERE categoria = ?`,
+        [categoria.trim()]
+      );
+
+      return {
+        success: true,
+        data: result || null
+      };
+
+    } catch (error) {
+      console.error('Error en PresupuestoModel.getByCategoria:', error);
+      return {
+        success: false,
+        error: error.message || 'Error al obtener el presupuesto',
+        data: null
+      };
+    }
+  }
+
   // Actualizar monto de una categoría
   async updateMonto(id, montoNuevo) {
     try {

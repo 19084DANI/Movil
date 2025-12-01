@@ -10,7 +10,9 @@ import EditarTransScreen from './EditarTransScreen';
 import PresupuestosScreen from './PresupuestosScreen';
 import Home from './HomeScreen';
 import NuevaTransScreen from './NuevaTransScreen';
+import IngresosScreen from './IngresosScreen';
 import GraficaScreen from './GraficaScreen';
+import TransaccionController from '../controllers/TransaccionController';
 
 const TransStack = createNativeStackNavigator();
 
@@ -33,11 +35,35 @@ export default function MenuScreen ({ navigation }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-280)).current;
   const [userData, setUserData] = useState(null);
+  const [totalIngresos, setTotalIngresos] = useState(0);
+
+  // Cargar total de ingresos
+  useEffect(() => {
+    const cargarIngresos = async () => {
+      try {
+        await TransaccionController.initialize();
+        const transacciones = await TransaccionController.obtenerTransacciones();
+        const ingresos = transacciones.filter(t => !t.es_gasto || t.es_gasto === 0);
+        const total = ingresos.reduce((sum, ing) => sum + (parseFloat(ing.monto) || 0), 0);
+        setTotalIngresos(total);
+      } catch (error) {
+        console.error('Error al cargar ingresos:', error);
+      }
+    };
+    
+    cargarIngresos();
+    const actualizarIngresos = () => cargarIngresos();
+    TransaccionController.addListener(actualizarIngresos);
+    
+    return () => {
+      TransaccionController.removeListener(actualizarIngresos);
+    };
+  }, []);
 
   // Opciones del menú
   const menuOptions = [
     { name: 'Menú', icon: 'home-outline', screen: 'home' },
-    { name: 'Gastos', icon: 'wallet-outline', screen: 'gastos' },
+    { name: `Ingresos ($${totalIngresos.toFixed(2)})`, icon: 'wallet-outline', screen: 'ingresos' },
     { name: 'Transacciones', icon: 'swap-horizontal-outline', screen: 'transacciones' },
     { name: 'Gráficas', icon: 'bar-chart-outline', screen: 'grafica' },
     { name: 'Presupuesto', icon: 'calculator-outline', screen: 'presupuesto' },
@@ -115,8 +141,8 @@ export default function MenuScreen ({ navigation }) {
         return <PresupuestosScreen/>
       case 'transacciones':
         return <TransaccionesStack/>
-      case 'gastos':
-        return <NuevaTransScreen/>
+      case 'ingresos':
+        return <IngresosScreen/>
       case 'grafica':
         return <GraficaScreen/>
       case 'perfil':

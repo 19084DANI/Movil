@@ -79,6 +79,22 @@ class DatabaseService {
         console.error('Error al verificar/agregar columna limite:', error.message);
       }
 
+      // Migración: agregar columna 'es_gasto' si no existe
+      try {
+        const transaccionesInfo = await this.db.getAllAsync(`PRAGMA table_info(transacciones)`);
+        const hasEsGastoColumn = transaccionesInfo.some(col => col.name === 'es_gasto');
+        
+        if (!hasEsGastoColumn) {
+          // Agregar la columna con valor por defecto 1 (gasto) para registros existentes
+          await this.db.execAsync(`
+            ALTER TABLE transacciones ADD COLUMN es_gasto INTEGER DEFAULT 1;
+          `);
+          console.log('Columna es_gasto agregada a transacciones');
+        }
+      } catch (error) {
+        console.error('Error al verificar/agregar columna es_gasto:', error.message);
+      }
+
       console.log('SQLite database initialized');
       return true;
     } catch (error) {

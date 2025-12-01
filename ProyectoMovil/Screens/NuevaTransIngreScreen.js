@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, TextInput, Alert, StyleSheet, ScrollView, Image, ImageBackground, Pressable } from "react-native";
-import HomeScreen from './HomeScreen';
-import TransaccionesScreen from './TransaccionesScreen';
+import IngresosScreen from './IngresosScreen';
 import { TouchableOpacity } from 'react-native';
 import TransaccionController from '../controllers/TransaccionController';
 import PresupuestoController from '../controllers/PresupuestoController';
@@ -9,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const controller = TransaccionController;
 
-export default function FormularioTransaccion() {
+export default function NuevaTransIngreScreen() {
   const [screen, setScreen] = useState('default');
   const [nombre, setNombre] = useState("");
   const [monto, setMonto] = useState("");
@@ -59,9 +58,6 @@ export default function FormularioTransaccion() {
   }, [cargarCategorias]);
 
   const mostrarAlerta = async () => {
-
-    //  Corrección importante:
-    
     if (!nombre && !monto && !categoria && !fecha && !descripcion) {
       Alert.alert("Todos los campos están vacíos");
     } else if (!nombre.trim()) {
@@ -77,7 +73,6 @@ export default function FormularioTransaccion() {
     } else if (!descripcion.trim()) {
       Alert.alert("Descripción no puede estar vacía");
     } else {
-
       try {
         setGuardando(true);
         const res = await controller.crearTransaccion({
@@ -86,12 +81,12 @@ export default function FormularioTransaccion() {
           categoria: categoria.trim(),
           fecha: fecha.trim(),
           descripcion: descripcion.trim(),
-          es_gasto: true, // Marcar como gasto
+          es_gasto: false, // Marcar como ingreso
         });
 
         if (res.success) {
           Alert.alert(
-            "Transacción creada",
+            "Ingreso creado",
             `Nombre: ${nombre}\nMonto: $${monto}\nCategoría: ${categoria}`,
             [{
               text: 'Aceptar',
@@ -100,28 +95,34 @@ export default function FormularioTransaccion() {
                 setMonto('');
                 setCategoria('');
                 setDescripcion('');
-            
-                setScreen('Transacciones');
+                setScreen('Ingresos');
               }
             }]
           );
         } else {
-          Alert.alert('Error', res.error || 'No se pudo crear la transacción');
+          Alert.alert('Error', res.error || 'No se pudo crear el ingreso');
         }
 
       } catch (error) {
-        Alert.alert('Error', error.message || 'Error al crear la transacción');
+        Alert.alert('Error', error.message || 'Error al crear el ingreso');
       } finally {
         setGuardando(false);
       }
     }
   };
 
+  // Obtener información de la categoría seleccionada
+  const getCategoriaInfo = () => {
+    if (!categoria || !presupuestosInfo[categoria]) return null;
+    return presupuestosInfo[categoria];
+  };
+
+  const categoriaInfo = getCategoriaInfo();
+  const disponible = categoriaInfo ? categoriaInfo.limite - categoriaInfo.monto : 0;
+
   switch (screen) {
-    case 'homee':
-      return <HomeScreen />;
-    case 'Transacciones':
-      return <TransaccionesScreen />;
+    case 'Ingresos':
+      return <IngresosScreen />;
     default:
       return (
         <ImageBackground source={require('../assets/fondo2.jpg')} resizeMode='cover' style={styles.backgrounds} >
@@ -132,7 +133,7 @@ export default function FormularioTransaccion() {
           <View style={styles.formContainer}>
             <View style={styles.formContainer2}>
               {/* Título estático */}
-              <Text style={styles.titulo}>Nuevo Gasto</Text>
+              <Text style={styles.titulo}>Nuevo Ingreso</Text>
 
               {/* ScrollView solo para los campos */}
               <ScrollView 
@@ -143,7 +144,7 @@ export default function FormularioTransaccion() {
                 <Text style={styles.texto}>Nombre</Text>
                 <TextInput
                   style={styles.inputs}
-                  placeholder="Ej. Pago de luz"
+                  placeholder="Ej. Venta de productos"
                   value={nombre}
                   onChangeText={setNombre}
                 />
@@ -189,8 +190,8 @@ export default function FormularioTransaccion() {
                         >
                           {categoriasPresupuestos.map((opt) => {
                             const info = presupuestosInfo[opt];
-                            const disponibleCat = info ? info.monto : 0;
-                            const sinDisponible = disponibleCat <= 0;
+                            const disponibleCat = info ? info.limite - info.monto : 0;
+                            const estaCompleto = disponibleCat <= 0;
                             
                             return (
                               <TouchableOpacity
@@ -198,26 +199,26 @@ export default function FormularioTransaccion() {
                                 style={[
                                   styles.categoriaOption,
                                   categoria === opt && styles.categoriaOptionSelected,
-                                  sinDisponible && styles.categoriaOptionDisabled
+                                  estaCompleto && styles.categoriaOptionDisabled
                                 ]}
                                 onPress={() => {
-                                  if (!sinDisponible) {
+                                  if (!estaCompleto) {
                                     setCategoria(opt);
                                     setCategoriaMenuAbierto(false);
                                   } else {
                                     Alert.alert(
-                                      'Sin presupuesto disponible',
-                                      `La categoría "${opt}" no tiene presupuesto disponible. Agrega un ingreso primero.`
+                                      'Límite alcanzado',
+                                      `La categoría "${opt}" ya alcanzó su límite de presupuesto. No puedes agregar más ingresos.`
                                     );
                                   }
                                 }}
-                                disabled={sinDisponible}
+                                disabled={estaCompleto}
                               >
                                 <Text
                                   style={[
                                     styles.categoriaOptionText,
                                     categoria === opt && styles.categoriaOptionTextSelected,
-                                    sinDisponible && styles.categoriaOptionTextDisabled
+                                    estaCompleto && styles.categoriaOptionTextDisabled
                                   ]}
                                 >
                                   {opt}
@@ -229,17 +230,17 @@ export default function FormularioTransaccion() {
                       </View>
                     )}
                     
-                    {presupuestosInfo[categoria] && (
+                    {categoriaInfo && (
                       <View style={styles.infoContainer}>
                         <Text style={styles.infoText}>
-                          Disponible: ${presupuestosInfo[categoria].monto.toFixed(2)} / ${presupuestosInfo[categoria].limite.toFixed(2)}
+                          Disponible: ${disponible.toFixed(2)} / ${categoriaInfo.limite.toFixed(2)}
                         </Text>
                       </View>
                     )}
                   </View>
                 )}
 
-                {presupuestosInfo[categoria] && <View style={styles.spacer} />}
+                {categoriaInfo && <View style={styles.spacer} />}
 
                 <Text style={styles.texto}>Fecha</Text>
                 <TextInput
@@ -252,14 +253,11 @@ export default function FormularioTransaccion() {
                 <Text style={styles.texto}>Descripción</Text>
                 <TextInput
                   style={[styles.inputDescripcion, { minHeight: 100 }]}
-                  placeholder="Ej. Recibo de CFE"
+                  placeholder="Ej. Venta realizada"
                   value={descripcion}
                   onChangeText={setDescripcion}
                   multiline={true}
                   textAlignVertical="top"
-                  onContentSizeChange={(event) => {
-                    // Permitir que crezca dinámicamente
-                  }}
                 />
               </ScrollView>
 
@@ -271,7 +269,7 @@ export default function FormularioTransaccion() {
                   disabled={guardando}
                 >
                   <Text style={styles.textoBoton}>
-                    {guardando ? "Guardando..." : "CREAR GASTO"}
+                    {guardando ? "Guardando..." : "CREAR INGRESO"}
                   </Text>
                 </Pressable>
               </View>
@@ -447,22 +445,12 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 
-  categoriaBtnDisabled: {
-    backgroundColor: '#E0E0E0',
-    borderColor: '#BDBDBD',
-    opacity: 0.6,
-  },
-
-  categoriaBtnTextDisabled: {
-    color: '#666',
-  },
-
   infoContainer: {
     width: '80%',
     padding: 10,
     backgroundColor: '#E8F5E9',
     borderRadius: 8,
-    marginTop: 10,
+    marginTop: 5,
     marginBottom: 10,
   },
 
@@ -480,3 +468,4 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 });
+

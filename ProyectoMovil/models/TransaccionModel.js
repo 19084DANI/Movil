@@ -11,14 +11,15 @@ class TransaccionModel {
       const db = await DatabaseService.openDB();
       
       await db.runAsync(
-        `INSERT INTO transacciones (nombre, monto, categoria, fecha, descripcion) 
-         VALUES (?, ?, ?, ?, ?)`,
+        `INSERT INTO transacciones (nombre, monto, categoria, fecha, descripcion, es_gasto) 
+         VALUES (?, ?, ?, ?, ?, ?)`,
         [
           transaccionData.nombre.trim(),
           parseFloat(transaccionData.monto),
           transaccionData.categoria.trim(),
           transaccionData.fecha.trim(),
-          transaccionData.descripcion.trim()
+          transaccionData.descripcion.trim(),
+          transaccionData.es_gasto !== undefined ? (transaccionData.es_gasto ? 1 : 0) : 1
         ]
       );
 
@@ -41,7 +42,7 @@ class TransaccionModel {
       const db = await DatabaseService.openDB();
       
       const result = await db.getAllAsync(
-        `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion
+        `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion, es_gasto
          FROM transacciones
          ORDER BY fecha DESC`
       );
@@ -66,7 +67,7 @@ class TransaccionModel {
       const db = await DatabaseService.openDB();
       
       const result = await db.getFirstAsync(
-        `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion
+        `SELECT id, nombre, monto, categoria, fecha, descripcion, fecha_creacion, es_gasto
          FROM transacciones
          WHERE id = ?`,
         [id]
@@ -93,7 +94,7 @@ class TransaccionModel {
       
       await db.runAsync(
         `UPDATE transacciones 
-         SET nombre = ?, monto = ?, categoria = ?, fecha = ?, descripcion = ?
+         SET nombre = ?, monto = ?, categoria = ?, fecha = ?, descripcion = ?, es_gasto = ?
          WHERE id = ?`,
         [
           transaccionData.nombre.trim(),
@@ -101,6 +102,7 @@ class TransaccionModel {
           transaccionData.categoria.trim(),
           transaccionData.fecha.trim(),
           transaccionData.descripcion.trim(),
+          transaccionData.es_gasto !== undefined ? (transaccionData.es_gasto ? 1 : 0) : 1,
           id
         ]
       );
