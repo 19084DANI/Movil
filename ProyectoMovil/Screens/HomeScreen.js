@@ -225,11 +225,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: "100%",
     
+    
   },
 
   elementos: {
     width: '92%',
-    backgroundColor: '#08314a5a',
+    backgroundColor: '#E8D9C8',
     padding: 16,
     borderRadius: 15,
     marginTop: 15,
