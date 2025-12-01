@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
   },
 
   botonVistaActivo: {
-    backgroundColor: '#79B7B4',
+    backgroundColor: '#355559ff',
     borderColor: '#79B7B4',
     borderWidth: 2,
     borderColor: '#001F3F',

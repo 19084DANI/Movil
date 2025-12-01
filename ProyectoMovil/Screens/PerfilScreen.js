@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     width: '100%',
-    backgroundColor: '#79B7B4',
+    backgroundColor: '#355559ff',
     borderRadius: 15,
     padding: 18,
     flexDirection: 'row',

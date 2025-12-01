@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   saldo: {
     width: '100%',
     height: 100,
-    backgroundColor: '#F7EFE6',
+    backgroundColor: '#E8D9C8',
     borderRadius: 12,
     padding: 15,
     flexDirection: 'row',
@@ -265,8 +265,8 @@ const styles = StyleSheet.create({
   },
 
   elementos2: {
-    width: '30%',
-    backgroundColor: '#F7EFE6',
+    width: '33%',
+    backgroundColor: '#98a292ff',
     borderRadius: 10,
     padding: 10,
     borderWidth: 2,
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
 
   listaContenedor: {
     width: '100%',
-    backgroundColor: '#F7EFE6',
+    backgroundColor: '#355559ff',
     padding: 10,
     borderRadius: 15,
     borderWidth: 2,

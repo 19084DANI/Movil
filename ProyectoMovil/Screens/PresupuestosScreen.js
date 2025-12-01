@@ -335,7 +335,7 @@ fontWeight: 'bold'
 elementos:{
   
     width:'100%',
-    height: 180,
+    height: 200,
     backgroundColor: '#F5E6D3',
     justifyContent: 'space-between',
     //alignItems: 'center',
@@ -367,20 +367,21 @@ botonEditarContainer: {
 },
 
 botonEditar: {
-  backgroundColor: '#79B7B4',
+  backgroundColor: '#355559ff',
   paddingHorizontal: 20,
   paddingVertical: 8,
   borderRadius: 8,
   overflow:'hidden',
   position:'absolute',
   top:-3,
+  
   borderWidth: 2,
     borderColor: '#001F3F',
 },
 
 botonEditarTexto: {
-  color: '#001F3F',
-  fontSize: 16,
+  color: '#ecf1f5ff',
+  
   fontWeight: 'bold',
 },
 
@@ -390,18 +391,21 @@ botonEliminarContainer: {
 botonEliminar: {
   backgroundColor: "#d9534f",
   padding: 4,
-  borderRadius: 10,
+  borderRadius: 8,
   paddingHorizontal: 20,
   paddingVertical: 8,
+  
+  
 
-  width:'30%',
+  width:'35%',
   borderWidth: 2,
     borderColor: '#001F3F',
 },
 botonEliminarTexto: {
-  color: "white",
+  color: '#ecf1f5ff',
   textAlign: "center",
   fontWeight: "bold",
+  
 },
 
 
