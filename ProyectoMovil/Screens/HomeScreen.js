@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image, ImageBackground, Button, FlatList, ActivityIndicator, Alert, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, Image, ImageBackground, Button, FlatList, ActivityIndicator, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react';
 import TransaccionController from '../controllers/TransaccionController';
 import PresupuestoController from '../controllers/PresupuestoController';
@@ -125,10 +125,13 @@ export default function BotonesScreen() {
   );
 
   return (
+    
     <ImageBackground
       source={require('../assets/fondo2.jpg')}
       resizeMode='cover'
       style={styles.backgrounds}>
+
+        <ScrollView>
 
           <View style={styles.Container}>
 
@@ -141,13 +144,7 @@ export default function BotonesScreen() {
                   <Text style={styles.textsaldo2}>${saldoDisponible.toFixed(2)}</Text>
                 </View>
 
-                <View style={styles.botonPresupuesto}>
-                  <Button
-                    style={styles.btn}
-                    color="#79B7B4"
-                    title='Presupuestos'
-                  />
-                </View>
+                
               </View>
 
               <View style={styles.cuadros}>
@@ -201,8 +198,10 @@ export default function BotonesScreen() {
 
             </View>
           </View>
+          </ScrollView>
 
           <Image style={styles.ayuda} source={require('../assets/help.png')} />
+          
         </ImageBackground>
       );
 }
@@ -230,7 +229,7 @@ const styles = StyleSheet.create({
 
   elementos: {
     width: '92%',
-    backgroundColor: '#E8D9C8',
+    backgroundColor: '#b8aa9aff',
     padding: 16,
     borderRadius: 15,
     marginTop: 15,

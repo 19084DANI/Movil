@@ -246,7 +246,7 @@ paddingHorizontal:10
 texto1:{
   fontSize:27,
   fontWeight:'bold',
-  color:'#fff'
+  color:'#07082bff'
 },
 
 sliderContainer: {
@@ -262,7 +262,7 @@ slider:{
 },
 sliderInfo: {
   fontSize: 12,
-  color: '#fff',
+  color: '#07082bff',
   marginTop: 5,
   textAlign: 'center',
   
@@ -336,7 +336,7 @@ elementos:{
   
     width:'100%',
     height: 180,
-    backgroundColor: '#0d3e5161',
+    backgroundColor: '#F5E6D3',
     justifyContent: 'space-between',
     //alignItems: 'center',
     marginVertical: 10,
@@ -355,7 +355,7 @@ totalInfo: {
 
 totalText: {
   fontSize: 12,
-  color: '#fff',
+  color: '#000000ff',
   textAlign: 'center',
   fontStyle: 'italic',
 },
