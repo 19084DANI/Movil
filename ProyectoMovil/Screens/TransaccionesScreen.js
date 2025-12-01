@@ -59,9 +59,9 @@ export default function TransaccionesScreen({ onBack }) {
         }
       }
       
-      //  loading carga en 3 segundos
+      //  loading carga en 2 segundos
       const elapsed = Date.now() - startTime;
-      const remainingTime = Math.max(0, 3000 - elapsed);
+      const remainingTime = Math.max(0, 2000 - elapsed);
       
       if (remainingTime > 0) {
         setTimeout(() => {
@@ -242,7 +242,7 @@ export default function TransaccionesScreen({ onBack }) {
 
   switch (screen) {
     case 'nuevaTrans':
-      return <NuevaTransScreen />;
+      return <NuevaTransScreen onBack={() => setScreen('default')} />;
     case 'editarTrans':
       return <EditarTransScreen id={editId} volver={() => setScreen('default')} />;
 

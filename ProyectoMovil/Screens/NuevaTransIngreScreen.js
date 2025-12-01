@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, TextInput, Alert, StyleSheet, ScrollView, Image, ImageBackground, Pressable } from "react-native";
-import { TouchableOpacity } from 'react-native';
+import React, { useState } from "react";
+import { View, Text, TextInput, Alert, StyleSheet, ScrollView, ImageBackground, Pressable } from "react-native";
 import TransaccionController from '../controllers/TransaccionController';
-import PresupuestoController from '../controllers/PresupuestoController';
-import { Ionicons } from '@expo/vector-icons';
 
 const controller = TransaccionController;
 
@@ -11,12 +8,8 @@ export default function NuevaTransIngreScreen({ onBack }) {
   const [screen, setScreen] = useState('default');
   const [nombre, setNombre] = useState("");
   const [monto, setMonto] = useState("");
-  const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [guardando, setGuardando] = useState(false);
-  const [categoriasPresupuestos, setCategoriasPresupuestos] = useState([]);
-  const [presupuestosInfo, setPresupuestosInfo] = useState({}); // Para mostrar límites disponibles
-  const [categoriaMenuAbierto, setCategoriaMenuAbierto] = useState(false);
 
   // Fecha actual por defecto
   const [fecha, setFecha] = useState(() => {
@@ -27,49 +20,13 @@ export default function NuevaTransIngreScreen({ onBack }) {
     return `${year}-${month}-${day}`;
   });
 
-  const cargarCategorias = useCallback(async () => {
-    try {
-      const presupuestos = await PresupuestoController.obtenerPresupuestos();
-      // Obtener categorías únicas de presupuestos
-      const categorias = presupuestos
-        .map(p => p.categoria)
-        .filter((cat, index, self) => self.indexOf(cat) === index);
-      setCategoriasPresupuestos(categorias);
-      
-      // Guardar información de presupuestos para validaciones
-      const info = {};
-      presupuestos.forEach(p => {
-        info[p.categoria] = {
-          monto: parseFloat(p.monto) || 0,
-          limite: parseFloat(p.limite) || 0
-        };
-      });
-      setPresupuestosInfo(info);
-    } catch (error) {
-      console.error('Error al cargar categorías:', error);
-      Alert.alert('Error', 'No se pudieron cargar las categorías de presupuestos');
-    }
-  }, []);
-
-  useEffect(() => {
-    cargarCategorias();
-    PresupuestoController.addListener(cargarCategorias);
-    return () => {
-      PresupuestoController.removeListener(cargarCategorias);
-    };
-  }, [cargarCategorias]);
-
   const mostrarAlerta = async () => {
-    if (!nombre && !monto && !categoria && !fecha && !descripcion) {
-      Alert.alert("Todos los campos están vacíos");
-    } else if (!nombre.trim()) {
+    if (!nombre.trim()) {
       Alert.alert("Nombre no puede estar vacío");
     } else if (!monto.trim()) {
       Alert.alert("Monto no puede estar vacío");
     } else if (isNaN(monto)) {
       Alert.alert("Monto debe ser numérico");
-    } else if (!categoria.trim()) {
-      Alert.alert("Categoría no puede estar vacía");
     } else if (!fecha.trim()) {
       Alert.alert("Fecha no puede estar vacía");
     } else if (!descripcion.trim()) {
@@ -80,7 +37,7 @@ export default function NuevaTransIngreScreen({ onBack }) {
         const res = await controller.crearTransaccion({
           nombre: nombre.trim(),
           monto: monto.trim(),
-          categoria: categoria.trim(),
+          categoria: 'Ingreso', // Categoría fija para ingresos
           fecha: fecha.trim(),
           descripcion: descripcion.trim(),
           es_gasto: false, // Marcar como ingreso
@@ -89,15 +46,14 @@ export default function NuevaTransIngreScreen({ onBack }) {
         if (res.success) {
           Alert.alert(
             "Ingreso creado",
-            `Nombre: ${nombre}\nMonto: $${monto}\nCategoría: ${categoria}`,
+            `Nombre: ${nombre}\nMonto: $${monto}`,
             [{
               text: 'Aceptar',
               onPress: () => {
                 setNombre('');
                 setMonto('');
-                setCategoria('');
                 setDescripcion('');
-                setScreen('Ingresos');
+                onBack();
               }
             }]
           );
@@ -112,15 +68,6 @@ export default function NuevaTransIngreScreen({ onBack }) {
       }
     }
   };
-
-  // Obtener información de la categoría seleccionada
-  const getCategoriaInfo = () => {
-    if (!categoria || !presupuestosInfo[categoria]) return null;
-    return presupuestosInfo[categoria];
-  };
-
-  const categoriaInfo = getCategoriaInfo();
-  const disponible = categoriaInfo ? categoriaInfo.limite - categoriaInfo.monto : 0;
 
   switch (screen) {
     default:
@@ -168,90 +115,6 @@ export default function NuevaTransIngreScreen({ onBack }) {
                   onChangeText={setMonto}
                 />
 
-                <Text style={styles.texto}>Categoría</Text>
-                {categoriasPresupuestos.length === 0 ? (
-                  <View style={styles.categoriaContainer}>
-                    <Text style={styles.categoriaMensaje}>
-                      No hay categorías disponibles. Crea un presupuesto primero.
-                    </Text>
-                  </View>
-                ) : (
-                  <View>
-                    <TouchableOpacity
-                      style={styles.categoriaSelector}
-                      onPress={() => setCategoriaMenuAbierto(!categoriaMenuAbierto)}
-                    >
-                      <Text style={[styles.categoriaSelectorText, !categoria && styles.categoriaSelectorPlaceholder]}>
-                        {categoria || 'Selecciona una categoría'}
-                      </Text>
-                      <Ionicons 
-                        name={categoriaMenuAbierto ? 'chevron-up' : 'chevron-down'} 
-                        size={20} 
-                        color="#001F3F" 
-                      />
-                    </TouchableOpacity>
-                    
-                    {categoriaMenuAbierto && (
-                      <View style={styles.categoriaDropdown}>
-                        <ScrollView 
-                          style={styles.categoriaScrollView}
-                          nestedScrollEnabled={true}
-                          showsVerticalScrollIndicator={true}
-                        >
-                          {categoriasPresupuestos.map((opt) => {
-                            const info = presupuestosInfo[opt];
-                            const disponibleCat = info ? info.limite - info.monto : 0;
-                            const estaCompleto = disponibleCat <= 0;
-                            
-                            return (
-                              <TouchableOpacity
-                                key={opt}
-                                style={[
-                                  styles.categoriaOption,
-                                  categoria === opt && styles.categoriaOptionSelected,
-                                  estaCompleto && styles.categoriaOptionDisabled
-                                ]}
-                                onPress={() => {
-                                  if (!estaCompleto) {
-                                    setCategoria(opt);
-                                    setCategoriaMenuAbierto(false);
-                                  } else {
-                                    Alert.alert(
-                                      'Límite alcanzado',
-                                      `La categoría "${opt}" ya alcanzó su límite de presupuesto. No puedes agregar más ingresos.`
-                                    );
-                                  }
-                                }}
-                                disabled={estaCompleto}
-                              >
-                                <Text
-                                  style={[
-                                    styles.categoriaOptionText,
-                                    categoria === opt && styles.categoriaOptionTextSelected,
-                                    estaCompleto && styles.categoriaOptionTextDisabled
-                                  ]}
-                                >
-                                  {opt}
-                                </Text>
-                              </TouchableOpacity>
-                            );
-                          })}
-                        </ScrollView>
-                      </View>
-                    )}
-                    
-                    {categoriaInfo && (
-                      <View style={styles.infoContainer}>
-                        <Text style={styles.infoText}>
-                          Disponible: ${disponible.toFixed(2)} / ${categoriaInfo.limite.toFixed(2)}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                )}
-
-                {categoriaInfo && <View style={styles.spacer} />}
-
                 <Text style={styles.texto}>Fecha</Text>
                 <TextInput
                   style={styles.inputs}
@@ -271,8 +134,17 @@ export default function NuevaTransIngreScreen({ onBack }) {
                 />
               </ScrollView>
 
-              {/* Botón estático */}
+              {/* Botones estáticos */}
               <View style={styles.buttonContainer}>
+                <Pressable
+                  style={styles.ButtonCancelar}
+                  onPress={onBack}
+                  disabled={guardando}
+                >
+                  <Text style={styles.textoBotonCancelar}>
+                    CANCELAR
+                  </Text>
+                </Pressable>
                 <Pressable
                   style={styles.Button}
                   onPress={mostrarAlerta}
@@ -495,9 +367,28 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     width: '100%',
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 15,
     paddingBottom: 10,
+    gap: 15,
+  },
+  ButtonCancelar: {
+    width: 150,
+    height: 45,
+    backgroundColor: '#E57373',
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 30,
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+  textoBotonCancelar: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#f5f6f8ff',
   },
 });
 

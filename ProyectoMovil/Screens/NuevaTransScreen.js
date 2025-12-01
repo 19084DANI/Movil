@@ -270,8 +270,17 @@ export default function FormularioTransaccion({ onBack }) {
                 />
               </ScrollView>
 
-              {/* Botón estático */}
+              {/* Botones estáticos */}
               <View style={styles.buttonContainer}>
+                <Pressable
+                  style={styles.ButtonCancelar}
+                  onPress={onBack}
+                  disabled={guardando}
+                >
+                  <Text style={styles.textoBotonCancelar}>
+                    CANCELAR
+                  </Text>
+                </Pressable>
                 <Pressable
                   style={styles.Button}
                   onPress={mostrarAlerta}
@@ -504,8 +513,27 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     width: '100%',
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 15,
     paddingBottom: 10,
+    gap: 15,
+  },
+  ButtonCancelar: {
+    width: 150,
+    height: 45,
+    backgroundColor: '#E57373',
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 30,
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+  textoBotonCancelar: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#f5f6f8ff',
   },
 });

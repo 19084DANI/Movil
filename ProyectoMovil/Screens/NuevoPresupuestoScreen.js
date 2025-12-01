@@ -1,10 +1,25 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ImageBackground, ScrollView} from "react-native";
-import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ImageBackground, ScrollView, ActivityIndicator} from "react-native";
+import React, { useState, useEffect } from "react";
 import PresupuestoController from "../controllers/PresupuestoController";
 
 export default function NuevoPresupuestoScreen({ navigation, onBack }) {
   const [nombre, setNombre] = useState("");
   const [limite, setLimite] = useState("");
+  const [dineroDisponible, setDineroDisponible] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    cargarDineroDisponible();
+  }, []);
+
+  const cargarDineroDisponible = async () => {
+    setLoading(true);
+    const result = await PresupuestoController.obtenerDineroDisponible();
+    if (result.success) {
+      setDineroDisponible(result.data.disponible);
+    }
+    setLoading(false);
+  };
 
   const handleGuardar = async () => {
     if (!nombre.trim() || !limite.trim()) {
@@ -69,11 +84,19 @@ export default function NuevoPresupuestoScreen({ navigation, onBack }) {
         <View style={styles.contenido}>
           <View style={styles.tituloContainer}>
             <Text style={styles.titulo}>Nuevo Presupuesto</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color="#001F3F" style={{ marginTop: 10 }} />
+            ) : (
+              <View style={styles.dineroDisponibleContainer}>
+                <Text style={styles.dineroDisponibleLabel}>Dinero disponible para asignar:</Text>
+                <Text style={styles.dineroDisponibleMonto}>${dineroDisponible.toFixed(2)}</Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Nombre del presupuesto</Text>
+              <Text style={styles.label}>Nombre de la categoría</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Ej: Alimentación, Transporte..."
@@ -84,7 +107,7 @@ export default function NuevoPresupuestoScreen({ navigation, onBack }) {
             </View>
 
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Límite (Monto máximo)</Text>
+              <Text style={styles.label}>Monto a asignar</Text>
               <TextInput
                 style={styles.input}
                 placeholder="Ej: 5000"
@@ -93,6 +116,9 @@ export default function NuevoPresupuestoScreen({ navigation, onBack }) {
                 onChangeText={setLimite}
                 keyboardType="numeric"
               />
+              <Text style={styles.ayudaTexto}>
+                Este será el presupuesto asignado a esta categoría
+              </Text>
             </View>
 
             <View style={styles.botonesContainer}>
@@ -140,6 +166,26 @@ const styles = StyleSheet.create({
     color: '#001F3F',
     textAlign: 'center',
   },
+  dineroDisponibleContainer: {
+    marginTop: 15,
+    padding: 15,
+    backgroundColor: '#79B7B4',
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#001F3F',
+    alignItems: 'center',
+  },
+  dineroDisponibleLabel: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '600',
+  },
+  dineroDisponibleMonto: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginTop: 5,
+  },
   formContainer: {
     backgroundColor: '#E8D9C8',
     borderRadius: 15,
@@ -164,6 +210,12 @@ const styles = StyleSheet.create({
     padding: 15,
     fontSize: 16,
     color: '#001F3F',
+  },
+  ayudaTexto: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 5,
+    fontStyle: 'italic',
   },
   botonesContainer: {
     flexDirection: 'row',
