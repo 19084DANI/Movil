@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, TextInput, Alert, StyleSheet, ScrollView, Image, ImageBackground, Pressable } from "react-native";
 import HomeScreen from './HomeScreen';
 import TransaccionesScreen from './TransaccionesScreen';
 import { TouchableOpacity } from 'react-native';
 import TransaccionController from '../controllers/TransaccionController';
+import PresupuestoController from '../controllers/PresupuestoController';
 import { Ionicons } from '@expo/vector-icons';
 
 const controller = TransaccionController;
@@ -15,12 +16,35 @@ export default function FormularioTransaccion() {
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [guardando, setGuardando] = useState(false);
+  const [categoriasPresupuestos, setCategoriasPresupuestos] = useState([]);
 
   // Fecha actual por defecto
   const [fecha, setFecha] = useState(() => {
     const hoy = new Date();
     return hoy.toISOString().split("T")[0];
   });
+
+  const cargarCategorias = useCallback(async () => {
+    try {
+      const presupuestos = await PresupuestoController.obtenerPresupuestos();
+      // Obtener categorías únicas de presupuestos
+      const categorias = presupuestos
+        .map(p => p.categoria)
+        .filter((cat, index, self) => self.indexOf(cat) === index);
+      setCategoriasPresupuestos(categorias);
+    } catch (error) {
+      console.error('Error al cargar categorías:', error);
+      Alert.alert('Error', 'No se pudieron cargar las categorías de presupuestos');
+    }
+  }, []);
+
+  useEffect(() => {
+    cargarCategorias();
+    PresupuestoController.addListener(cargarCategorias);
+    return () => {
+      PresupuestoController.removeListener(cargarCategorias);
+    };
+  }, [cargarCategorias]);
 
   const mostrarAlerta = async () => {
 
@@ -116,27 +140,35 @@ export default function FormularioTransaccion() {
                 />
 
                 <Text style={styles.texto}>Categoría</Text>
-                <View style={styles.categoriaContainer}>
-                  {['Oficio', 'Personal', 'Fijo'].map((opt) => (
-                    <TouchableOpacity
-                      key={opt}
-                      style={[
-                        styles.categoriaBtn,
-                        categoria === opt && styles.categoriaBtnSelected,
-                      ]}
-                      onPress={() => setCategoria(opt)}
-                    >
-                      <Text
+                {categoriasPresupuestos.length === 0 ? (
+                  <View style={styles.categoriaContainer}>
+                    <Text style={styles.categoriaMensaje}>
+                      No hay categorías disponibles. Crea un presupuesto primero.
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={styles.categoriaContainer}>
+                    {categoriasPresupuestos.map((opt) => (
+                      <TouchableOpacity
+                        key={opt}
                         style={[
-                          styles.categoriaBtnText,
-                          categoria === opt && styles.categoriaBtnTextSelected,
+                          styles.categoriaBtn,
+                          categoria === opt && styles.categoriaBtnSelected,
                         ]}
+                        onPress={() => setCategoria(opt)}
                       >
-                        {opt}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                        <Text
+                          style={[
+                            styles.categoriaBtnText,
+                            categoria === opt && styles.categoriaBtnTextSelected,
+                          ]}
+                        >
+                          {opt}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
 
                 <Text style={styles.texto}>Fecha</Text>
                 <TextInput
@@ -278,13 +310,16 @@ const styles = StyleSheet.create({
   categoriaContainer: {
     width: '80%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
     marginTop: 10,
     marginBottom: 10,
+    gap: 8,
   },
   categoriaBtn: {
-    flex: 1,
-    marginHorizontal: 6,
+    minWidth: '30%',
+    flexBasis: '30%',
+    marginHorizontal: 0,
     paddingVertical: 10,
     borderRadius: 12,
     backgroundColor: '#F7EFE6',
@@ -303,5 +338,13 @@ const styles = StyleSheet.create({
   },
   categoriaBtnTextSelected: {
     color: '#fff',
+  },
+
+  categoriaMensaje: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    paddingVertical: 10,
+    fontStyle: 'italic',
   },
 });

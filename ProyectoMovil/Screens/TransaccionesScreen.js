@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import HomeScreen from './HomeScreen';
 import NuevaTransScreen from './NuevaTransScreen';
 import TransaccionController from '../controllers/TransaccionController';
+import PresupuestoController from '../controllers/PresupuestoController';
 import EditarTransScreen from './EditarTransScreen';
 
 const controller = TransaccionController;
@@ -13,32 +14,83 @@ export default function TransaccionesScreen({ navigation }) {
   const [transacciones, setTransacciones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editId, setEditId] = useState(null);
+  const [viewMode, setViewMode] = useState('fecha'); // 'fecha' o 'categoria'
+  const [presupuestos, setPresupuestos] = useState([]);
 
 
   const cargarTransacciones = useCallback(async () => {
     try {
-      setLoading(true);
       const data = await controller.obtenerTransacciones();
       setTransacciones(data);
     } catch (error) {
       Alert.alert('Error', error.message || 'Error al cargar transacciones');
-    } finally {
-      setLoading(false);
+    }
+  }, []);
+
+  const cargarPresupuestos = useCallback(async () => {
+    try {
+      const data = await PresupuestoController.obtenerPresupuestos();
+      setPresupuestos(data || []);
+    } catch (error) {
+      console.error('Error al cargar presupuestos:', error);
     }
   }, []);
 
   useEffect(() => {
     const init = async () => {
-      await controller.initialize();
-      await cargarTransacciones();
+      setLoading(true);
+      const startTime = Date.now();
+      
+      try {
+        await controller.initialize();
+        
+        // Cargar en paralelo
+        await Promise.all([
+          cargarTransacciones(),
+          cargarPresupuestos()
+        ]);
+      } catch (error) {
+        console.error('Error en init:', error);
+        // Aún así intentar cargar los datos
+        try {
+          await cargarTransacciones();
+          await cargarPresupuestos();
+        } catch (e) {
+          console.error('Error al cargar datos:', e);
+        }
+      }
+      
+      // Asegurar que el loading dure máximo 3 segundos
+      const elapsed = Date.now() - startTime;
+      const remainingTime = Math.max(0, 3000 - elapsed);
+      
+      if (remainingTime > 0) {
+        setTimeout(() => {
+          setLoading(false);
+        }, remainingTime);
+      } else {
+        setLoading(false);
+      }
     };
+    
     init();
-    controller.addListener(cargarTransacciones);
+    
+    const actualizarTransacciones = () => {
+      cargarTransacciones();
+    };
+    
+    const actualizarPresupuestos = () => {
+      cargarPresupuestos();
+    };
+    
+    controller.addListener(actualizarTransacciones);
+    PresupuestoController.addListener(actualizarPresupuestos);
 
     return () => {
-      controller.removeListener(cargarTransacciones);
+      controller.removeListener(actualizarTransacciones);
+      PresupuestoController.removeListener(actualizarPresupuestos);
     };
-  }, [cargarTransacciones]);
+  }, [cargarTransacciones, cargarPresupuestos]);
 
   const handleEliminar = (transaccion) => {
     Alert.alert(
@@ -107,6 +159,91 @@ export default function TransaccionesScreen({ navigation }) {
     );
   };
 
+  // Obtener categorías únicas de presupuestos
+  const categoriasPresupuestos = presupuestos
+    .map(p => p.categoria)
+    .filter((cat, index, self) => self.indexOf(cat) === index);
+
+  // Ordenar transacciones por fecha (más reciente primero)
+  const transaccionesOrdenadasPorFecha = [...transacciones].sort((a, b) => {
+    const fechaA = new Date(a.fecha_creacion || a.fecha || 0).getTime();
+    const fechaB = new Date(b.fecha_creacion || b.fecha || 0).getTime();
+    return fechaB - fechaA; // Más reciente primero
+  });
+
+  // Agrupar transacciones por categoría (solo categorías de presupuestos)
+  const transaccionesPorCategoria = categoriasPresupuestos.map(categoria => {
+    const transaccionesDeCategoria = transacciones
+      .filter(t => t.categoria === categoria)
+      .sort((a, b) => {
+        const fechaA = new Date(a.fecha_creacion || a.fecha || 0).getTime();
+        const fechaB = new Date(b.fecha_creacion || b.fecha || 0).getTime();
+        return fechaB - fechaA; // Más reciente primero
+      });
+    return { categoria, transacciones: transaccionesDeCategoria };
+  }).filter(grupo => grupo.transacciones.length > 0); // Solo mostrar categorías con transacciones
+
+  // Renderizar vista por categoría
+  const renderVistaPorCategoria = () => {
+    if (transaccionesPorCategoria.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No hay transacciones por categoría</Text>
+          <Text style={styles.emptySubtext}>Crea transacciones con categorías de presupuestos</Text>
+        </View>
+      );
+    }
+
+    return (
+      <ScrollView 
+        contentContainerStyle={styles.lista}
+        showsVerticalScrollIndicator={false}
+      >
+        {transaccionesPorCategoria.map((grupo, index) => (
+          <View key={index} style={styles.categoriaGrupo}>
+            <View style={styles.categoriaHeader}>
+              <Text style={styles.categoriaTitulo}>{grupo.categoria}</Text>
+              <Text style={styles.categoriaCount}>({grupo.transacciones.length})</Text>
+            </View>
+            {grupo.transacciones.map((item) => (
+              <View key={item.id} style={styles.elementos}>
+                <View style={styles.headerTransaccion}>
+                  <Text style={styles.monto}>${item.monto.toFixed(2)}</Text>
+                  <View style={styles.acciones}>
+                    <TouchableOpacity
+                      style={styles.btnEditar}
+                      onPress={() => {
+                        if (navigation && navigation.navigate) {
+                          navigation.navigate("EditarTransScreen", { id: item.id });
+                        }
+                      }}
+                    >
+                      <Text style={styles.btnTexto}>✎</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btnEliminar} onPress={() => handleEliminar(item)}>
+                      <Text style={styles.btnTexto}>X</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <View style={styles.detalles}>
+                  <Text style={styles.textoNombre}>{item.nombre}</Text>
+                </View>
+
+                <View style={styles.fecha}>
+                  <Text style={styles.textoDescripcion}>{item.descripcion}</Text>
+                  <Text style={styles.textoFecha}>{item.fecha}</Text>
+                </View>
+
+                <Text style={styles.textTipo}>{item.es_gasto ? 'Gasto' : 'Ingreso'}</Text>
+              </View>
+            ))}
+          </View>
+        ))}
+      </ScrollView>
+    );
+  };
+
   switch (screen) {
     case 'homeee':
       return <HomeScreen />;
@@ -129,12 +266,34 @@ export default function TransaccionesScreen({ navigation }) {
           </View>
 
           <View style={styles.botones}>
-            <View style={{ width: 140, marginRight: 10 }}>
-              <Button color='#79B7B4' title='Fecha' />
-            </View>
-            <View style={{ width: 140 }}>
-              <Button color='#79B7B4' title='Categoria' />
-            </View>
+            <TouchableOpacity 
+              style={[
+                styles.botonVista,
+                viewMode === 'fecha' && styles.botonVistaActivo
+              ]}
+              onPress={() => setViewMode('fecha')}
+            >
+              <Text style={[
+                styles.botonVistaTexto,
+                viewMode === 'fecha' && styles.botonVistaTextoActivo
+              ]}>
+                Fecha
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[
+                styles.botonVista,
+                viewMode === 'categoria' && styles.botonVistaActivo
+              ]}
+              onPress={() => setViewMode('categoria')}
+            >
+              <Text style={[
+                styles.botonVistaTexto,
+                viewMode === 'categoria' && styles.botonVistaTextoActivo
+              ]}>
+                Categoría
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {loading ? (
@@ -144,20 +303,24 @@ export default function TransaccionesScreen({ navigation }) {
             </View>
           ) : (
             <View style={styles.contenido}>
-              <FlatList
-                data={transacciones}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderTransaccion}
-                contentContainerStyle={styles.lista}
-                style={{ width: '100%' }}
+              {viewMode === 'fecha' ? (
+                <FlatList
+                  data={transaccionesOrdenadasPorFecha}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={renderTransaccion}
+                  contentContainerStyle={styles.lista}
+                  style={{ width: '100%' }}
 
-                ListEmptyComponent={
-                  <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>No hay transacciones</Text>
-                    <Text style={styles.emptySubtext}>Crea la primera transacción</Text>
-                  </View>
-                }
-              />
+                  ListEmptyComponent={
+                    <View style={styles.emptyContainer}>
+                      <Text style={styles.emptyText}>No hay transacciones</Text>
+                      <Text style={styles.emptySubtext}>Crea la primera transacción</Text>
+                    </View>
+                  }
+                />
+              ) : (
+                renderVistaPorCategoria()
+              )}
 
               <View style={styles.contenedorAgregar}>
                 <TouchableOpacity onPress={() => setScreen('nuevaTrans')}>
@@ -235,6 +398,59 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 10,
     marginBottom: 10,
+    gap: 10,
+  },
+
+  botonVista: {
+    width: 140,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: '#F5E6D3',
+    borderWidth: 2,
+    borderColor: '#79B7B4',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  botonVistaActivo: {
+    backgroundColor: '#79B7B4',
+    borderColor: '#79B7B4',
+  },
+
+  botonVistaTexto: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#001F3F',
+  },
+
+  botonVistaTextoActivo: {
+    color: '#fff',
+  },
+
+  categoriaGrupo: {
+    marginBottom: 20,
+    width: '100%',
+  },
+
+  categoriaHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+
+  categoriaTitulo: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#001F3F',
+    marginRight: 8,
+  },
+
+  categoriaCount: {
+    fontSize: 16,
+    color: '#001F3F',
+    fontWeight: '600',
   },
 
   contenido: {
