@@ -360,6 +360,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     gap: 10,
+    
   },
 
   botonVista: {
@@ -372,17 +373,22 @@ const styles = StyleSheet.create({
     borderColor: '#79B7B4',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   botonVistaActivo: {
     backgroundColor: '#79B7B4',
     borderColor: '#79B7B4',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   botonVistaTexto: {
     fontSize: 16,
     fontWeight: '600',
     color: '#001F3F',
+    
   },
 
   botonVistaTextoActivo: {
@@ -392,6 +398,7 @@ const styles = StyleSheet.create({
   categoriaGrupo: {
     marginBottom: 20,
     width: '100%',
+
   },
 
   categoriaHeader: {
@@ -419,6 +426,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingTop: 10,
+    
   },
 
   lista: {
@@ -435,6 +443,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: '#D1C6B5',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   headerTransaccion: {

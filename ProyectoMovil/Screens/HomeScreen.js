@@ -223,7 +223,8 @@ const styles = StyleSheet.create({
 
   Container: {
     alignItems: 'center',
-    width: "100%"
+    width: "100%",
+    
   },
 
   elementos: {
@@ -232,6 +233,8 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 15,
     marginTop: 15,
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   titulo: {
@@ -249,13 +252,16 @@ const styles = StyleSheet.create({
     padding: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   cuadros: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 15
+    marginVertical: 15,
+    
   },
 
   elementos2: {
@@ -263,6 +269,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7EFE6',
     borderRadius: 10,
     padding: 10,
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   elementos22: {
@@ -270,6 +278,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8D9C8',
     borderRadius: 10,
     padding: 10,
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   textosaldo: {
@@ -312,13 +322,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7EFE6',
     padding: 10,
     borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   cardTransaccion: {
     backgroundColor: '#F5E6D3',
     padding: 15,
     borderRadius: 12,
-    marginBottom: 12
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   cardMonto: {

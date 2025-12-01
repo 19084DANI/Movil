@@ -253,16 +253,19 @@ sliderContainer: {
   width: '100%',
   alignItems: 'center',
   marginVertical: 10,
+  
 },
 slider:{
   paddingHorizontal: 12,
   width: '100%',
+  
 },
 sliderInfo: {
   fontSize: 12,
   color: '#fff',
   marginTop: 5,
   textAlign: 'center',
+  
 },
 backgrounds: {
   flex: 1,
@@ -270,6 +273,7 @@ backgrounds: {
   alignItems: 'center',
   width: '100%',
   height: '100%',
+  
 },
 encabezado:{
   justifyContent:'space-between',
@@ -338,6 +342,8 @@ elementos:{
     marginVertical: 10,
     borderRadius: 10,
     padding:15,
+    borderWidth: 2,
+    borderColor: '#001F3F',
 },
 
 totalInfo: {
@@ -357,6 +363,7 @@ totalText: {
 botonEditarContainer: {
   marginTop: 10,
   alignItems: 'flex-end',
+  
 },
 
 botonEditar: {
@@ -364,11 +371,11 @@ botonEditar: {
   paddingHorizontal: 20,
   paddingVertical: 8,
   borderRadius: 8,
-  borderWidth: 1,
-  borderColor: '#001F3F',
   overflow:'hidden',
   position:'absolute',
   top:-3,
+  borderWidth: 2,
+    borderColor: '#001F3F',
 },
 
 botonEditarTexto: {
@@ -386,9 +393,10 @@ botonEliminar: {
   borderRadius: 10,
   paddingHorizontal: 20,
   paddingVertical: 8,
-  borderWidth: 1,
-  borderColor: '#001F3F',
-  width:'30%'
+
+  width:'30%',
+  borderWidth: 2,
+    borderColor: '#001F3F',
 },
 botonEliminarTexto: {
   color: "white",

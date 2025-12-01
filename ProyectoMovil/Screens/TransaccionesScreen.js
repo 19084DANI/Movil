@@ -356,6 +356,7 @@ const styles = StyleSheet.create({
     height: '10%',
     borderBottomWidth: 1,
     borderBottomColor: '#001F3F',
+    
   },
 
   encabezado2: {
@@ -366,6 +367,7 @@ const styles = StyleSheet.create({
     height: '10%',
     borderTopWidth: 1,
     borderTopColor: '#001F3F',
+    
   },
 
   menuhamburgesa: {
@@ -399,6 +401,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     gap: 10,
+    
   },
 
   botonVista: {
@@ -411,11 +414,15 @@ const styles = StyleSheet.create({
     borderColor: '#79B7B4',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   botonVistaActivo: {
     backgroundColor: '#79B7B4',
     borderColor: '#79B7B4',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   botonVistaTexto: {
@@ -458,6 +465,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingTop: 10,
+    
   },
 
   lista: {
@@ -474,6 +482,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderWidth: 1,
     borderColor: '#D1C6B5',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
 
   headerTransaccion: {

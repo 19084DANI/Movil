@@ -414,14 +414,15 @@ const styles = StyleSheet.create({
     padding: 18,
     width: '100%',
     paddingBottom: 50,
+    
   },
   card: {
     backgroundColor: '#F5E6D3',
     padding: 16,
     borderRadius: 12,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E8D9C8',
+    borderWidth: 2,
+    borderColor: '#001F3F',
   },
   cardHeader: {
     flexDirection: 'row',
