@@ -10,7 +10,7 @@ class PresupuestoModel {
     try {
       const db = await DatabaseService.openDB();
 
-      await db.runAsync(
+      db.runSync(
         `INSERT INTO presupuestos (categoria, monto, limite)
          VALUES (?, ?, ?)`,
         [
@@ -40,7 +40,7 @@ class PresupuestoModel {
     try {
       const db = await DatabaseService.openDB();
 
-      const result = await db.getAllAsync(
+      const result = db.getAllSync(
         `SELECT id, categoria, monto, limite, fecha_creacion
          FROM presupuestos
          ORDER BY id DESC`
@@ -65,7 +65,7 @@ class PresupuestoModel {
     try {
       const db = await DatabaseService.openDB();
 
-      const result = await db.getFirstAsync(
+      const result = db.getFirstSync(
         `SELECT id, categoria, monto, limite, fecha_creacion
          FROM presupuestos
          WHERE id = ?`,
@@ -92,7 +92,7 @@ class PresupuestoModel {
     try {
       const db = await DatabaseService.openDB();
 
-      const result = await db.getFirstAsync(
+      const result = db.getFirstSync(
         `SELECT id, categoria, monto, limite, fecha_creacion
          FROM presupuestos
          WHERE categoria = ?`,
@@ -119,7 +119,7 @@ class PresupuestoModel {
     try {
       const db = await DatabaseService.openDB();
 
-      await db.runAsync(
+      db.runSync(
         `UPDATE presupuestos
          SET monto = ?
          WHERE id = ?`,
@@ -148,7 +148,7 @@ class PresupuestoModel {
     try {
         const db = await DatabaseService.openDB();
 
-        await db.runAsync(
+        db.runSync(
             `DELETE FROM presupuestos WHERE id = ?`,
             [id]
         );
@@ -170,7 +170,7 @@ class PresupuestoModel {
     try {
         const db = await DatabaseService.openDB();
 
-        const result = await db.getFirstAsync(
+        const result = db.getFirstSync(
             `SELECT SUM(monto) AS total FROM presupuestos`
         );
 
@@ -204,7 +204,7 @@ class PresupuestoModel {
     try {
       const db = await DatabaseService.openDB();
 
-      await db.runAsync(
+      db.runSync(
         `UPDATE presupuestos
          SET categoria = ?, monto = ?
          WHERE id = ?`,
@@ -234,7 +234,7 @@ class PresupuestoModel {
     try {
       const db = await DatabaseService.openDB();
 
-      await db.runAsync(
+      db.runSync(
         `UPDATE presupuestos
          SET categoria = ?, limite = ?
          WHERE id = ?`,

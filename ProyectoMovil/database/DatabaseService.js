@@ -7,29 +7,64 @@ class DatabaseService {
     this.isWeb = Platform.OS === 'web';
     this.dbName = 'app_database';
     this.dbVersion = 1;
+    this.initPromise = null;
+    this.isInitializing = false;
   }
 
   async init() {
-    if (this.isWeb) {
-      return await this.initIndexedDB();
-    } else {
-      return await this.initSQLite();
+    // Si ya está inicializando, esperar a que termine
+    if (this.initPromise) {
+      return this.initPromise;
     }
+
+    // Si ya está inicializado, retornar
+    if (this.db) {
+      return true;
+    }
+
+    // Crear promesa de inicialización
+    this.initPromise = (async () => {
+      try {
+        this.isInitializing = true;
+        if (this.isWeb) {
+          return await this.initIndexedDB();
+        } else {
+          return await this.initSQLite();
+        }
+      } finally {
+        this.isInitializing = false;
+      }
+    })();
+
+    return this.initPromise;
   }
 
   async openDB() {
     if (!this.db) {
       await this.init();
     }
+    
+    if (!this.db) {
+      throw new Error('Database not initialized');
+    }
+    
     return this.db;
   }
 
   // base de teefono
   async initSQLite() {
     try {
-      this.db = await SQLite.openDatabaseAsync(this.dbName);
+      console.log('Initializing SQLite database...');
+      
+      // Abrir la base de datos
+      this.db = SQLite.openDatabaseSync(this.dbName);
+      
+      if (!this.db) {
+        throw new Error('Failed to open database');
+      }
 
-      await this.db.execAsync(`
+      // Ejecutar las migraciones
+      this.db.execSync(`
         CREATE TABLE IF NOT EXISTS usuarios (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           nombre TEXT NOT NULL,
@@ -54,51 +89,16 @@ class DatabaseService {
           categoria TEXT NOT NULL,
           fecha TEXT NOT NULL,
           descripcion TEXT NOT NULL,
+          es_gasto INTEGER DEFAULT 1,
           fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP
         );
       `);
 
-      // Migración: agregar columna 'limite' si no existe
-      try {
-        // Verificar si la columna existe consultando la tabla
-        const tableInfo = await this.db.getAllAsync(`PRAGMA table_info(presupuestos)`);
-        const hasLimiteColumn = tableInfo.some(col => col.name === 'limite');
-        
-        if (!hasLimiteColumn) {
-          // Agregar la columna con un valor por defecto para registros existentes
-          await this.db.execAsync(`
-            ALTER TABLE presupuestos ADD COLUMN limite REAL DEFAULT 0;
-          `);
-          // Actualizar registros existentes con un valor por defecto basado en el monto
-          await this.db.execAsync(`
-            UPDATE presupuestos SET limite = monto * 1.5 WHERE limite IS NULL;
-          `);
-          console.log('Columna limite agregada a presupuestos');
-        }
-      } catch (error) {
-        console.error('Error al verificar/agregar columna limite:', error.message);
-      }
-
-      // Migración: agregar columna 'es_gasto' si no existe
-      try {
-        const transaccionesInfo = await this.db.getAllAsync(`PRAGMA table_info(transacciones)`);
-        const hasEsGastoColumn = transaccionesInfo.some(col => col.name === 'es_gasto');
-        
-        if (!hasEsGastoColumn) {
-          // Agregar la columna con valor por defecto 1 (gasto) para registros existentes
-          await this.db.execAsync(`
-            ALTER TABLE transacciones ADD COLUMN es_gasto INTEGER DEFAULT 1;
-          `);
-          console.log('Columna es_gasto agregada a transacciones');
-        }
-      } catch (error) {
-        console.error('Error al verificar/agregar columna es_gasto:', error.message);
-      }
-
-      console.log('SQLite database initialized');
+      console.log('SQLite database initialized successfully');
       return true;
     } catch (error) {
       console.error('Error initializing SQLite:', error);
+      this.db = null;
       return false;
     }
   }
@@ -148,7 +148,7 @@ class DatabaseService {
       const placeholders = Object.keys(data).map(() => '?').join(', ');
       const values = Object.values(data);
 
-      const result = await this.db.runAsync(
+      const result = this.db.runSync(
         `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`,
         values
       );
@@ -187,7 +187,7 @@ class DatabaseService {
       let query = `SELECT * FROM ${table}`;
       if (where) query += ` WHERE ${where}`;
 
-      const result = await this.db.getAllAsync(query, params);
+      const result = this.db.getAllSync(query, params);
       return { success: true, data: result };
     } catch (error) {
       console.error('Error selecting from SQLite:', error);
@@ -223,7 +223,7 @@ class DatabaseService {
         .join(', ');
       const values = [...Object.values(data), ...params];
 
-      const result = await this.db.runAsync(
+      const result = this.db.runSync(
         `UPDATE ${table} SET ${setClause} WHERE ${where}`,
         values
       );
@@ -271,7 +271,7 @@ class DatabaseService {
 
   async deleteSQLite(table, where, params) {
     try {
-      const result = await this.db.runAsync(
+      const result = this.db.runSync(
         `DELETE FROM ${table} WHERE ${where}`,
         params
       );
