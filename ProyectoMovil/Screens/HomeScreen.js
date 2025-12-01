@@ -1,4 +1,4 @@
-import { Text, StyleSheet, View, Image, ImageBackground, Button, ActivityIndicator, Alert, TouchableOpacity, ScrollView } from 'react-native'
+import { Text, StyleSheet, View, Image, ImageBackground, Button, ActivityIndicator, Alert, TouchableOpacity, ScrollView, Modal, Linking } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react';
 import TransaccionController from '../controllers/TransaccionController';
 import PresupuestoController from '../controllers/PresupuestoController';
@@ -12,6 +12,7 @@ export default function BotonesScreen() {
   const [gastosTotal, setGastosTotal] = useState(0);
   const [saldoDisponible, setSaldoDisponible] = useState(0);
   const [ingresosTotal, setIngresosTotal] = useState(0);
+  const [modalAyudaVisible, setModalAyudaVisible] = useState(false);
 
   const cargarTransacciones = useCallback(async () => {
     try {
@@ -190,7 +191,52 @@ export default function BotonesScreen() {
           </View>
           </ScrollView>
 
-          <Image style={styles.ayuda} source={require('../assets/help.png')} />
+          <TouchableOpacity 
+            style={styles.ayudaContainer} 
+            onPress={() => setModalAyudaVisible(true)}
+          >
+            <Image style={styles.ayuda} source={require('../assets/help.png')} />
+          </TouchableOpacity>
+
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalAyudaVisible}
+            onRequestClose={() => setModalAyudaVisible(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitulo}>¿Necesitas Ayuda?</Text>
+                
+                <Text style={styles.modalTexto}>
+                  Si necesitas ayuda, contáctanos:
+                </Text>
+
+                <TouchableOpacity 
+                  style={styles.contactoItem}
+                  onPress={() => Linking.openURL('mailto:124049120@upq.edu.mx')}
+                >
+                  <Ionicons name="mail" size={24} color="#001F3F" />
+                  <Text style={styles.contactoTexto}>124049120@upq.edu.mx</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                  style={styles.contactoItem}
+                  onPress={() => Linking.openURL('tel:4426087833')}
+                >
+                  <Ionicons name="call" size={24} color="#001F3F" />
+                  <Text style={styles.contactoTexto}>442 608 7833</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.modalBotonCerrar}
+                  onPress={() => setModalAyudaVisible(false)}
+                >
+                  <Text style={styles.modalBotonTexto}>Cerrar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
           
         </ImageBackground>
       );
@@ -384,12 +430,81 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 
-  ayuda: {
+  ayudaContainer: {
     position: 'absolute',
     bottom: 25,
     right: 25,
+  },
+
+  ayuda: {
     width: 45,
     height: 45
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  modalContent: {
+    backgroundColor: '#F5E6D3',
+    borderRadius: 20,
+    padding: 25,
+    width: '85%',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#001F3F',
+  },
+
+  modalTitulo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#001F3F',
+    marginBottom: 15,
+  },
+
+  modalTexto: {
+    fontSize: 16,
+    color: '#001F3F',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+
+  contactoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8D9C8',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 12,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#001F3F',
+  },
+
+  contactoTexto: {
+    fontSize: 16,
+    color: '#001F3F',
+    marginLeft: 10,
+    fontWeight: '600',
+  },
+
+  modalBotonCerrar: {
+    backgroundColor: '#136F63',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginTop: 10,
+    borderWidth: 2,
+    borderColor: '#001F3F',
+  },
+
+  modalBotonTexto: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 
   emptyContainer: {

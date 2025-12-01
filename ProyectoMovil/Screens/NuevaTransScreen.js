@@ -23,7 +23,10 @@ export default function FormularioTransaccion() {
   // Fecha actual por defecto
   const [fecha, setFecha] = useState(() => {
     const hoy = new Date();
-    return hoy.toISOString().split("T")[0];
+    const year = hoy.getFullYear();
+    const month = String(hoy.getMonth() + 1).padStart(2, '0');
+    const day = String(hoy.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   });
 
   const cargarCategorias = useCallback(async () => {

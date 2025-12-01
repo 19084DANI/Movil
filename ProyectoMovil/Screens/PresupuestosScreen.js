@@ -14,6 +14,8 @@ export default function PresupuestosScreen() {
   const [presupuestos, setPresupuestos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [presupuestoAEditar, setPresupuestoAEditar] = useState(null);
+  const [viewMode, setViewMode] = useState('categoria'); // 'categoria' o 'fecha'
+  const [transacciones, setTransacciones] = useState([]);
 
   // Calcular total automáticamente desde los presupuestos actuales
   const calcularTotal = useCallback(() => {
@@ -26,20 +28,56 @@ export default function PresupuestosScreen() {
     try {
       const presupuestosData = await PresupuestoController.obtenerPresupuestos();
       setPresupuestos(presupuestosData);
+      
+      // Verificar si hay presupuestos excedidos
+      verificarPresupuestosExcedidos(presupuestosData);
     } catch (error) {
       console.error('Error al cargar presupuestos:', error);
     }
   }, []);
 
+  const cargarTransacciones = useCallback(async () => {
+    try {
+      const data = await TransaccionController.obtenerTransacciones();
+      const gastos = data.filter(t => t.es_gasto === 1 || t.es_gasto === true);
+      setTransacciones(gastos);
+    } catch (error) {
+      console.error('Error al cargar transacciones:', error);
+    }
+  }, []);
+
+  const verificarPresupuestosExcedidos = (presupuestosData) => {
+    const excedidos = presupuestosData.filter(p => {
+      const gastoTotal = calcularGastosPorCategoria(p.categoria);
+      return gastoTotal > parseFloat(p.monto);
+    });
+
+    if (excedidos.length > 0) {
+      const categorias = excedidos.map(p => p.categoria).join(', ');
+      Alert.alert(
+        ' Presupuesto Excedido',
+        `Has excedido el presupuesto en: ${categorias}`,
+        [{ text: 'Entendido' }]
+      );
+    }
+  };
+
+  const calcularGastosPorCategoria = (categoria) => {
+    return transacciones
+      .filter(t => t.categoria === categoria)
+      .reduce((sum, t) => sum + parseFloat(t.monto || 0), 0);
+  };
+
   useEffect(() => {
     const init = async () => {
-      await cargarPresupuestos();
+      await Promise.all([cargarPresupuestos(), cargarTransacciones()]);
     };
     init();
 
     // Escuchar cambios en presupuestos y transacciones para actualizar automáticamente
     const actualizarDatos = () => {
       cargarPresupuestos();
+      cargarTransacciones();
     };
     
     PresupuestoController.addListener(actualizarDatos);
@@ -49,7 +87,7 @@ export default function PresupuestosScreen() {
       PresupuestoController.removeListener(actualizarDatos);
       TransaccionController.removeListener(actualizarDatos);
     };
-  }, [cargarPresupuestos]);
+  }, [cargarPresupuestos, cargarTransacciones]);
 
   // Recargar cuando se regrese de NuevoPresupuestoScreen
   useEffect(() => {
@@ -139,6 +177,37 @@ export default function PresupuestosScreen() {
          
         </View>
 
+        <View style={styles.botones}>
+          <TouchableOpacity 
+            style={[
+              styles.botonVista,
+              viewMode === 'categoria' && styles.botonVistaActivo
+            ]}
+            onPress={() => setViewMode('categoria')}
+          >
+            <Text style={[
+              styles.botonVistaTexto,
+              viewMode === 'categoria' && styles.botonVistaTextoActivo
+            ]}>
+              Categoría
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[
+              styles.botonVista,
+              viewMode === 'fecha' && styles.botonVistaActivo
+            ]}
+            onPress={() => setViewMode('fecha')}
+          >
+            <Text style={[
+              styles.botonVistaTexto,
+              viewMode === 'fecha' && styles.botonVistaTextoActivo
+            ]}>
+              Fecha
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.elementos}>
           <View style={styles.textoslide}>
           <Text style={styles.texto1}>Presupuesto{'\n'}Total:</Text>
@@ -152,8 +221,9 @@ export default function PresupuestosScreen() {
            </View>
         </View>
 
-        {/* Renderizar dinámicamente todos los presupuestos */}
-        {presupuestos.map((presupuesto) => {
+        {viewMode === 'categoria' ? (
+          /* Vista por categoría (actual) */
+          presupuestos.map((presupuesto) => {
           const montoActual = getMontoActual(presupuesto.categoria);
           const maxValue = getLimiteMaximo(presupuesto.categoria);
           const minValue = getLimiteMinimo(presupuesto.categoria);
@@ -204,7 +274,66 @@ export default function PresupuestosScreen() {
 
             </View>
           );
-        })}
+        })
+        ) : (
+          /* Vista por fecha */
+          [...presupuestos]
+            .sort((a, b) => new Date(b.fecha_creacion || 0) - new Date(a.fecha_creacion || 0))
+            .map((presupuesto) => {
+              const montoActual = getMontoActual(presupuesto.categoria);
+              const maxValue = getLimiteMaximo(presupuesto.categoria);
+              const minValue = getLimiteMinimo(presupuesto.categoria);
+              const valorSlider = Math.max(minValue, Math.min(maxValue, montoActual));
+              
+              return (
+                <View key={presupuesto.id} style={styles.elementos}>
+                  <View style={styles.textoslide}>
+                    <Text style={styles.texto1}>{presupuesto.categoria}</Text>
+                    <Text style={[{fontSize:30}, styles.precio]}>$: {Math.floor(montoActual).toLocaleString()}</Text>
+                  </View>
+                  {presupuesto.fecha_creacion && (
+                    <Text style={styles.fechaTexto}>
+                      Creado: {new Date(presupuesto.fecha_creacion).toLocaleDateString()}
+                    </Text>
+                  )}
+                  <View style={styles.sliderContainer}>
+                    <Slider 
+                      style={[{width:300, height: 50}, styles.slider]} 
+                      maximumValue={maxValue}
+                      minimumValue={minValue} 
+                      value={valorSlider}
+                      disabled={true}
+                      color='#79B7B4' 
+                      thumbTintColor='#79B7B4' 
+                      maximumTrackTintColor='rgba(255, 255, 255, 0.5)' 
+                      minimumTrackTintColor='#79B7B4'
+                    />
+                    <Text style={styles.sliderInfo}>
+                      ${montoActual.toFixed(2)} / ${maxValue.toFixed(2)}
+                    </Text>
+                  </View>
+                  <View style={styles.botonEditarContainer}>
+                    <TouchableOpacity 
+                      style={styles.botonEditar}
+                      onPress={() => {
+                        setPresupuestoAEditar(presupuesto);
+                        setScreen('editar');
+                      }}
+                    >
+                      <Text style={styles.botonEditarTexto}>Editar</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.botonEliminarContainer}>
+                    <TouchableOpacity style={styles.botonEliminar}
+                      onPress={() => eliminarPresupuesto(presupuesto.id)}
+                    >
+                      <Text style={styles.botonEliminarTexto}>Eliminar</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              );
+            })
+        )}
 
         <View style={{width:'100%', flexDirection:'row' ,justifyContent:'flex-end', padding:20}}>
           <TouchableOpacity onPress={() => setScreen('nuevop')}>
@@ -231,6 +360,48 @@ const styles = StyleSheet.create({
 precio:{
   color:'#000',
   fontWeight:'bold'
+},
+
+botones: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  marginVertical: 15,
+  gap: 10,
+},
+
+botonVista: {
+  width: 140,
+  paddingVertical: 10,
+  paddingHorizontal: 20,
+  borderRadius: 8,
+  backgroundColor: '#F5E6D3',
+  borderWidth: 2,
+  borderColor: '#001F3F',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+
+botonVistaActivo: {
+  backgroundColor: '#355559ff',
+  borderColor: '#79B7B4',
+},
+
+botonVistaTexto: {
+  fontSize: 16,
+  fontWeight: '600',
+  color: '#001F3F',
+},
+
+botonVistaTextoActivo: {
+  color: '#fff',
+},
+
+fechaTexto: {
+  fontSize: 14,
+  color: '#001F3F',
+  marginTop: 5,
+  paddingHorizontal: 10,
+  fontStyle: 'italic',
 },
 
 contenido: {
