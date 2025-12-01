@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     borderColor: '#001F3F',
   },
   botonGuardar: {
-    backgroundColor: '#001F3F',
+    backgroundColor: '#79B7B4',
     borderColor: '#001F3F',
   },
   botonDisabled: {

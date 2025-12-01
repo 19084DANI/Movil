@@ -359,13 +359,13 @@ const styles = StyleSheet.create({
   Button: {
     width: 150,
     height: 45,
-    backgroundColor: '#164b46ff',
+    backgroundColor: '#79B7B4',
     borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 30,
     borderWidth: 1,
-    borderColor: '#265d63ff',
+    borderColor: '#001F3F',
   },
   textoBoton: {
     fontSize: 14,

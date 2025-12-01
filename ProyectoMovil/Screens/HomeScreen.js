@@ -144,7 +144,7 @@ export default function BotonesScreen() {
                 <View style={styles.botonPresupuesto}>
                   <Button
                     style={styles.btn}
-                    color="#ADD6BC"
+                    color="#79B7B4"
                     title='Presupuestos'
                   />
                 </View>
